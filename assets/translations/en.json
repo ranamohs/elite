@@ -1,6 +1,9 @@
 {
   "welcome": "Welcome Back",
-  "selectYourLanguage": "Select your language",
+  "selectYourLanguage": "اختار اللغة",
+  "chooseYourLanguageSubtitle": "Choose your language",
+  "changeLanguageLaterHint": "تقدر تغير اللغة بعدين من الإعدادات",
+  "continueText": "متابعة",
   "letsGo": "Let's go",
 
   "loginTofixtit_app": "Login to Al riyada",
@@ -114,8 +117,7 @@
   "amountToPay": "Amount To Pay",
   "totalCostsAfterAddingTax": "Total Costs After Adding Tax",
   "totalCosts": "Total Costs",
-  "loginIsRequired": "Login is required",
-  "pleaseLogInToContinue": "Please log in to continue",
+
   "requestService": "Request Service",
   "chooseLocation": "Choose Location",
   "useCurrentLocation": "Use my current location",
@@ -185,7 +187,7 @@
   "leaveARating": "Leave a rating",
   "ourServices": "Our Services",
   "loginIsRequired": "Login is required",
-  "pleaseLogInToContinue": "Please log in to continue",
+  "pleaseLogInToContinue": "Please log in to continue"
 
 
 }

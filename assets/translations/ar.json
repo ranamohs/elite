@@ -1,13 +1,16 @@
 {
   "welcome": "مرحبا بك",
-  "selectYourLanguage": "اختر لغتك",
+  "selectYourLanguage": "اختار اللغة",
+  "chooseYourLanguageSubtitle": "اختار اللغة اللي انت عايزها",
+  "changeLanguageLaterHint": "تقدر تغير اللغة بعدين من الإعدادات",
+  "continueText": "متابعة",
   "letsGo": "هيا بنا",
 
   "loginTofixtit_app": "تسجيل الدخول إلى الريادة",
   "phoneNumber": "رقم الجوال",
   "password": "كلمة المرور",
   "login": "تسجيل الدخول",
-   "doNotHaveAnAccount": "ليس لديك حساب؟",
+  "doNotHaveAnAccount": "ليس لديك حساب؟",
 
   "signUpToJoinfixtit_app": "سجّل للانضمام إلى الريادة",
   "signUp": "إنشاء حساب",
