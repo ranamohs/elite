@@ -113,6 +113,7 @@ void setupServiceLocator() {
       dioConsumer: getIt.get<DioConsumer>(),
       secureStorageHelper: getIt<SecureStorageHelper>(),
       networkCubit: getIt<NetworkConnectionCubit>(),
+      userDataManager: getIt<UserDataManager>(),
     ),
   );
   getIt.registerFactory<RegisterCubit>(
@@ -268,8 +269,8 @@ void setupServiceLocator() {
   // Search dependencies
   getIt.registerLazySingleton<ShopsSearchRepo>(
         () => ShopsSearchRepoImpl(
-          dioConsumer: getIt<DioConsumer>(),
-          networkInfo: getIt<NetworkInfo>(),
+      dioConsumer: getIt<DioConsumer>(),
+      networkInfo: getIt<NetworkInfo>(),
 
     ),
   );
@@ -283,7 +284,7 @@ void setupServiceLocator() {
 
   getIt.registerLazySingleton<AddReviewRepo>(
         () => AddReviewRepoImpl(
-          secureStorageHelper: getIt<SecureStorageHelper>(),
+      secureStorageHelper: getIt<SecureStorageHelper>(),
       dioConsumer: getIt<DioConsumer>(),
     ),
   );

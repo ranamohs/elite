@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/home/presentation/views/home_page.dart';
-import '../../features/home/presentation/views/recent_shops_view.dart';
 import '../../features/login/presentation/views/login_view.dart';
 import '../../features/search/presentation/manager/search_cubit.dart';
 import '../../features/settings/views/change_language_view.dart';
@@ -13,7 +12,6 @@ import '../../features/account/presentation/views/update_profile_view.dart';
 import '../../features/settings/views/about_us_view.dart';
 import '../../features/app_info/presentation/views/contact_us_view.dart';
 import '../../features/settings/views/privacy_policy_view.dart';
-import '../../features/home/presentation/views/categories_view.dart';
 import '../../features/register/presentation/manager/register_cubit.dart';
 import '../../features/settings/views/terms_and_conditions_view.dart';
 import '../../features/shops/data/models/shops_model.dart';
@@ -22,7 +20,6 @@ import '../../features/shops/presentation/views/shop_details_view.dart';
 import '../../features/shops/presentation/views/wishlist_view.dart';
 import '../../features/shops/presentation/views/services_view.dart';
 import '../../features/splash/presentation/views/intro_view.dart';
-import '../../features/splash/presentation/views/intro_with_button.dart';
 import '../../features/app_info/presentation/views/help_and_support_view.dart';
 import '../services/service_locator.dart';
 
@@ -59,15 +56,8 @@ abstract class AppRouter {
       GoRoute(path: '/', builder: (context, state) => const SplashView()),
       GoRoute(path: welcomeView,builder: (context, state) => const WelcomeView()),
       GoRoute(path: introView,builder: (context, state) => const IntroView()),
-      GoRoute(path: introViewWithButton,builder: (context, state) => const IntroWithButton()),
       GoRoute(path: loginView, builder: (context, state) => LoginView()),
-      GoRoute(path: allCategoriesView,builder: (context, state) => const AllCategoriesView()),
-      GoRoute(
-          path: allRecentShopsView,
-          builder: (context, state) => BlocProvider(
-            create: (context) => getIt<ShopsSearchCubit>(),
-            child: const AllRecentShopsView(),
-          )),
+
       GoRoute(path: registerView, builder: (context, state) => BlocProvider(
         create: (context) => getIt<RegisterCubit>(),
         child:  RegisterView(),

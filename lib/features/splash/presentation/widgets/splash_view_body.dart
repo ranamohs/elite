@@ -9,6 +9,7 @@ import 'package:elite/core/state_management/user_cubit/user_cubit.dart'
     show UserCubit;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashViewBody extends StatefulWidget {
   const SplashViewBody({super.key});
@@ -58,7 +59,16 @@ class _SplashViewBodyState extends State<SplashViewBody> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              ClipRRect(
+               borderRadius: BorderRadiusGeometry.circular(50.r),
+                child: Image.asset(
+                  AppAssets.appLogo,
+                  width: 276,
+                  height: 276,
+                ),
 
+              ),
+              SizedBox(height: 110.h,)
             ],
           ),
         ),

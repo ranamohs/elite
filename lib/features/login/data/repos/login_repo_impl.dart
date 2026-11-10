@@ -86,14 +86,40 @@ class LoginRepoImpl implements LoginRepo {
   }
 
   Future<void> _cacheUserData(Map<String, dynamic> response) async {
-    await secureStorageHelper.saveToken(token: response[ApiKey.token]);
+    final token = response[ApiKey.token];
+    if (token != null) {
+      await secureStorageHelper.saveToken(token: token.toString());
+    }
+
     final userData = response[ApiKey.user];
-    userDataManager.saveUserId(id: userData[ApiKey.id]);
-    userDataManager.saveUserName(name: userData[ApiKey.name]);
-    userDataManager.saveUserEmail(email: userData[ApiKey.email]);
-    userDataManager.saveUserPhoneNumber(
-        phoneNumber: userData[ApiKey.phoneNumber]);
-    userDataManager.saveUserAvatarUrl(avatar: userData[ApiKey.avatar] ?? '');
+    if (userData is Map<String, dynamic>) {
+      final rawId = userData[ApiKey.id];
+      if (rawId != null) {
+        final parsedId = rawId is int ? rawId : int.tryParse(rawId.toString());
+        if (parsedId != null) {
+          userDataManager.saveUserId(id: parsedId);
+        }
+      }
+
+      final name = userData[ApiKey.name];
+      if (name != null) {
+        userDataManager.saveUserName(name: name.toString());
+      }
+
+      final email = userData[ApiKey.email];
+      if (email != null) {
+        userDataManager.saveUserEmail(email: email.toString());
+      }
+
+      final phone = userData[ApiKey.phone] ?? userData[ApiKey.phoneNumber];
+      if (phone != null) {
+        userDataManager.saveUserPhoneNumber(phoneNumber: phone.toString());
+      }
+
+      final avatar = userData[ApiKey.avatar];
+      userDataManager.saveUserAvatarUrl(avatar: avatar != null ? avatar.toString() : '');
+    }
+
     userDataManager.saveUserStatus(isGuest: false);
   }
 }

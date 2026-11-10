@@ -29,11 +29,31 @@ abstract class AppColors {
   static const Color splashCircle = Color(0xFFD9D9D9);
   static const Color iconColor = Color(0xFF4CA5A5);
   static const Color languageButtonSelected = Color(0xFFFDBA42);
-  static const Color primaryColor = Color(0xFFF2A71D);
   static const Color darkGry = Color(0xFF414141);
   static const Color searchColor = Color(0xFFD9D9D9);
 
 
   static const splashColor =  Color(0xFfF2CDAC);
 
+  static const Color welcomeBgColor = Color(0xFFF6F8F2);
+  static const Color primaryColor = Color(0xFF8DBE3A);
+  static const Color badgeBg = Color(0xFFEEF6E0);
+  static const Color badgeTextGreen = Color(0xFF6E9A28);
+  static const Color titleDark = Color(0xFF111111);
+  static const Color subtitleGrey = Color(0xFF858B95);
+  static const Color hintGrey = Color(0xFF8E939C);
+  static const Color unselectedBorder = Color(0xFFE5E7EB);
+  static const Color unselectedRadioBorder = Color(0xFFCBD5E1);
+
+  static const Color homeHeaderGreen = Color(0xFF8DBE3A);
+  static const Color homeContractDarkGreen = Color(0xFF34511A);
+  static const Color homeContractBadgeGreen = Color(0xFF557A26);
+  static const Color homeBackground = Color(0xFFF6F8F2);
+  static const Color navInactiveGrey = Color(0xFF9CA3AF);
+  static const Color servicePlumbingBg = Color(0xFFE3F0FB);
+  static const Color serviceElectricityBg = Color(0xFFFEF6D8);
+  static const Color serviceAcBg = Color(0xFFE6F4FA);
+  static const Color serviceCarpentryBg = Color(0xFFF7EBDD);
+  static const Color serviceAluminumBg = Color(0xFFEEF1F4);
+  static const Color serviceShutterBg = Color(0xFFECEFF1);
 }
