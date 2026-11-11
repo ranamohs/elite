@@ -80,8 +80,6 @@ class HomeHeaderSection extends StatelessWidget {
                     ),
 
                     SizedBox(width: 10.w),
-
-                    // Greeting and Location
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -123,7 +121,6 @@ class HomeHeaderSection extends StatelessWidget {
                   ],
                 ),
 
-                // Left side in RTL: Notification Bell with Red Badge Dot
                 GestureDetector(
                   onTap: onNotificationTap,
                   child: Stack(

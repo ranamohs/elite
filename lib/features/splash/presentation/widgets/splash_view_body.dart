@@ -63,8 +63,8 @@ class _SplashViewBodyState extends State<SplashViewBody> {
                borderRadius: BorderRadiusGeometry.circular(50.r),
                 child: Image.asset(
                   AppAssets.appLogo,
-                  width: 276,
-                  height: 276,
+                  width: 300,
+                  height: 300,
                 ),
 
               ),

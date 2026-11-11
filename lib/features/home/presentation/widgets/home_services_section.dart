@@ -73,7 +73,6 @@ class HomeServicesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Services Header
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 2.w),
           child: Directionality(
@@ -108,10 +107,7 @@ class HomeServicesSection extends StatelessWidget {
             ),
           ),
         ),
-
         SizedBox(height: 14.h),
-
-        // Services Grid (3 x 2)
         Directionality(
           textDirection: TextDirection.rtl,
           child: GridView.builder(
@@ -153,7 +149,6 @@ class HomeServicesSection extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      // Top colored container with icon
                       Expanded(
                         flex: 6,
                         child: Container(
@@ -176,8 +171,6 @@ class HomeServicesSection extends StatelessWidget {
                           ),
                         ),
                       ),
-
-                      // Bottom white container with name
                       Expanded(
                         flex: 4,
                         child: Container(
