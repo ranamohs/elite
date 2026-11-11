@@ -16,7 +16,7 @@ import '../manager/recent_shops_cubit/recent_shops_cubit.dart';
 import '../widgets/home_banners_section.dart';
 import '../widgets/home_contract_section.dart';
 import '../widgets/home_header_section.dart';
-import '../widgets/home_services_section.dart';
+import '../widgets/home_categories_section.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
