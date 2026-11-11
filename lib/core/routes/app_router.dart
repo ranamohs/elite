@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/home/presentation/views/home_page.dart';
 import '../../features/login/presentation/views/login_view.dart';
-import '../../features/search/presentation/manager/search_cubit.dart';
+import '../../features/services/presentation/views/category_services_view.dart';
 import '../../features/settings/views/change_language_view.dart';
 import '../../features/account/presentation/views/update_profile_view.dart';
 import '../../features/settings/views/about_us_view.dart';
@@ -14,11 +14,7 @@ import '../../features/app_info/presentation/views/contact_us_view.dart';
 import '../../features/settings/views/privacy_policy_view.dart';
 import '../../features/register/presentation/manager/register_cubit.dart';
 import '../../features/settings/views/terms_and_conditions_view.dart';
-import '../../features/shops/data/models/shops_model.dart';
-import '../../features/shops/presentation/views/rating_page_view.dart';
-import '../../features/shops/presentation/views/shop_details_view.dart';
-import '../../features/shops/presentation/views/wishlist_view.dart';
-import '../../features/shops/presentation/views/services_view.dart';
+
 import '../../features/splash/presentation/views/intro_view.dart';
 import '../../features/app_info/presentation/views/help_and_support_view.dart';
 import '../services/service_locator.dart';
@@ -66,21 +62,15 @@ abstract class AppRouter {
       GoRoute(
           path: categoryDetailsView,
           builder: (context, state) {
-            final extras = state.extra as Map<String,dynamic>;
+            final extras = state.extra as Map<String, dynamic>;
             final int categoryId = extras['categoryId'] as int;
             final String arName = extras['arName'] as String;
             final String enName = extras['enName'] as String;
-            return ShopsView(
+            return CategoryServicesView(
               categoryId: categoryId,
               categoryArName: arName,
               categoryEnName: enName,
             );
-          }),
-      GoRoute(
-          path: serviceDetailsView,
-          builder: (context, state) {
-            final ShopData shopData = state.extra as ShopData;
-            return ShopDetailView(shopData: shopData);
           }),
 
       GoRoute(path: contactUsView, builder: (context, state) => const ContactUsView()),
@@ -90,12 +80,7 @@ abstract class AppRouter {
       GoRoute(path: privacyPolicyView, builder: (context, state) => const PrivacyPolicyView()),
       GoRoute(path: changeLanguageView, builder: (context, state) => const ChangeLanguageView()),
       GoRoute(path: updateProfileView, builder: (context, state) => const UpdateProfileView()),
-      GoRoute(
-          path: rating,
-          builder: (context, state) {
-            final int shopId = state.extra as int;
-            return RatingPage(shopId: shopId);
-          }),      GoRoute(path: wishlistView, builder: (context, state) => const WishlistView()),
+
 
     ],
   );

@@ -37,7 +37,7 @@ class HomeHeaderSection extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.homeHeaderGreen,
+        color: AppColors.badgeTextGreen,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30.r),
           bottomRight: Radius.circular(30.r),
@@ -46,17 +46,14 @@ class HomeHeaderSection extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(18.w, topPadding + 10.h, 18.w, 22.h),
       child: Column(
         children: [
-          // Top Row: Notification Bell (Left) & User Info with Avatar (Right in RTL)
           Directionality(
             textDirection: TextDirection.rtl,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Right side in RTL: Avatar + Greeting + Location
                 Row(
                   children: [
-                    // Circular Avatar
                     Container(
                       width: 46.w,
                       height: 46.w,
@@ -129,16 +126,16 @@ class HomeHeaderSection extends StatelessWidget {
                   children: [
                     const Icon(
                       Icons.search,
-                      color: Color(0xFF8E939C),
+                      color: AppColors.subtitleGrey,
                       size: 20,
                     ),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: Text(
                         'ابحث عن خدمة... مثلاً: سخان، تكييف',
-                        style: TextStyle(
+                        style: AppStyles.styleRegular14(context).copyWith(
                           fontSize: 12.sp,
-                          color: const Color(0xFF8E939C),
+                          color: AppColors.subtitleGrey,
                           fontWeight: FontWeight.w400,
                         ),
                         overflow: TextOverflow.ellipsis,

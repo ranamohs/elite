@@ -19,8 +19,8 @@ class BackIconButton extends StatelessWidget {
       },
       color: iconColor ?? AppColors.primaryColor,
       icon: Icon(
-       isArabic(context)?  FontAwesomeIcons.arrowRight : FontAwesomeIcons.arrowLeft,
-        size: 28,
+       isArabic(context)?  Icons.arrow_back_ios : FontAwesomeIcons.arrowLeft,
+        size: 24,
       ),
     );
   }
