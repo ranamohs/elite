@@ -74,7 +74,16 @@ class Data {
     id = json['id'];
     name = json['name'] != null ? new Message.fromJson(json['name']) : null;
     url = json['url'];
-    image = json['image'] != null ? '${EndPoints.IMAGE_BASE_URL}${json['image']}' : null;
+    final rawImage = json['image']?.toString();
+    if (rawImage != null && rawImage.isNotEmpty) {
+      if (rawImage.startsWith('http://') || rawImage.startsWith('https://')) {
+        image = rawImage;
+      } else {
+        image = '${EndPoints.IMAGE_BASE_URL}$rawImage';
+      }
+    } else {
+      image = null;
+    }
   }
 
   Map<String, dynamic> toJson() {

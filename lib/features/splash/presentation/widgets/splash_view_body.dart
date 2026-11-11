@@ -35,10 +35,10 @@ class _SplashViewBodyState extends State<SplashViewBody> {
     Future.delayed(const Duration(seconds: 5), () {
       if (!mounted) return;
 
-      if (!isSelectLanguageViewVisited) {
+      if (!userCubit.state.isGuest) {
+        customGo(context, AppRouter.homePage);
+      } else if (!isSelectLanguageViewVisited) {
         customGo(context, AppRouter.welcomeView);
-      } else if (isSelectLanguageViewVisited) {
-        customGo(context, AppRouter.loginView);
       } else {
         customGo(context, AppRouter.loginView);
       }
@@ -60,11 +60,11 @@ class _SplashViewBodyState extends State<SplashViewBody> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ClipRRect(
-               borderRadius: BorderRadiusGeometry.circular(50.r),
+                borderRadius: BorderRadiusGeometry.circular(50.r),
                 child: Image.asset(
                   AppAssets.appLogo,
-                  width: 300,
-                  height: 300,
+                  width: 276,
+                  height: 276,
                 ),
 
               ),

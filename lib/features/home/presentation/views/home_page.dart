@@ -1,3 +1,4 @@
+import 'package:elite/core/constants/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -131,7 +132,7 @@ class _AppLayoutState extends State<AppLayout> {
             SizedBox(height: 4.h),
             Text(
               label,
-              style: TextStyle(
+              style:AppStyles.styleRegular14(context).copyWith(
                 fontSize: 11.sp,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: color,

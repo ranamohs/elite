@@ -1,8 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:elite/core/constants/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/functions/internet_connection_status_snack_bar.dart';
 import '../../../../core/state_management/network_connection_cubit/network_connection_cubit.dart';
 import '../../../../core/state_management/network_connection_cubit/network_connection_state.dart';
@@ -51,30 +54,48 @@ class _HomeViewState extends State<HomeView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // 1. Curved Green Top Header (Avatar, Greeting, Location, Notifications, Search Bar)
                 const HomeHeaderSection(),
-
                 SizedBox(height: 16.h),
-
-                // 2. Promotional Banners Carousel with Indicator Dots
                 const HomeBannersSection(),
-
                 SizedBox(height: 20.h),
-
-                // 3. Services Section with Title, Link, and 3x2 Grid
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 18.w),
                   child: const HomeServicesSection(),
                 ),
-
                 SizedBox(height: 20.h),
-
-                // 4. Monthly Maintenance Contract Card
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "عقود الصيانة",
+                        style: AppStyles.styleMedium18(context).copyWith(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.titleDark,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: (){},
+                        child: Text(
+                          'كل العقود ',
+                          style: AppStyles.styleMedium18(context).copyWith(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.homeContractBadgeGreen,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16.h,),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 18.w),
                   child: const HomeContractSection(),
                 ),
-
                 SizedBox(height: 28.h),
               ],
             ),

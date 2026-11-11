@@ -1,13 +1,21 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:elite/core/functions/is_arabic.dart';
+import 'package:elite/features/home/data/models/banners_models/banners_model.dart';
+import 'package:elite/features/home/presentation/manager/banners_cubit/banners_cubit.dart';
+import 'package:elite/features/home/presentation/manager/banners_cubit/banners_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/constants/app_assets.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/routes/app_router.dart';
 
 class HomeBannersSection extends StatefulWidget {
-  final List<dynamic>? banners;
+  final List<Data>? banners;
   final void Function(int index)? onBannerTap;
 
   const HomeBannersSection({
@@ -30,11 +38,104 @@ class _HomeBannersSectionState extends State<HomeBannersSection> {
     super.dispose();
   }
 
+  void _handleBannerTap(Data? banner, int index) async {
+    if (widget.onBannerTap != null) {
+      widget.onBannerTap!(index);
+      return;
+    }
+
+    final url = banner?.url;
+    if (url != null && url.isNotEmpty) {
+      final uri = Uri.tryParse(url);
+      if (uri != null && await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+        return;
+      }
+    }
+
+    if (mounted) {
+      GoRouter.of(context).push(AppRouter.allCategoriesView);
+    }
+  }
+
+  Widget _buildShimmerLoading() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 145.h,
+          child: PageView.builder(
+            controller: PageController(viewportFraction: 0.9),
+            itemCount: 1,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 6.w),
+                child: Shimmer.fromColors(
+                  baseColor: AppColors.loadingEffectColor,
+                  highlightColor: Colors.grey.shade100,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(22.r),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        SizedBox(height: 10.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              height: 6.h,
+              width: 18.w,
+              decoration: BoxDecoration(
+                color: const Color(0xFFD1D5DB),
+                borderRadius: BorderRadius.circular(4.r),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final count = (widget.banners != null && widget.banners!.isNotEmpty)
-        ? widget.banners!.length
-        : 3;
+    if (widget.banners != null) {
+      return _buildBannersList(widget.banners!);
+    }
+
+    return BlocBuilder<BannersCubit, BannersState>(
+      builder: (context, state) {
+        if (state is BannersLoading) {
+          return _buildShimmerLoading();
+        }
+
+        if (state is BannersSuccess) {
+          final bannersList = state.bannersModel.data ?? [];
+          if (bannersList.isEmpty) {
+            return const SizedBox.shrink();
+          }
+          return _buildBannersList(bannersList);
+        }
+
+        if (state is BannersFailure) {
+          return const SizedBox.shrink();
+        }
+
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget _buildBannersList(List<Data> bannersList) {
+    if (bannersList.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final count = bannersList.length;
 
     return Column(
       children: [
@@ -49,109 +150,55 @@ class _HomeBannersSectionState extends State<HomeBannersSection> {
             },
             itemCount: count,
             itemBuilder: (context, index) {
+              final banner = bannersList[index];
+              final imageUrl = banner.image;
+              final isAr = isArabic(context);
+              final bannerName = (isAr
+                  ? banner.name?.ar
+                  : banner.name?.en) ??
+                  banner.name?.ar ??
+                  banner.name?.en ??
+                  '';
+
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 6.w),
-                child: Container(
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(22.r),
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color(0xFFE0EDF3),
-                        Color(0xFF8AA38B),
-                        Color(0xFF384A33),
+                child: GestureDetector(
+                  onTap: () => _handleBannerTap(banner, index),
+                  child: Container(
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(22.r),
+                      color: Colors.grey.shade200,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.07),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
                       ],
-                      stops: [0.0, 0.45, 1.0],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.07),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Stack(
-                    children: [
-                      // Left AC graphic
-                      Positioned(
-                        left: 10.w,
-                        top: 10.h,
-                        bottom: 10.h,
-                        width: 90.w,
-                        child: Image.asset(
-                          AppAssets.logo,
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) =>
-                          const SizedBox.shrink(),
-                        ),
-                      ),
-
-                      // Right Texts & Button (in RTL layout)
-                      Positioned.fill(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(95.w, 10.h, 14.w, 10.h),
-                          child: Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'صيانة التكييف قبل الصيف',
-                                  style: TextStyle(
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                SizedBox(height: 3.h),
-                                Text(
-                                  'خصم 20% بكود SUMMER20',
-                                  style: TextStyle(
-                                    fontSize: 10.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white.withValues(alpha: 0.9),
-                                  ),
-                                ),
-                                SizedBox(height: 8.h),
-                                // "احجز دلوقتي" button
-                                GestureDetector(
-                                  onTap: () {
-                                    if (widget.onBannerTap != null) {
-                                      widget.onBannerTap!(index);
-                                    } else {
-                                      GoRouter.of(context)
-                                          .push(AppRouter.allCategoriesView);
-                                    }
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 14.w,
-                                      vertical: 4.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.homeHeaderGreen,
-                                      borderRadius: BorderRadius.circular(14.r),
-                                    ),
-                                    child: Text(
-                                      'احجز دلوقتي',
-                                      style: TextStyle(
-                                        fontSize: 10.sp,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        // Network banner image if available
+                        if (imageUrl != null && imageUrl.isNotEmpty)
+                          CachedNetworkImage(
+                            imageUrl: imageUrl,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: AppColors.loadingEffectColor,
+                              highlightColor: Colors.grey.shade100,
+                              child: Container(
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ],
+                            errorWidget: (context, url, error) =>
+                                _buildFallbackBannerContent(bannerName, banner, index),
+                          )
+                        else
+                          _buildFallbackBannerContent(bannerName, banner, index),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -162,25 +209,119 @@ class _HomeBannersSectionState extends State<HomeBannersSection> {
         SizedBox(height: 10.h),
 
         // Dots indicator
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(count, (index) {
-            final isActive = _bannerIndex == index;
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              margin: EdgeInsets.symmetric(horizontal: 3.w),
-              height: 6.h,
-              width: isActive ? 18.w : 6.w,
-              decoration: BoxDecoration(
-                color: isActive
-                    ? AppColors.homeHeaderGreen
-                    : const Color(0xFFD1D5DB),
-                borderRadius: BorderRadius.circular(4.r),
-              ),
-            );
-          }),
-        ),
+        if (count > 1)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(count, (index) {
+              final isActive = _bannerIndex == index;
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                margin: EdgeInsets.symmetric(horizontal: 3.w),
+                height: 6.h,
+                width: isActive ? 18.w : 6.w,
+                decoration: BoxDecoration(
+                  color: isActive
+                      ? AppColors.homeHeaderGreen
+                      : const Color(0xFFD1D5DB),
+                  borderRadius: BorderRadius.circular(4.r),
+                ),
+              );
+            }),
+          ),
       ],
+    );
+  }
+
+  Widget _buildFallbackBannerContent(String bannerName, Data? banner, int index) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFFE0EDF3),
+            Color(0xFF8AA38B),
+            Color(0xFF384A33),
+          ],
+          stops: [0.0, 0.45, 1.0],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            left: 10.w,
+            top: 10.h,
+            bottom: 10.h,
+            width: 80.w,
+            child: Image.asset(
+              AppAssets.logo,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) =>
+              const SizedBox.shrink(),
+            ),
+          ),
+          Positioned.fill(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(85.w, 4.h, 14.w, 4.h),
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      bannerName.isNotEmpty
+                          ? bannerName
+                          : 'صيانة التكييف قبل الصيف',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      'خصم 20% بكود SUMMER20',
+                      style: TextStyle(
+                        fontSize: 9.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white.withValues(alpha: 0.9),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 5.h),
+                    GestureDetector(
+                      onTap: () => _handleBannerTap(banner, index),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 3.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.homeHeaderGreen,
+                          borderRadius: BorderRadius.circular(14.r),
+                        ),
+                        child: Text(
+                          'احجز دلوقتي',
+                          style: TextStyle(
+                            fontSize: 9.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

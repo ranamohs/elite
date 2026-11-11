@@ -1,3 +1,4 @@
+import 'package:elite/core/constants/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -85,85 +86,23 @@ class HomeHeaderSection extends StatelessWidget {
                       children: [
                         Text(
                           'أهلاً، $displayName',
-                          style: TextStyle(
-                            fontSize: 16.sp,
+                          style: AppStyles.styleMedium16(context).copyWith(
                             fontWeight: FontWeight.w800,
                             color: Colors.white,
-                          ),
+                          )
                         ),
-                        SizedBox(height: 2.h),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.location_on_outlined,
-                              size: 14,
-                              color: Colors.white,
-                            ),
-                            SizedBox(width: 2.w),
-                            Text(
-                              'المعادي، القاهرة',
-                              style: TextStyle(
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white.withValues(alpha: 0.95),
-                              ),
-                            ),
-                            SizedBox(width: 4.w),
-                            const Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 14,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
+
                       ],
                     ),
                   ],
                 ),
 
-                GestureDetector(
-                  onTap: onNotificationTap,
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Container(
-                        width: 40.w,
-                        height: 40.w,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withValues(alpha: 0.28),
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.notifications_outlined,
-                            color: Colors.white,
-                            size: 22,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 6.h,
-                        right: 6.w,
-                        child: Container(
-                          width: 8.w,
-                          height: 8.w,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFEF4444),
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 1.5),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),
 
           SizedBox(height: 18.h),
 
-          // Search Field in Header
           Directionality(
             textDirection: TextDirection.rtl,
             child: GestureDetector(
@@ -177,7 +116,7 @@ class HomeHeaderSection extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 14.w),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(24.r),
+                  borderRadius: BorderRadius.circular(16.r),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.05),
