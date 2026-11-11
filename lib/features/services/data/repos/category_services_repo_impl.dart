@@ -34,7 +34,7 @@ class CategoryServicesRepoImpl implements CategoryServicesRepo {
     try {
       final token = await secureStorageHelper?.getToken();
       final queryParameters = {if (page != null) Params.page: page};
-      final endpoint = '/$categoryId/services';
+      final endpoint = '/$categoryId/sub-categories';
 
       final response = await dioConsumer.get(
         endpoint,

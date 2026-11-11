@@ -3,6 +3,7 @@ import 'package:elite/core/functions/is_arabic.dart';
 import 'package:elite/features/home/data/models/banners_models/banners_model.dart';
 import 'package:elite/features/home/presentation/manager/banners_cubit/banners_cubit.dart';
 import 'package:elite/features/home/presentation/manager/banners_cubit/banners_state.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,11 +32,34 @@ class HomeBannersSection extends StatefulWidget {
 class _HomeBannersSectionState extends State<HomeBannersSection> {
   int _bannerIndex = 0;
   final PageController _bannerController = PageController(viewportFraction: 0.9);
+  Timer? _autoPlayTimer;
+  int _currentBannersCount = 0;
 
   @override
   void dispose() {
+    _stopAutoPlay();
     _bannerController.dispose();
     super.dispose();
+  }
+
+  void _startAutoPlay(int count) {
+    _stopAutoPlay();
+    if (count <= 1) return;
+
+    _autoPlayTimer = Timer.periodic(const Duration(seconds: 4), (_) {
+      if (!mounted || !_bannerController.hasClients) return;
+      final nextIndex = (_bannerIndex + 1) % count;
+      _bannerController.animateToPage(
+        nextIndex,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOutCubic,
+      );
+    });
+  }
+
+  void _stopAutoPlay() {
+    _autoPlayTimer?.cancel();
+    _autoPlayTimer = null;
   }
 
   void _handleBannerTap(Data? banner, int index) async {
@@ -132,10 +156,19 @@ class _HomeBannersSectionState extends State<HomeBannersSection> {
 
   Widget _buildBannersList(List<Data> bannersList) {
     if (bannersList.isEmpty) {
+      _stopAutoPlay();
       return const SizedBox.shrink();
     }
 
     final count = bannersList.length;
+    if (_currentBannersCount != count) {
+      _currentBannersCount = count;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _startAutoPlay(count);
+        }
+      });
+    }
 
     return Column(
       children: [
@@ -180,7 +213,6 @@ class _HomeBannersSectionState extends State<HomeBannersSection> {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        // Network banner image if available
                         if (imageUrl != null && imageUrl.isNotEmpty)
                           CachedNetworkImage(
                             imageUrl: imageUrl,
@@ -207,8 +239,6 @@ class _HomeBannersSectionState extends State<HomeBannersSection> {
         ),
 
         SizedBox(height: 10.h),
-
-        // Dots indicator
         if (count > 1)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

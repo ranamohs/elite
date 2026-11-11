@@ -1,4 +1,5 @@
 import 'package:elite/core/constants/app_colors.dart';
+import 'package:elite/core/constants/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -26,7 +27,6 @@ class CategoryEmptyServicesWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Decorative outer circle with soft gradient/shadow
             Container(
               width: 120.w,
               height: 120.w,
@@ -69,38 +69,32 @@ class CategoryEmptyServicesWidget extends StatelessWidget {
 
             SizedBox(height: 24.h),
 
-            // Title
             Text(
               isArabic
                   ? 'لا توجد خدمات متاحة حالياً'
                   : 'No services available right now',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: AppStyles.styleMedium16(context).copyWith(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w800,
-                color: const Color(0xFF1E293B),
+                color: AppColors.titleDark,
               ),
             ),
-
             SizedBox(height: 8.h),
-
-            // Subtitle / explanation
             Text(
               isArabic
                   ? 'قسم $categoryName قيد التحديث وسنضيف خدمات جديدة قريباً جداً'
                   : 'The $categoryName section is being updated and new services will be added very soon',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: AppStyles.styleRegular14(context).copyWith(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w500,
-                color: const Color(0xFF64748B),
+                color: AppColors.subtitleGrey,
                 height: 1.5,
               ),
             ),
 
             SizedBox(height: 28.h),
-
-            // Action Buttons Row
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -114,7 +108,7 @@ class CategoryEmptyServicesWidget extends StatelessWidget {
                     ),
                     label: Text(
                       isArabic ? 'تحديث' : 'Refresh',
-                      style: TextStyle(
+                      style: AppStyles.styleRegular14(context).copyWith(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
@@ -133,33 +127,6 @@ class CategoryEmptyServicesWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (onBack != null) ...[
-                  SizedBox(width: 12.w),
-                  OutlinedButton(
-                    onPressed: onBack,
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(
-                        color: Color(0xFFCBD5E1),
-                        width: 1,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 18.w,
-                        vertical: 10.h,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14.r),
-                      ),
-                    ),
-                    child: Text(
-                      isArabic ? 'رجوع' : 'Back',
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF475569),
-                      ),
-                    ),
-                  ),
-                ],
               ],
             ),
           ],

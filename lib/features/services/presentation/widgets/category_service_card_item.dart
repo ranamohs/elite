@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:elite/core/constants/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_styles.dart';
 import '../../../../core/constants/end_points.dart';
 import '../../data/models/category_services_model.dart';
 
@@ -27,6 +27,7 @@ class CategoryServiceCardItem extends StatelessWidget {
   final CategoryServiceItem service;
   final int index;
   final bool isArabic;
+  final String? imageUrl;
   final VoidCallback? onTap;
 
   const CategoryServiceCardItem({
@@ -34,6 +35,7 @@ class CategoryServiceCardItem extends StatelessWidget {
     required this.service,
     required this.index,
     required this.isArabic,
+    this.imageUrl,
     this.onTap,
   });
 
@@ -43,7 +45,13 @@ class CategoryServiceCardItem extends StatelessWidget {
     final description =
     isArabic ? service.description.ar : service.description.en;
 
-    String? fullImageUrl = service.thumbnail;
+    String? fullImageUrl = imageUrl ?? service.image ?? service.thumbnail;
+    if (fullImageUrl == null || fullImageUrl.isEmpty) {
+      if (service.gallery.isNotEmpty && service.gallery.first.url != null) {
+        fullImageUrl = service.gallery.first.url;
+      }
+    }
+
     if (fullImageUrl != null && fullImageUrl.isNotEmpty) {
       if (!fullImageUrl.startsWith('http')) {
         fullImageUrl = '${EndPoints.IMAGE_BASE_URL}$fullImageUrl';

@@ -61,7 +61,7 @@ class _AllCategoriesViewState extends State<AllCategoriesView> {
     final isAr = isArabic(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F4F6),
+      backgroundColor:AppColors.homeBackground,
       appBar: PrimaryAppBar(
         title: isAr ? 'كل الأقسام' : 'All Categories',
       ),
@@ -139,8 +139,8 @@ class _AllCategoriesViewState extends State<AllCategoriesView> {
                           textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
                             hintText: isAr
-                                ? 'ابحث في $displayTotal خدمة...'
-                                : 'Search in $displayTotal services...',
+                                ? 'ابحث في $displayTotal قسم...'
+                                : 'Search in $displayTotal category...',
                             hintStyle: TextStyle(
                               fontSize: 13.sp,
                               color: const Color(0xFF9E9E9E),

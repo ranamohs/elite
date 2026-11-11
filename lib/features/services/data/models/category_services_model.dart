@@ -53,6 +53,7 @@ class CategoryServiceItem {
   final ServiceLocalizedText name;
   final ServiceLocalizedText description;
   final ServicePrice? price;
+  final String? image;
   final String? thumbnail;
   final List<ServiceGalleryItem> gallery;
   final ServiceCategoryInfo? category;
@@ -62,12 +63,16 @@ class CategoryServiceItem {
     required this.name,
     required this.description,
     this.price,
+    this.image,
     this.thumbnail,
     required this.gallery,
     this.category,
   });
 
   factory CategoryServiceItem.fromJson(Map<String, dynamic> json) {
+    final image = json['image']?.toString();
+    final thumbnail = json['thumbnail']?.toString() ?? image;
+
     return CategoryServiceItem(
       id: json['id'] ?? 0,
       name: json['name'] != null
@@ -77,7 +82,8 @@ class CategoryServiceItem {
           ? ServiceLocalizedText.fromJson(json['description'])
           : ServiceLocalizedText(ar: '', en: ''),
       price: json['price'] != null ? ServicePrice.fromJson(json['price']) : null,
-      thumbnail: json['thumbnail'],
+      image: image,
+      thumbnail: thumbnail,
       gallery: json['gallery'] != null
           ? List<ServiceGalleryItem>.from(
         json['gallery'].map((x) => ServiceGalleryItem.fromJson(x)),

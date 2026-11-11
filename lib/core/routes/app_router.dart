@@ -1,3 +1,4 @@
+import 'package:elite/features/home/presentation/views/all_categories_view.dart';
 import 'package:elite/features/register/presentation/views/register_view.dart';
 import 'package:elite/features/splash/presentation/views/welcome_view.dart';
 import 'package:elite/features/splash/presentation/views/splash_view.dart';
@@ -15,8 +16,8 @@ import '../../features/settings/views/privacy_policy_view.dart';
 import '../../features/register/presentation/manager/register_cubit.dart';
 import '../../features/settings/views/terms_and_conditions_view.dart';
 
-import '../../features/splash/presentation/views/intro_view.dart';
 import '../../features/app_info/presentation/views/help_and_support_view.dart';
+import '../../features/sub_category/presentation/views/sub_category_services_view.dart';
 import '../services/service_locator.dart';
 
 abstract class AppRouter {
@@ -26,6 +27,7 @@ abstract class AppRouter {
   static const introViewWithButton = '/introViewWithButton';
   static const homePage = '/homePage';
   static const categoryDetailsView = '/categoryDetailsView';
+  static const subCategoryServicesView = '/subCategoryServicesView';
   static const serviceDetailsView = '/serviceDetailsView';
   static const updateProfileView = '/updateProfileView';
   static const helpAndSupportView = '/helpAndSupportView';
@@ -51,8 +53,8 @@ abstract class AppRouter {
     routes: [
       GoRoute(path: '/', builder: (context, state) => const SplashView()),
       GoRoute(path: welcomeView,builder: (context, state) => const WelcomeView()),
-      GoRoute(path: introView,builder: (context, state) => const IntroView()),
       GoRoute(path: loginView, builder: (context, state) => LoginView()),
+      GoRoute(path: allCategoriesView, builder: (context, state) => AllCategoriesView()),
 
       GoRoute(path: registerView, builder: (context, state) => BlocProvider(
         create: (context) => getIt<RegisterCubit>(),
@@ -72,6 +74,23 @@ abstract class AppRouter {
               categoryEnName: enName,
             );
           }),
+      GoRoute(
+          path: subCategoryServicesView,
+          builder: (context, state) {
+            final extras = state.extra as Map<String, dynamic>;
+            final int subCategoryId = extras['subCategoryId'] as int;
+            final String subCategoryArName = extras['subCategoryArName'] as String;
+            final String subCategoryEnName = extras['subCategoryEnName'] as String;
+            final String? mainCategoryArName = extras['mainCategoryArName'] as String?;
+            final String? mainCategoryEnName = extras['mainCategoryEnName'] as String?;
+            return SubCategoryServicesView(
+              subCategoryId: subCategoryId,
+              subCategoryArName: subCategoryArName,
+              subCategoryEnName: subCategoryEnName,
+              mainCategoryArName: mainCategoryArName,
+              mainCategoryEnName: mainCategoryEnName,
+            );
+          }),
 
       GoRoute(path: contactUsView, builder: (context, state) => const ContactUsView()),
       GoRoute(path: helpAndSupportView, builder: (context, state) => const HelpAndSupportView()),
@@ -80,7 +99,6 @@ abstract class AppRouter {
       GoRoute(path: privacyPolicyView, builder: (context, state) => const PrivacyPolicyView()),
       GoRoute(path: changeLanguageView, builder: (context, state) => const ChangeLanguageView()),
       GoRoute(path: updateProfileView, builder: (context, state) => const UpdateProfileView()),
-
 
     ],
   );

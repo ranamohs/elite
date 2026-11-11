@@ -38,9 +38,6 @@ import '../../features/app_info/presentation/manager/contact_us_cubit/contact_us
 import '../../features/app_info/presentation/manager/default_page_cubit/default_page_cubit.dart';
 import '../../features/app_info/presentation/manager/privacy_cubit/privacy_cubit.dart';
 import '../../features/app_info/presentation/manager/terms_cubit/terms_cubit.dart';
-import '../../features/home/data/repos/recent_shops_repo/recent_shops_repo.dart';
-import '../../features/home/data/repos/recent_shops_repo/recent_shops_repo_impl.dart';
-import '../../features/home/presentation/manager/recent_shops_cubit/recent_shops_cubit.dart';
 
 
 
@@ -79,7 +76,6 @@ void setupServiceLocator() {
     categoriesRepo: getIt<CategoriesRepo>(),
   ));
 
-
   // Register dependencies
   getIt.registerSingleton<RegisterRepoImpl>(
     RegisterRepoImpl(
@@ -107,17 +103,6 @@ void setupServiceLocator() {
       loginRepo: getIt<LoginRepoImpl>(),
     ),
   );
-
-  // Featured Categories dependencies
-  getIt.registerLazySingleton<RcenetShopsRepo>(
-          () => RcenetShopsRepoImpl(
-        dioConsumer: getIt<DioConsumer>(),
-        networkCubit: getIt<NetworkConnectionCubit>(),
-      ));
-  getIt.registerFactory<RcenetShopsCubit>(() => RcenetShopsCubit(
-    rcenetShopsRepo: getIt<RcenetShopsRepo>(),
-  ));
-
 
   getIt.registerLazySingleton<AboutUsRepo>(
         () => AboutUsRepoImpl(

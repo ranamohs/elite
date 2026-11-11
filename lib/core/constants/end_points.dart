@@ -3,11 +3,8 @@ class EndPoints {
 
   static const String IMAGE_BASE_URL = 'http://elitefm-eg.online';
   static const String banners = "/banners";
-  static const String categories = "/categories";
-  static const String recentShops = "/shops/recent";
-  static const String shops = "/shops";
-  static const String searchShops = "/shops/search";
-  static const String wishlist = '/wishlist';
+  static const String categories = "/main-categories";
+
   static const String requestService = "/request";
   static const String deleteAccount = "/profile/delete";
   static const String logout = "/logout";

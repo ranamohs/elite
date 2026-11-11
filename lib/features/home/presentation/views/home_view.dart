@@ -5,13 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/functions/internet_connection_status_snack_bar.dart';
 import '../../../../core/state_management/network_connection_cubit/network_connection_cubit.dart';
 import '../../../../core/state_management/network_connection_cubit/network_connection_state.dart';
 import '../manager/banners_cubit/banners_cubit.dart';
 import '../manager/categories_cubit/categories_cubit.dart';
-import '../manager/recent_shops_cubit/recent_shops_cubit.dart';
 
 import '../widgets/home_banners_section.dart';
 import '../widgets/home_contract_section.dart';
@@ -45,7 +43,6 @@ class _HomeViewState extends State<HomeView> {
           onRefresh: () async {
             context.read<BannersCubit>().getBanners();
             context.read<CategoriesCubit>().refreshCategories();
-            context.read<RcenetShopsCubit>().refreshRcenetShops();
           },
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(

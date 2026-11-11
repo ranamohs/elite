@@ -8,9 +8,8 @@ import 'package:elite/features/home/presentation/manager/categories_cubit/catego
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider, MultiBlocProvider;
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // أضف هذا الاستيراد
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../features/home/presentation/manager/banners_cubit/banners_cubit.dart';
-import '../features/home/presentation/manager/recent_shops_cubit/recent_shops_cubit.dart';
 
 class EliteApp extends StatelessWidget {
   const EliteApp({super.key});
@@ -39,9 +38,6 @@ class EliteApp extends StatelessWidget {
             ),
             BlocProvider<CategoriesCubit>(
               create: (_) => getIt<CategoriesCubit>()..getCategories(),
-            ),
-            BlocProvider<RcenetShopsCubit>(
-              create: (_) => getIt<RcenetShopsCubit>()..getRcenetShops(),
             ),
 
 

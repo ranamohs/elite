@@ -14,6 +14,7 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/routes/app_router.dart';
 import '../../../../core/constants/app_styles.dart';
 import 'category_card_item.dart';
+import 'home_empty_categories_widget.dart';
 
 class ServiceModelItem {
   final String title;
@@ -81,7 +82,7 @@ class HomeCategoriesSection extends StatelessWidget {
         final displayCategories = categories.take(6).toList();
         final displayTotal = totalCount > 0
             ? totalCount
-            : (categories.isNotEmpty ? categories.length : 15);
+            : (categories.isNotEmpty ? categories.length : 0);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -149,7 +150,12 @@ class HomeCategoriesSection extends StatelessWidget {
                 },
               )
             else if (displayCategories.isEmpty)
-              const SizedBox.shrink()
+              HomeEmptyCategoriesWidget(
+                isArabic: isAr,
+                onRefresh: () {
+                  context.read<CategoriesCubit>().getCategories();
+                },
+              )
             else
               GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
