@@ -60,7 +60,7 @@ class _HomeViewState extends State<HomeView> {
                 SizedBox(height: 20.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 18.w),
-                  child: const HomeServicesSection(),
+                  child: const HomeCategoriesSection(),
                 ),
                 SizedBox(height: 20.h),
                 Padding(

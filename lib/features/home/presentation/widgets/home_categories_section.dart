@@ -25,12 +25,12 @@ class ServiceModelItem {
   });
 }
 
-class HomeServicesSection extends StatelessWidget {
+class HomeCategoriesSection extends StatelessWidget {
   final List<ServiceModelItem>? customServices;
   final void Function(ServiceModelItem service)? onServiceTap;
   final VoidCallback? onViewAllTap;
 
-  const HomeServicesSection({
+  const HomeCategoriesSection({
     super.key,
     this.customServices,
     this.onServiceTap,
