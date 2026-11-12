@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_styles.dart';
 import '../../../../core/constants/end_points.dart';
 import '../../data/models/sub_category_model.dart';
 
@@ -146,10 +147,10 @@ class SubCategoryCardItem extends StatelessWidget {
                         title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style:AppStyles.styleMedium16(context).copyWith(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w800,
-                          color: const Color(0xFF1E293B),
+                          color: AppColors.titleDark,
                           height: 1.25,
                         ),
                       ),
@@ -158,15 +159,13 @@ class SubCategoryCardItem extends StatelessWidget {
                         description,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style:AppStyles.styleMedium16(context).copyWith(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
-                          color: const Color(0xFF64748B),
-                          height: 1.2,
+                          color: AppColors.subtitleGrey,
                         ),
                       ),
                       SizedBox(height: 6.h),
-                      // Light green rounded badge
                       Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 10.w,
@@ -178,10 +177,10 @@ class SubCategoryCardItem extends StatelessWidget {
                         ),
                         child: Text(
                           badgeText,
-                          style: TextStyle(
+                          style:AppStyles.styleMedium16(context).copyWith(
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFF558B2F),
+                            color: AppColors.homeContractBadgeGreen,
                           ),
                         ),
                       ),
@@ -190,12 +189,8 @@ class SubCategoryCardItem extends StatelessWidget {
                 ),
 
                 SizedBox(width: 8.w),
-
-                // 3) Chevron Arrow
                 Icon(
-                  isArabic
-                      ? Icons.arrow_back_ios_new_rounded
-                      : Icons.arrow_forward_ios_rounded,
+                  Icons.arrow_forward_ios_rounded,
                   color: const Color(0xFF94A3B8),
                   size: 15.sp,
                 ),

@@ -1,5 +1,8 @@
+import 'package:elite/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../../core/constants/app_styles.dart';
 
 class SubCategoryBottomBanner extends StatelessWidget {
   final bool isArabic;
@@ -17,7 +20,7 @@ class SubCategoryBottomBanner extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F8E9), // Light pastel green background
+        color: const Color(0xFFF1F8E9),
         borderRadius: BorderRadius.circular(14.r),
       ),
       child: Center(
@@ -26,10 +29,10 @@ class SubCategoryBottomBanner extends StatelessWidget {
               ? 'مش عارف المشكلة فين؟ اطلب معاينة وفني يحددها'
               : 'Don’t know the problem? Request an inspection',
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style:AppStyles.styleMedium16(context).copyWith(
             fontSize: 13.sp,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF558B2F),
+            color: AppColors.homeContractBadgeGreen,
           ),
         ),
       ),

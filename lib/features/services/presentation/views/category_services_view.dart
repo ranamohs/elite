@@ -1,4 +1,5 @@
 import 'package:elite/core/constants/app_colors.dart';
+import 'package:elite/core/constants/app_styles.dart';
 import 'package:elite/core/databases/api/dio_consumer.dart';
 import 'package:elite/core/databases/cache/secure_storage_helper.dart';
 import 'package:elite/core/functions/is_arabic.dart';
@@ -116,118 +117,74 @@ class _CategoryServicesContentState extends State<_CategoryServicesContent> {
     final title = isAr ? widget.categoryArName : widget.categoryEnName;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.homeBackground,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF8FAFC),
+        backgroundColor: AppColors.homeBackground,
         elevation: 0,
         scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,
         titleSpacing: 18.w,
-        title: Directionality(
-          textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              InkWell(
-                borderRadius: BorderRadius.circular(20.r),
-                onTap: () => Navigator.of(context).maybePop(),
-                child: Padding(
-                  padding: EdgeInsets.all(4.w),
-                  child: Icon(
-                    isAr
-                        ? Icons.arrow_forward_ios_rounded
-                        : Icons.arrow_back_ios_rounded,
-                    size: 19.sp,
-                    color: const Color(0xFF0F172A),
-                  ),
-                ),
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF0F172A),
-                ),
-              ),
-            ],
-          ),
-        ),
-        centerTitle: false,
-      ),
-      body: Directionality(
-        textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // Level / Step Subtitle matching design: 'المستوى 2 من 4 • اختار القسم الفرعي'
-            Padding(
-              padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 14.h),
-              child: Text(
-                isAr
-                    ? 'المستوى 2 من 4 • اختار القسم الفرعي'
-                    : 'Level 2 of 4 • Choose sub-category',
-                style: TextStyle(
-                  fontSize: 13.5.sp,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF7CB342),
+            InkWell(
+              borderRadius: BorderRadius.circular(20.r),
+              onTap: () => Navigator.of(context).maybePop(),
+              child: Padding(
+                padding: EdgeInsets.all(4.w),
+                child: Icon(
+              Icons.arrow_back_ios_rounded,
+                  size: 19.sp,
+                  color: AppColors.homeContractBadgeGreen,
                 ),
               ),
             ),
+            SizedBox(width: 8.w),
+            Text(
+              title,
+              style:AppStyles.styleMedium16(context).copyWith(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w800,
+                color: AppColors.homeContractBadgeGreen,
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: BlocBuilder<CategoryServicesCubit, CategoryServicesState>(
+              builder: (context, state) {
+                if (state is CategoryServicesLoading) {
+                  return _buildLoadingShimmer();
+                }
 
-            // Services List
-            Expanded(
-              child: BlocBuilder<CategoryServicesCubit, CategoryServicesState>(
-                builder: (context, state) {
-                  if (state is CategoryServicesLoading) {
-                    return _buildLoadingShimmer();
-                  }
-
-                  if (state is CategoryServicesFailure) {
-                    return Center(
-                      child: RetryWidget(
-                        message: state.failure.errMessage,
-                        onPressed: () {
-                          context
-                              .read<CategoryServicesCubit>()
-                              .refreshServices(widget.categoryId);
-                        },
-                      ),
-                    );
-                  }
-
-                  List<CategoryServiceItem> services = [];
-                  bool isLoadingMore = false;
-
-                  if (state is CategoryServicesSuccess) {
-                    services = state.servicesModel.data;
-                  } else if (state is CategoryServicesLoadingMore) {
-                    services = state.servicesModel.data;
-                    isLoadingMore = true;
-                  }
-
-                  if (services.isEmpty) {
-                    return RefreshIndicator(
-                      color: AppColors.homeHeaderGreen,
-                      onRefresh: () async {
+                if (state is CategoryServicesFailure) {
+                  return Center(
+                    child: RetryWidget(
+                      message: state.failure.errMessage,
+                      onPressed: () {
                         context
                             .read<CategoryServicesCubit>()
                             .refreshServices(widget.categoryId);
                       },
-                      child: CategoryEmptyServicesWidget(
-                        isArabic: isAr,
-                        categoryName: title,
-                        onRefresh: () {
-                          context
-                              .read<CategoryServicesCubit>()
-                              .refreshServices(widget.categoryId);
-                        },
-                        onBack: () => Navigator.of(context).maybePop(),
-                      ),
-                    );
-                  }
+                    ),
+                  );
+                }
 
+                List<CategoryServiceItem> services = [];
+                bool isLoadingMore = false;
+
+                if (state is CategoryServicesSuccess) {
+                  services = state.servicesModel.data;
+                } else if (state is CategoryServicesLoadingMore) {
+                  services = state.servicesModel.data;
+                  isLoadingMore = true;
+                }
+
+                if (services.isEmpty) {
                   return RefreshIndicator(
                     color: AppColors.homeHeaderGreen,
                     onRefresh: () async {
@@ -235,60 +192,79 @@ class _CategoryServicesContentState extends State<_CategoryServicesContent> {
                           .read<CategoryServicesCubit>()
                           .refreshServices(widget.categoryId);
                     },
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      physics: const AlwaysScrollableScrollPhysics(
-                        parent: BouncingScrollPhysics(),
-                      ),
-                      padding: EdgeInsets.fromLTRB(18.w, 4.h, 18.w, 24.h),
-                      itemCount: services.length + (isLoadingMore ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index == services.length) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 16.h),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: AppColors.homeHeaderGreen,
-                              ),
-                            ),
-                          );
-                        }
-
-                        final item = services[index];
-                        String? imageUrl = item.image ?? item.thumbnail;
-                        if (imageUrl == null || imageUrl.isEmpty) {
-                          if (item.gallery.isNotEmpty &&
-                              item.gallery.first.url != null) {
-                            imageUrl = item.gallery.first.url;
-                          }
-                        }
-
-                        return CategoryServiceCardItem(
-                          service: item,
-                          index: index,
-                          isArabic: isAr,
-                          imageUrl: imageUrl,
-                          onTap: () {
-                            GoRouter.of(context).push(
-                              AppRouter.subCategoryServicesView,
-                              extra: {
-                                'subCategoryId': item.id,
-                                'subCategoryArName': item.name.ar,
-                                'subCategoryEnName': item.name.en,
-                                'mainCategoryArName': widget.categoryArName,
-                                'mainCategoryEnName': widget.categoryEnName,
-                              },
-                            );
-                          },
-                        );
+                    child: CategoryEmptyServicesWidget(
+                      isArabic: isAr,
+                      categoryName: title,
+                      onRefresh: () {
+                        context
+                            .read<CategoryServicesCubit>()
+                            .refreshServices(widget.categoryId);
                       },
+                      onBack: () => Navigator.of(context).maybePop(),
                     ),
                   );
-                },
-              ),
+                }
+
+                return RefreshIndicator(
+                  color: AppColors.homeHeaderGreen,
+                  onRefresh: () async {
+                    context
+                        .read<CategoryServicesCubit>()
+                        .refreshServices(widget.categoryId);
+                  },
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics(),
+                    ),
+                    padding: EdgeInsets.fromLTRB(18.w, 4.h, 18.w, 24.h),
+                    itemCount: services.length + (isLoadingMore ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == services.length) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.homeHeaderGreen,
+                            ),
+                          ),
+                        );
+                      }
+
+                      final item = services[index];
+                      String? imageUrl = item.image ?? item.thumbnail;
+                      if (imageUrl == null || imageUrl.isEmpty) {
+                        if (item.gallery.isNotEmpty &&
+                            item.gallery.first.url != null) {
+                          imageUrl = item.gallery.first.url;
+                        }
+                      }
+
+                      return CategoryServiceCardItem(
+                        service: item,
+                        index: index,
+                        isArabic: isAr,
+                        imageUrl: imageUrl,
+                        onTap: () {
+                          GoRouter.of(context).push(
+                            AppRouter.subCategoryServicesView,
+                            extra: {
+                              'subCategoryId': item.id,
+                              'subCategoryArName': item.name.ar,
+                              'subCategoryEnName': item.name.en,
+                              'mainCategoryArName': widget.categoryArName,
+                              'mainCategoryEnName': widget.categoryEnName,
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
