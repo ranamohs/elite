@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:elite/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -76,7 +78,7 @@ class RegisterView extends StatelessWidget {
                                 ),
                                 SizedBox(width: 6.w),
                                 Text(
-                                  'إنشاء حساب',
+                                  AppStrings.createAccount.tr(),
                                   style: AppStyles.styleRegular16(context).copyWith(
                                     color: AppColors.titleDark,
                                     fontWeight: FontWeight.w700,
@@ -108,10 +110,7 @@ class RegisterView extends StatelessWidget {
                             ),
                             textAlign: TextAlign.right,
                           ),
-
                           SizedBox(height: 22.h),
-
-                          // Form
                           const RegisterForm(),
                         ],
                       ),

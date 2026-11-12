@@ -1,3 +1,6 @@
+import 'package:elite/features/splash/presentation/views/intro_view.dart';
+
+import '../../features/category_catalog/presentation/views/category_catalog_view.dart';
 import 'package:elite/features/home/presentation/views/all_categories_view.dart';
 import 'package:elite/features/register/presentation/views/register_view.dart';
 import 'package:elite/features/splash/presentation/views/welcome_view.dart';
@@ -28,6 +31,7 @@ abstract class AppRouter {
   static const homePage = '/homePage';
   static const categoryDetailsView = '/categoryDetailsView';
   static const subCategoryServicesView = '/subCategoryServicesView';
+  static const categoryCatalogView = '/categoryCatalogView';
   static const serviceDetailsView = '/serviceDetailsView';
   static const updateProfileView = '/updateProfileView';
   static const helpAndSupportView = '/helpAndSupportView';
@@ -53,6 +57,8 @@ abstract class AppRouter {
     routes: [
       GoRoute(path: '/', builder: (context, state) => const SplashView()),
       GoRoute(path: welcomeView,builder: (context, state) => const WelcomeView()),
+      GoRoute(path: introView,builder: (context, state) => const IntroView()),
+
       GoRoute(path: loginView, builder: (context, state) => LoginView()),
       GoRoute(path: allCategoriesView, builder: (context, state) => AllCategoriesView()),
 
@@ -92,6 +98,13 @@ abstract class AppRouter {
             );
           }),
 
+      GoRoute(path: categoryCatalogView, builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>;
+        return CategoryCatalogView(categoryId: extra['categoryId'] as int,
+            arName: extra['arName'] as String, enName: extra['enName'] as String,
+            parentArName: extra['parentArName'] as String?, parentEnName: extra['parentEnName'] as String?,
+            mainArName: extra['mainArName'] as String?, mainEnName: extra['mainEnName'] as String?);
+      }),
       GoRoute(path: contactUsView, builder: (context, state) => const ContactUsView()),
       GoRoute(path: helpAndSupportView, builder: (context, state) => const HelpAndSupportView()),
       GoRoute(path: aboutUsView, builder: (context, state) => const AboutUsView()),

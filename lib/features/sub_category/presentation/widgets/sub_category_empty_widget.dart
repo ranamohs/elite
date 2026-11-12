@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_styles.dart';
 
 class SubCategoryEmptyWidget extends StatelessWidget {
   final bool isArabic;
@@ -46,10 +47,10 @@ class SubCategoryEmptyWidget extends StatelessWidget {
             Text(
               isArabic ? 'لا توجد عناصر متاحة' : 'No items available',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style:AppStyles.styleMedium16(context).copyWith(
                 fontSize: 17.sp,
                 fontWeight: FontWeight.w800,
-                color: const Color(0xFF1E293B),
+                color: AppColors.titleDark,
               ),
             ),
             SizedBox(height: 8.h),
@@ -58,10 +59,10 @@ class SubCategoryEmptyWidget extends StatelessWidget {
                   ? 'قسم $subCategoryName قيد التحديث وسنضيف بنود جديدة قريباً'
                   : 'Section $subCategoryName is being updated and new items will be added soon',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style:AppStyles.styleMedium16(context).copyWith(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w500,
-                color: const Color(0xFF64748B),
+                color: AppColors.subtitleGrey,
                 height: 1.4,
               ),
             ),
@@ -79,7 +80,7 @@ class SubCategoryEmptyWidget extends StatelessWidget {
                     ),
                     label: Text(
                       isArabic ? 'تحديث' : 'Refresh',
-                      style: TextStyle(
+                      style:AppStyles.styleMedium16(context).copyWith(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
@@ -98,33 +99,6 @@ class SubCategoryEmptyWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (onBack != null) ...[
-                  SizedBox(width: 12.w),
-                  OutlinedButton(
-                    onPressed: onBack,
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(
-                        color: Color(0xFFCBD5E1),
-                        width: 1,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 18.w,
-                        vertical: 10.h,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14.r),
-                      ),
-                    ),
-                    child: Text(
-                      isArabic ? 'رجوع' : 'Back',
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF475569),
-                      ),
-                    ),
-                  ),
-                ],
               ],
             ),
           ],

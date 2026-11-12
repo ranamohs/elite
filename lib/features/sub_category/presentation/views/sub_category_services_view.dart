@@ -1,3 +1,5 @@
+import 'package:go_router/go_router.dart';
+import '../../../../core/routes/app_router.dart';
 import 'package:elite/core/constants/app_colors.dart';
 import 'package:elite/core/databases/api/dio_consumer.dart';
 import 'package:elite/core/databases/cache/secure_storage_helper.dart';
@@ -147,7 +149,7 @@ class _SubCategoryServicesContentState
                 child: Padding(
                   padding: EdgeInsets.all(4.w),
                   child: Icon(
-                  Icons.arrow_back_ios_rounded,
+                    Icons.arrow_back_ios_rounded,
                     size: 19.sp,
                     color: AppColors.homeContractBadgeGreen,
                   ),
@@ -157,7 +159,7 @@ class _SubCategoryServicesContentState
               Text(
                 title,
                 style:AppStyles.styleMedium16(context).copyWith(
-                  fontSize: 20.sp,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.w800,
                   color: AppColors.homeContractBadgeGreen,
                 ),
@@ -254,7 +256,11 @@ class _SubCategoryServicesContentState
                         item: item,
                         index: index,
                         isArabic: isAr,
-                        onTap: () {},
+                        onTap: () => context.push(AppRouter.categoryCatalogView, extra: {
+                          'categoryId': item.id, 'arName': item.name.ar, 'enName': item.name.en,
+                          'parentArName': widget.subCategoryArName, 'parentEnName': widget.subCategoryEnName,
+                          'mainArName': widget.mainCategoryArName, 'mainEnName': widget.mainCategoryEnName,
+                        }),
                       );
                     },
                   ),

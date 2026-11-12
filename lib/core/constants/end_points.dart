@@ -1,4 +1,6 @@
 class EndPoints {
+  static String categoryProducts(int id) => '/$id/products';
+  static String categoryServices(int id) => '/$id/services';
   static const String baserUrl = "http://elitefm-eg.online/api";
 
   static const String IMAGE_BASE_URL = 'http://elitefm-eg.online';

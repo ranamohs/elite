@@ -1,3 +1,5 @@
+import '../../features/category_catalog/data/repos/catalog_repo.dart';
+import '../../features/category_catalog/data/repos/catalog_repo_impl.dart';
 import 'package:elite/core/databases/api/dio_consumer.dart';
 import 'package:elite/core/databases/cache/app_data_manager.dart';
 import 'package:elite/core/databases/cache/cache_helper.dart';
@@ -59,6 +61,11 @@ void setupServiceLocator() {
   getIt.registerLazySingleton<NetworkConnectionCubit>(
         () => NetworkConnectionCubit(getIt<NetworkInfo>()),
   );
+
+  getIt.registerLazySingleton<CatalogRepo>(() => CatalogRepoImpl(
+    dioConsumer: getIt<DioConsumer>(), networkCubit: getIt<NetworkConnectionCubit>(),
+    secureStorageHelper: getIt<SecureStorageHelper>(),
+  ));
 
   // Banners dependencies
   getIt.registerLazySingleton<BannersRepo>(() => BannersRepoImpl(
