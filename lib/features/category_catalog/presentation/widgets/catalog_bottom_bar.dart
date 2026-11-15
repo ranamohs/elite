@@ -52,7 +52,7 @@ class CatalogBottomBar extends StatelessWidget {
               onPressed: onContinue,
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,
-                minimumSize: Size(140.w, 44.h),
+                minimumSize: Size(140.w, 54.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.r),
                 ),

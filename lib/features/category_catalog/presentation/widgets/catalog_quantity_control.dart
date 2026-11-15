@@ -51,9 +51,7 @@ class CatalogQuantityControl extends StatelessWidget {
           ),
         ),
         child: Text(
-          item.isProduct
-              ? text('أضف للسلة', 'Add to cart')
-              : text('إضافة', 'Add'),
+         text('إضافة', 'Add'),
           style: TextStyle(fontSize: 11.sp),
         ),
       );

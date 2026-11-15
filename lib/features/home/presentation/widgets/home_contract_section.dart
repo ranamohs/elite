@@ -108,7 +108,7 @@ class HomeContractSection extends StatelessWidget {
                         ),
                         child: Text(
                           'اطلب العقد',
-                          style: TextStyle(
+                          style: AppStyles.styleRegular14(context).copyWith(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
