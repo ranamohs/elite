@@ -5,11 +5,13 @@ import 'orders_history_helpers.dart';
 
 class OrdersHistoryTabs extends StatelessWidget {
   final bool previous;
+  final bool compact;
   final int currentCount;
   final bool hasMore;
   final ValueChanged<bool> onChanged;
   const OrdersHistoryTabs({
     super.key,
+    this.compact = false,
     required this.previous,
     required this.currentCount,
     required this.hasMore,
@@ -22,8 +24,12 @@ class OrdersHistoryTabs extends StatelessWidget {
         child: tab(
           ordersText(
             context,
-            'الحالية ($currentCount${hasMore ? '+' : ''})',
-            'Current ($currentCount${hasMore ? '+' : ''})',
+            compact
+                ? 'الحالية'
+                : 'الحالية ($currentCount${hasMore ? '+' : ''})',
+            compact
+                ? 'Current'
+                : 'Current ($currentCount${hasMore ? '+' : ''})',
           ),
           !previous,
               () => onChanged(false),
@@ -44,12 +50,13 @@ class OrdersHistoryTabs extends StatelessWidget {
     style: OutlinedButton.styleFrom(
       backgroundColor: selected ? AppColors.primaryColor : Colors.white,
       foregroundColor: selected ? Colors.white : AppColors.titleDark,
-      minimumSize: Size(0, 42.h),
+      minimumSize: Size(0, compact ? 30.h : 42.h),
+      padding: EdgeInsets.symmetric(horizontal: compact ? 8.w : 16.w),
       side: BorderSide(
         color: selected ? AppColors.primaryColor : AppColors.unselectedBorder,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
     ),
-    child: Text(title, style: TextStyle(fontSize: 12.sp)),
+    child: Text(title, style: TextStyle(fontSize: compact ? 10.sp : 12.sp)),
   );
 }

@@ -191,35 +191,6 @@ class _OrderAddressViewState extends State<OrderAddressView> {
             ),
             field(0, checkoutText(context, 'المنطقة', 'Area')),
             field(1, checkoutText(context, 'الشارع', 'Street')),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: field(2, checkoutText(context, 'عمارة', 'Building')),
-                ),
-                SizedBox(width: 8.w),
-                Expanded(
-                  child: field(3, checkoutText(context, 'الدور', 'Floor')),
-                ),
-                SizedBox(width: 8.w),
-                Expanded(
-                  child: field(4, checkoutText(context, 'شقة', 'Apartment')),
-                ),
-              ],
-            ),
-            SizedBox(height: 12.h),
-            Wrap(
-              spacing: 8.w,
-              children: List.generate(
-                3,
-                    (i) => ChoiceChip(
-                  label: Text(labels[i]),
-                  selected: label == i,
-                  onSelected: (_) => setState(() => label = i),
-                  selectedColor: AppColors.primaryColor,
-                ),
-              ),
-            ),
           ],
         ),
       ),

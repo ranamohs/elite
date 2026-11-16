@@ -1,133 +1,150 @@
-import 'package:easy_localization/easy_localization.dart';
-import 'package:elite/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../core/constants/app_assets.dart';
-import '../../../core/constants/app_strings.dart';
-import '../../../core/constants/app_styles.dart';
-import '../../../core/functions/navigation.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../core/databases/cache/cache_helper.dart';
+import '../../../core/functions/is_arabic.dart';
 import '../../../core/routes/app_router.dart';
 import '../../../core/services/service_locator.dart';
-import '../../account/data/repos/delete_account_repo/delete_account_repo_impl.dart';
-import '../../account/presentation/manager/delete_account_cubit/delete_account_cubit.dart';
-import '../../account/presentation/widgets/delete_account_dialog.dart';
+import '../../account/presentation/widgets/account_actions.dart';
+import '../../account/presentation/widgets/account_ui.dart';
 
-class SettingsView extends StatelessWidget {
+class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
-
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title:  Text(
-          AppStrings.settings.tr(),
-          style: AppStyles.styleMedium22(context),
+  State<SettingsView> createState() => _SettingsViewState();
+}
+
+class _SettingsViewState extends State<SettingsView> {
+  final cache = getIt<CacheHelper>();
+  late final Map<String, bool> preferences;
+  final busy = <String>{};
+  @override
+  void initState() {
+    super.initState();
+    preferences = {
+      for (final key in ['orders', 'offers', 'sms'])
+        key:
+        cache.getData(key: 'notification_preference.$key') as bool? ??
+            key != 'sms',
+    };
+  }
+
+  Future<void> toggle(String key, bool value) async {
+    if (busy.contains(key)) return;
+    final old = preferences[key]!;
+    setState(() {
+      busy.add(key);
+      preferences[key] = value;
+    });
+    try {
+      if (!await cache.saveData(
+        key: 'notification_preference.$key',
+        value: value,
+      ))
+        throw StateError('Preference save failed');
+    } catch (_) {
+      if (mounted) {
+        setState(() => preferences[key] = old);
+        accountInfo(
+          context,
+          'تعذر حفظ الاختيار، حاولي مرة أخرى',
+          'Could not save your preference. Try again.',
+        );
+      }
+    } finally {
+      if (mounted) setState(() => busy.remove(key));
+    }
+  }
+
+  Widget section(String title) => Padding(
+    padding: EdgeInsets.only(top: 20.h, bottom: 10.h),
+    child: Text(
+      title,
+      style: TextStyle(color: AppColors.subtitleGrey, fontSize: 12.sp),
+    ),
+  );
+  Widget notification(String key, String title) => Padding(
+    padding: EdgeInsetsDirectional.only(start: 12.w),
+    child: Row(
+      children: [
+        Expanded(
+          child: Text(title, style: TextStyle(fontSize: 12.sp)),
         ),
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _buildSectionHeader(AppStrings.general.tr() , context),
-          _buildSettingItem(
-            context: context,
+        Switch(
+          value: preferences[key]!,
+          onChanged: busy.contains(key) ? null : (value) => toggle(key, value),
+          activeTrackColor: AppColors.primaryColor,
+        ),
+      ],
+    ),
+  );
+  @override
+  Widget build(BuildContext context) => AccountScaffold(
+    title: accountText(context, 'الإعدادات', 'Settings'),
+    body: ListView(
+      padding: EdgeInsets.fromLTRB(18.w, 0, 18.w, 24.h),
+      children: [
+        section(accountText(context, 'اللغة', 'Language')),
+        AccountCard(
+          padding: EdgeInsets.zero,
+          child: AccountMenuTile(
             icon: Icons.language,
-            title: AppStrings.changeLanguage.tr(),
-            onTap: () {
-              customPush(context, AppRouter.changeLanguageView);
-            },
+            title: accountText(context, 'لغة التطبيق', 'App language'),
+            onTap: () => context.push(AppRouter.changeLanguageView),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  isArabic(context) ? 'العربية' : 'English',
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: AppColors.badgeTextGreen,
+                  ),
+                ),
+                 Icon(Icons.arrow_forward_ios, size: 12.sp),
+              ],
+            ),
           ),
-          _buildSettingItem(
-            context: context,
-            icon: Icons.privacy_tip_outlined,
-            title: AppStrings.privacyPolicy.tr(),
-            onTap: () {
-              customPush(context, AppRouter.privacyPolicyView);
-            },
-          ),
-          _buildSettingItem(
-            context: context,
-            icon: Icons.info_outline,
-            title: AppStrings.aboutUs.tr(),
-            onTap: () {
-              customPush(context, AppRouter.aboutUsView);
-            },
-          ),
-
-          const SizedBox(height: 24),
-
-          _buildSectionHeader(AppStrings.account.tr() , context),
-          _buildSettingItem(
-            context: context,
-            icon: Icons.description_outlined,
-            title: AppStrings.termsAndConditions.tr(),
-            onTap: () {
-              customPush(context, AppRouter.termsAndConditionsView);
-            },
-          ),
-          _buildSettingItem(
-            context: context,
-            icon: Icons.delete_outline,
-            title: AppStrings.deleteAccount.tr(),
-            titleColor: Colors.red,
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return BlocProvider(
-                    create: (_) => DeleteAccountCubit(
-                      deleteAccountRepo: getIt<DeleteAccountRepoImpl>(),
-                    ),
-                    child: DeleteAccountDialog(),
-                  );
-                },
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(String title  , BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-      child: Text(
-        title,
-        style: AppStyles.styleSemiBold18(context),
-      ),
-    );
-  }
-
-  Widget _buildSettingItem({
-    required BuildContext context,
-    required IconData icon,
-    required String title,
-    Color titleColor = Colors.black,
-    required VoidCallback onTap,
-
-  }) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      elevation: 0,
-      color: Colors.white,
-      child: ListTile(
-        leading: Icon(icon, color: Colors.grey[700]),
-        title: Text(
-          title,
-          style: AppStyles.styleSemiBold16(context),
-
         ),
-        trailing: const Icon(
-          Icons.arrow_forward_ios,
-          size: 16,
-          color: Colors.grey,
+        section(accountText(context, 'عام', 'General')),
+        AccountCard(
+          padding: EdgeInsets.zero,
+          child: Column(
+            children: [
+              AccountMenuTile(
+                icon: Icons.lock_outline,
+                title: accountText(context, 'سياسة الخصوصية', 'Privacy policy'),
+                onTap: () => context.push(AppRouter.privacyPolicyView),
+              ),
+              const Divider(height: 1),
+              AccountMenuTile(
+                icon: Icons.info_outline,
+                title: accountText(context, 'عن التطبيق', 'About the app'),
+                onTap: () => context.push(AppRouter.aboutUsView),
+              ),
+              const Divider(height: 1),
+              // AccountMenuTile(
+              //   icon: Icons.star_outline,
+              //   title: accountText(context, 'قيّم التطبيق', 'Rate the app'),
+              //   onTap: () => accountInfo(
+              //     context,
+              //     'رابط التطبيق على المتجر مش متاح حاليًا',
+              //     'The app store link is not available yet',
+              //   ),
+              // ),
+              // const Divider(height: 1),
+              AccountMenuTile(
+                icon: Icons.delete_outline,
+                title: accountText(context, 'حذف الحساب', 'Delete account'),
+                destructive: true,
+                onTap: () => showAccountDeletion(context),
+                trailing: const SizedBox.shrink(),
+              ),
+            ],
+          ),
         ),
-        onTap: onTap,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      ),
-    );
-  }
+      ],
+    ),
+  );
 }

@@ -1,4 +1,5 @@
 class EndPoints {
+  static String orderHistoryDetails(int id) => '/orders/history/$id';
   static const String ordersHistory = '/orders/history';
   static const String minusFromCart = '/cart/minusFromCart';
   static String removeCartItem(int id) => '/cart/$id';

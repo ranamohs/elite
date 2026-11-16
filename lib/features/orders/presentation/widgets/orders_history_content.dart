@@ -3,10 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/retry_widget.dart';
 import '../../data/models/orders_history_model.dart';
+import '../views/order_history_details_view.dart';
 import 'order_history_card.dart';
-import 'order_history_details.dart';
 import 'orders_history_helpers.dart';
 import 'orders_history_tabs.dart';
+import 'orders_history_empty.dart';
 
 class OrdersHistoryContent extends StatelessWidget {
   final OrdersHistoryModel model;
@@ -14,7 +15,7 @@ class OrdersHistoryContent extends StatelessWidget {
   final String? error;
   final ValueChanged<bool> onTabChanged;
   final Future<void> Function() onRefresh;
-  final VoidCallback onRetry, onLoadMore;
+  final VoidCallback onRetry, onLoadMore, onRequestService;
   const OrdersHistoryContent({
     super.key,
     required this.model,
@@ -24,19 +25,16 @@ class OrdersHistoryContent extends StatelessWidget {
     required this.onRefresh,
     required this.onRetry,
     required this.onLoadMore,
+    required this.onRequestService,
     this.error,
   });
 
   Widget card(BuildContext context, OrderHistoryItem order) => OrderHistoryCard(
     order: order,
-    onDetails: () => showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.sizeOf(context).height * .8,
+    onDetails: () => Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => OrderHistoryDetailsView(orderId: order.id),
       ),
-      builder: (_) => OrderHistoryDetails(order: order),
     ),
   );
 
@@ -47,11 +45,17 @@ class OrdersHistoryContent extends StatelessWidget {
     final hasMore = model.currentPage < model.lastPage;
     return Column(
       children: [
-        OrdersHistoryTabs(
-          previous: previous,
-          currentCount: current.length,
-          hasMore: hasMore,
-          onChanged: onTabChanged,
+        Center(
+          child: SizedBox(
+            width: model.orders.isEmpty ? 170.w : double.infinity,
+            child: OrdersHistoryTabs(
+              previous: previous,
+              currentCount: current.length,
+              hasMore: hasMore,
+              compact: model.orders.isEmpty,
+              onChanged: onTabChanged,
+            ),
+          ),
         ),
         SizedBox(height: 12.h),
         Expanded(
@@ -78,31 +82,9 @@ class OrdersHistoryContent extends StatelessWidget {
                 ...old.map((order) => card(context, order)),
                 if ((previous && old.isEmpty) ||
                     (!previous && model.orders.isEmpty))
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 70.h),
-                    child: Column(
-                      children: [
-                        const Icon(
-                          Icons.assignment_outlined,
-                          size: 48,
-                          color: AppColors.navInactiveGrey,
-                        ),
-                        SizedBox(height: 12.h),
-                        Text(
-                          previous
-                              ? ordersText(
-                            context,
-                            'لا توجد طلبات سابقة',
-                            'No previous orders',
-                          )
-                              : ordersText(
-                            context,
-                            'لا توجد طلبات حتى الآن',
-                            'No orders yet',
-                          ),
-                        ),
-                      ],
-                    ),
+                  OrdersHistoryEmpty(
+                    previous: previous,
+                    onRequestService: onRequestService,
                   ),
                 if (error != null)
                   RetryWidget(message: error!, onPressed: onRetry),

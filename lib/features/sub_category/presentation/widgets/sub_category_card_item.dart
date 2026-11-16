@@ -9,12 +9,12 @@ import '../../../../core/constants/end_points.dart';
 import '../../data/models/sub_category_model.dart';
 
 const List<Color> kSubCategoryIconBgColors = [
-  Color(0xFFEAF5E4), // Soft light green
-  Color(0xFFE5F1FC), // Soft blue
-  Color(0xFFFEF0DE), // Soft peach / warm yellow
-  Color(0xFFFDEEEC), // Soft coral
-  Color(0xFFF1EEFB), // Soft purple
-  Color(0xFFE8F6F6), // Soft teal
+  Color(0xFFEAF5E4),
+  Color(0xFFE5F1FC),
+  Color(0xFFFEF0DE),
+  Color(0xFFFDEEEC),
+  Color(0xFFF1EEFB),
+  Color(0xFFE8F6F6),
 ];
 
 Color getSubCategoryIconBgColor(int index) {
@@ -38,8 +38,6 @@ class SubCategoryCardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final title = isArabic ? item.name.ar : item.name.en;
-    final description = item.description ??
-        (isArabic ? 'تركيب سخان جديد أو فك القديم' : 'Installation or removal');
 
     String? fullImageUrl = item.image;
     if (fullImageUrl != null && fullImageUrl.isNotEmpty) {
@@ -147,17 +145,6 @@ class SubCategoryCardItem extends StatelessWidget {
                           fontWeight: FontWeight.w800,
                           color: AppColors.titleDark,
                           height: 1.25,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        description,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style:AppStyles.styleMedium16(context).copyWith(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.subtitleGrey,
                         ),
                       ),
                       SizedBox(height: 6.h),

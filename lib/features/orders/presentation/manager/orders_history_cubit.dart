@@ -42,6 +42,7 @@ class OrdersHistoryCubit extends Cubit<OrdersHistoryState> {
           OrdersHistorySuccess(
             OrdersHistoryModel(
               orders: orders,
+              total: data.total,
               currentPage: data.currentPage,
               lastPage: data.lastPage,
             ),

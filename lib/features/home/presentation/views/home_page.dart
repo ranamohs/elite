@@ -6,7 +6,7 @@ import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../features/home/presentation/views/home_view.dart';
-import '../../../account/presentation/views/update_profile_view.dart';
+import '../../../account/presentation/views/account_view.dart';
 import '../../../orders/presentation/views/orders_history_view.dart';
 import '../../../settings/views/settings_view.dart';
 
@@ -23,9 +23,12 @@ class _AppLayoutState extends State<AppLayout> {
 
   List<Widget> get _screens => [
     const HomeView(),
-    OrdersHistoryView(isActive: _currentIndex == 1),
+    OrdersHistoryView(
+      isActive: _currentIndex == 1,
+      onRequestService: () => _onTabTapped(0),
+    ),
     const SettingsView(), // offers / settings placeholder
-    const UpdateProfileView(), // account
+    AccountView(isActive: _currentIndex == 3, onOrders: () => _onTabTapped(1)),
   ];
 
   void _onTabTapped(int index) {

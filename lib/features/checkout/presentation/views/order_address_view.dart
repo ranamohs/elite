@@ -1,198 +1,210 @@
+import '../../../../core/services/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../account/data/repos/addresses_repo/account_addresses_repo.dart';
 import '../../data/models/order_draft.dart';
 import '../widgets/checkout_widgets.dart';
-import '../widgets/order_address_map.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geocoding/geocoding.dart';
+import '../widgets/order_address_view.dart';
+import '../widgets/order_photos_picker.dart';
+import 'order_address_view.dart';
+import 'order_schedule_view.dart';
 
-class OrderAddressView extends StatefulWidget {
-  final OrderAddress? initial;
-  const OrderAddressView({super.key, this.initial});
+class OrderDetailsView extends StatefulWidget {
+  final OrderDraft order;
+  const OrderDetailsView({super.key, required this.order});
   @override
-  State<OrderAddressView> createState() => _OrderAddressViewState();
+  State<OrderDetailsView> createState() => _OrderDetailsViewState();
 }
 
-class _OrderAddressViewState extends State<OrderAddressView> {
-  final formKey = GlobalKey<FormState>();
-  late final List<TextEditingController> fields;
-  int label = 0;
-  LatLng? selectedLocation;
-  bool findingAddress = false;
-  int locationRequest = 0;
+class _OrderDetailsViewState extends State<OrderDetailsView> {
+  late final TextEditingController description;
+  @override
+  void initState() {
+    super.initState();
+    description = TextEditingController(text: widget.order.description);
+    if (widget.order.address == null) loadDefaultAddress();
+  }
 
-  Future<void> selectLocation(LatLng point) async {
-    final request = ++locationRequest;
-    setState(() {
-      selectedLocation = point;
-      findingAddress = true;
-      fields[0].clear();
-      fields[1].clear();
-    });
+  Future<void> loadDefaultAddress() async {
     try {
-      final addresses = await placemarkFromCoordinates(
-        point.latitude,
-        point.longitude,
+      final addresses = await getIt<AccountAddressesRepo>().load();
+      if (!mounted || widget.order.address != null || addresses.isEmpty) return;
+      final saved = addresses.firstWhere(
+            (value) => value.isDefault,
+        orElse: () => addresses.first,
       );
-      if (!mounted || request != locationRequest || addresses.isEmpty) return;
-      final place = addresses.first;
-      final area = [place.subLocality, place.locality, place.administrativeArea]
-          .whereType<String>()
-          .where((value) => value.trim().isNotEmpty)
-          .toSet()
-          .join('، ');
-      if (fields[0].text.isEmpty) fields[0].text = area;
-      if (fields[1].text.isEmpty)
-        fields[1].text = place.thoroughfare?.isNotEmpty == true
-            ? place.thoroughfare!
-            : (place.street ?? '');
+      setState(() => widget.order.address = saved.address);
     } catch (_) {
-      if (mounted && request == locationRequest) {
+      // Manual address selection stays available if local storage cannot be read.
+    }
+  }
+
+  @override
+  void dispose() {
+    description.dispose();
+    super.dispose();
+  }
+
+  Future<void> address() async {
+    final value = await Navigator.of(context).push<OrderAddress>(
+      MaterialPageRoute(
+        builder: (_) => OrderAddressView(initial: widget.order.address),
+      ),
+    );
+    if (mounted && value != null) setState(() => widget.order.address = value);
+  }
+
+  Future<void> photos() async {
+    try {
+      final files = await ImagePicker().pickMultiImage(
+        imageQuality: 80,
+        maxWidth: 1600,
+      );
+      if (!mounted) return;
+      setState(
+            () => widget.order.photos = [
+          ...widget.order.photos,
+          ...files.map((e) => e.path),
+        ].take(3).toList(),
+      );
+    } catch (_) {
+      if (mounted)
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               checkoutText(
                 context,
-                'تم تحديد المكان. اكتبي المنطقة والشارع يدويًا',
-                'Location selected. Enter the area and street manually',
+                'تعذر اختيار الصور، حاولي مرة أخرى',
+                'Could not select photos. Please try again.',
               ),
             ),
           ),
         );
-      }
-    } finally {
-      if (mounted && request == locationRequest)
-        setState(() => findingAddress = false);
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    final a = widget.initial;
-    if (a?.latitude != null && a?.longitude != null) {
-      selectedLocation = LatLng(a!.latitude!, a.longitude!);
-    }
-    fields = [
-      a?.area,
-      a?.street,
-      a?.building,
-      a?.floor,
-      a?.apartment,
-    ].map((e) => TextEditingController(text: e ?? '')).toList();
-    if (a != null)
-      label =
-          ['البيت', 'الشغل', 'تاني', 'Home', 'Work', 'Other'].indexOf(a.label) %
-              3;
-    if (label < 0) label = 0;
-  }
-
-  @override
-  void dispose() {
-    for (final field in fields) {
-      field.dispose();
-    }
-    super.dispose();
-  }
-
-  Widget field(int index, String name) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      CheckoutSectionTitle(name),
-      TextFormField(
-        controller: fields[index],
-        validator: (value) => value == null || value.trim().isEmpty
-            ? checkoutText(context, 'مطلوب', 'Required')
-            : null,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
-          isDense: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
-            borderSide: const BorderSide(color: AppColors.unselectedBorder),
-          ),
-        ),
-      ),
-    ],
-  );
   @override
   Widget build(BuildContext context) {
-    final labels = [
-      checkoutText(context, 'البيت', 'Home'),
-      checkoutText(context, 'الشغل', 'Work'),
-      checkoutText(context, 'تاني', 'Other'),
-    ];
+    final order = widget.order;
     return CheckoutScaffold(
-      title: checkoutText(context, 'أضف عنوانك', 'Add your address'),
+      title: checkoutText(context, 'تفاصيل الطلب', 'Order details'),
       action: checkoutText(
         context,
-        'حفظ العنوان والبدء',
-        'Save address and continue',
+        'التالي: الموعد والدفع',
+        'Next: schedule and payment',
       ),
-      onAction: () {
-        if (selectedLocation == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                checkoutText(
-                  context,
-                  'حددي مكانك على الخريطة الأول',
-                  'Select your location on the map first',
-                ),
-              ),
-            ),
-          );
-          return;
+      onAction: () async {
+        order.description = description.text.trim();
+        if (order.address == null) {
+          await address();
+          if (!mounted || order.address == null) return;
         }
-        if (!formKey.currentState!.validate()) return;
-        Navigator.of(context).pop(
-          OrderAddress(
-            latitude: selectedLocation!.latitude,
-            longitude: selectedLocation!.longitude,
-            area: fields[0].text.trim(),
-            street: fields[1].text.trim(),
-            building: fields[2].text.trim(),
-            floor: fields[3].text.trim(),
-            apartment: fields[4].text.trim(),
-            label: labels[label],
-          ),
+        if (!context.mounted) return;
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => OrderScheduleView(order: order)),
         );
       },
-      body: Form(
-        key: formKey,
-        child: Column(
-          children: [
-            OrderAddressMap(
-              selected: selectedLocation,
-              onSelected: selectLocation,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          OrderPriceCard(
+            order: order,
+            title: checkoutText(
+              context,
+              'الخدمات والمنتجات المختارة',
+              'Selected services and products',
             ),
-            if (findingAddress)
-              const LinearProgressIndicator(color: AppColors.primaryColor),
-            Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: Text(
-                checkoutText(
-                  context,
-                  selectedLocation == null
-                      ? 'اضغطي على الخريطة لتحديد العنوان'
-                      : 'ممكن تسحبي العلامة لتعديل المكان',
-                  selectedLocation == null
-                      ? 'Tap the map to select your address'
-                      : 'Drag the marker to adjust your location',
-                ),
-                style: TextStyle(
-                  color: AppColors.badgeTextGreen,
-                  fontSize: 11.sp,
-                ),
+          ),
+          CheckoutSectionTitle(
+            checkoutText(
+              context,
+              'اوصف المشكلة (اختياري)',
+              'Describe the issue (optional)',
+            ),
+          ),
+          TextField(
+            controller: description,
+            maxLines: 3,
+            maxLength: 500,
+            decoration: InputDecoration(
+              hintText: checkoutText(
+                context,
+                'مثال: السخان القديم محتاج يتفك، والجديد يتركب، وفيه تسريب من الوصلة…',
+                'Describe the work or issue…',
+              ),
+              hintStyle: TextStyle(
+                color: AppColors.subtitleGrey,
+                fontSize: 12.sp,
+              ),
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16.r),
+                borderSide: const BorderSide(color: AppColors.unselectedBorder),
               ),
             ),
-            field(0, checkoutText(context, 'المنطقة', 'Area')),
-            field(1, checkoutText(context, 'الشارع', 'Street')),
-
-          ],
-        ),
+          ),
+          CheckoutSectionTitle(
+            checkoutText(
+              context,
+              'صور المشكلة (اختياري)',
+              'Issue photos (optional)',
+            ),
+          ),
+          OrderPhotosPicker(
+            photos: order.photos,
+            onAdd: photos,
+            onRemove: (index) => setState(() => order.photos.removeAt(index)),
+          ),
+          CheckoutSectionTitle(checkoutText(context, 'العنوان', 'Address')),
+          CheckoutCard(
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(12.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.badgeBg,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: const Icon(
+                    Icons.home_outlined,
+                    color: AppColors.badgeTextGreen,
+                  ),
+                ),
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        order.address?.label ??
+                            checkoutText(
+                              context,
+                              'أضيفي عنوانك',
+                              'Add your address',
+                            ),
+                      ),
+                      if (order.address != null)
+                        Text(
+                          order.address!.details,
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            color: AppColors.subtitleGrey,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: address,
+                  child: Text(checkoutText(context, 'تغيير', 'Change')),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

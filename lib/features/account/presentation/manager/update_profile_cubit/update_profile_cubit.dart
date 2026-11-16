@@ -10,13 +10,27 @@ import '../../../data/repos/update_profile_repo/update_profile_repo.dart';
 
 class UpdateProfileCubit extends Cubit<UpdateProfileState> {
   final UpdateProfileRepo updateProfileRepo;
-  UpdateProfileCubit({required this.updateProfileRepo}) : super(UpdateProfileInitial());
+  UpdateProfileCubit({required this.updateProfileRepo})
+      : super(UpdateProfileInitial());
 
-  Future<void> updateProfile({required String name,required String phoneNumber,required String email,File? avatar}) async {
+  Future<void> updateProfile({
+    required String name,
+    required String phoneNumber,
+    required String email,
+    File? avatar,
+  }) async {
+    if (state is UpdateProfileLoading) return;
     emit(UpdateProfileLoading());
 
-    final Either<UpdateProfileFailureModel, UpdateProfileSuccessModel> result = await updateProfileRepo.updateProfile(name: name, phoneNumber: phoneNumber, email: email, avatar: avatar);
+    final Either<UpdateProfileFailureModel, UpdateProfileSuccessModel> result =
+    await updateProfileRepo.updateProfile(
+      name: name,
+      phoneNumber: phoneNumber,
+      email: email,
+      avatar: avatar,
+    );
 
+    if (isClosed) return;
     result.fold((failure) => emit(UpdateProfileFailure(failure)), (success) {
       emit(UpdateProfileSuccess(success: success));
     });

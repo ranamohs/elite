@@ -1,3 +1,5 @@
+import 'package:go_router/go_router.dart';
+import '../../../../core/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,7 +16,12 @@ import '../widgets/orders_history_loading.dart';
 
 class OrdersHistoryView extends StatefulWidget {
   final bool isActive;
-  const OrdersHistoryView({super.key, this.isActive = true});
+  final VoidCallback? onRequestService;
+  const OrdersHistoryView({
+    super.key,
+    this.isActive = true,
+    this.onRequestService,
+  });
   @override
   State<OrdersHistoryView> createState() => _OrdersHistoryViewState();
 }
@@ -80,6 +87,8 @@ class _OrdersHistoryViewState extends State<OrdersHistoryView>
                         if (state is OrdersHistoryLoading ||
                             state is OrdersHistoryInitial)
                           return const OrdersHistoryLoadingWidget();
+                        // Render from this builder's state snapshot. cubit.state may
+                        // already be Loading while BlocBuilder still holds Success.
                         final model = switch (state) {
                           OrdersHistorySuccess() => state.model,
                           OrdersHistoryLoadingMore() => state.model,
@@ -99,6 +108,9 @@ class _OrdersHistoryViewState extends State<OrdersHistoryView>
                         }
                         return OrdersHistoryContent(
                           model: model,
+                          onRequestService:
+                          widget.onRequestService ??
+                                  () => context.go(AppRouter.homePage),
                           previous: previous,
                           loadingMore: state is OrdersHistoryLoadingMore,
                           error: state is OrdersHistoryFailure

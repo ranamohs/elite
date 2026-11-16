@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../data/models/order_draft.dart';
 import '../widgets/checkout_widgets.dart';
+import '../widgets/order_address_view.dart';
 import '../widgets/order_photos_picker.dart';
 import 'order_address_view.dart';
 import 'order_schedule_view.dart';

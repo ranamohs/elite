@@ -1,3 +1,9 @@
+import '../../features/account/data/repos/addresses_repo/account_addresses_repo.dart';
+import '../../features/account/data/repos/addresses_repo/local_account_addresses_repo.dart';
+import '../../features/account/presentation/manager/addresses_cubit/account_addresses_cubit.dart';
+import '../../features/orders/data/repos/order_details_repo.dart';
+import '../../features/orders/data/repos/order_details_repo_impl.dart';
+import '../../features/orders/presentation/manager/order_details_cubit.dart';
 import '../../features/orders/data/repos/orders_history_repo.dart';
 import '../../features/orders/data/repos/orders_history_repo_impl.dart';
 import '../../features/orders/presentation/manager/orders_history_cubit.dart';
@@ -104,6 +110,27 @@ void setupServiceLocator() {
   );
   getIt.registerFactory<OrdersHistoryCubit>(
         () => OrdersHistoryCubit(repo: getIt<OrdersHistoryRepo>()),
+  );
+
+  getIt.registerLazySingleton<OrderDetailsRepo>(
+        () => OrderDetailsRepoImpl(
+      dioConsumer: getIt<DioConsumer>(),
+      secureStorageHelper: getIt<SecureStorageHelper>(),
+      networkCubit: getIt<NetworkConnectionCubit>(),
+    ),
+  );
+  getIt.registerFactory<OrderDetailsCubit>(
+        () => OrderDetailsCubit(repo: getIt<OrderDetailsRepo>()),
+  );
+
+  getIt.registerLazySingleton<AccountAddressesRepo>(
+        () => LocalAccountAddressesRepo(
+      cache: getIt<CacheHelper>(),
+      user: getIt<UserDataManager>(),
+    ),
+  );
+  getIt.registerFactory<AccountAddressesCubit>(
+        () => AccountAddressesCubit(repo: getIt<AccountAddressesRepo>()),
   );
 
   // Banners dependencies

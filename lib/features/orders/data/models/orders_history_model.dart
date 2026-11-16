@@ -108,10 +108,12 @@ class OrderHistoryLine {
 }
 
 class OrdersHistoryModel {
+  final int? total;
   final List<OrderHistoryItem> orders;
   final int currentPage, lastPage;
   const OrdersHistoryModel({
     required this.orders,
+    this.total,
     this.currentPage = 1,
     this.lastPage = 1,
   });
@@ -124,6 +126,7 @@ class OrdersHistoryModel {
             OrderHistoryItem.fromJson(Map<String, dynamic>.from(e as Map)),
       )
           .toList(),
+      total: int.tryParse('${meta['total']}'),
       currentPage: orderInt(meta['current_page'], 1),
       lastPage: orderInt(meta['last_page'], 1),
     );
