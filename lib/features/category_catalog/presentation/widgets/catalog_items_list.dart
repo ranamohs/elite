@@ -1,3 +1,4 @@
+import '../../data/models/cart_change_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -10,12 +11,20 @@ import '../../../../core/widgets/retry_widget.dart';
 import 'catalog_item_card.dart';
 
 class CatalogItemsList extends StatelessWidget {
+  final CartOperation loadingOperation;
+  final ValueChanged<CatalogItem>? onRemove;
+  final bool enabled;
+  final int? loadingProductId;
   final CatalogCubit cubit;
   final bool product;
   final Map<String, int> quantities;
   final void Function(CatalogItem, int) onQuantityChanged;
   const CatalogItemsList({
     super.key,
+    this.onRemove,
+    this.loadingOperation = CartOperation.add,
+    this.enabled = true,
+    this.loadingProductId,
     required this.cubit,
     required this.product,
     required this.quantities,
@@ -72,6 +81,14 @@ class CatalogItemsList extends StatelessWidget {
                   delegate: SliverChildBuilderDelegate(
                         (context, index) => CatalogItemCard(
                       item: items[index],
+                      loadingOperation: loadingOperation,
+                      onRemove: onRemove == null
+                          ? null
+                          : () => onRemove!(items[index]),
+                      enabled: enabled,
+                      loading:
+                      items[index].isProduct &&
+                          loadingProductId == items[index].id,
                       count: quantities[items[index].key] ?? 0,
                       onChanged: (delta) =>
                           onQuantityChanged(items[index], delta),
@@ -91,6 +108,14 @@ class CatalogItemsList extends StatelessWidget {
                       padding: EdgeInsets.only(bottom: 10.h),
                       child: CatalogItemCard(
                         item: items[index],
+                        loadingOperation: loadingOperation,
+                        onRemove: onRemove == null
+                            ? null
+                            : () => onRemove!(items[index]),
+                        enabled: enabled,
+                        loading:
+                        items[index].isProduct &&
+                            loadingProductId == items[index].id,
                         count: quantities[items[index].key] ?? 0,
                         onChanged: (delta) =>
                             onQuantityChanged(items[index], delta),

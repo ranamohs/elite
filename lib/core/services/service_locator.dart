@@ -1,3 +1,12 @@
+import '../../features/orders/data/repos/orders_history_repo.dart';
+import '../../features/orders/data/repos/orders_history_repo_impl.dart';
+import '../../features/orders/presentation/manager/orders_history_cubit.dart';
+import '../../features/category_catalog/data/repos/cart_repo.dart';
+import '../../features/category_catalog/data/repos/cart_repo_impl.dart';
+import '../../features/category_catalog/presentation/manager/cart_cubit.dart';
+import '../../features/checkout/data/repos/service_request_repo.dart';
+import '../../features/checkout/data/repos/service_request_repo_impl.dart';
+import '../../features/checkout/presentation/manager/service_request_cubit.dart';
 import '../../features/category_catalog/data/repos/catalog_repo.dart';
 import '../../features/category_catalog/data/repos/catalog_repo_impl.dart';
 import 'package:elite/core/databases/api/dio_consumer.dart';
@@ -41,9 +50,6 @@ import '../../features/app_info/presentation/manager/default_page_cubit/default_
 import '../../features/app_info/presentation/manager/privacy_cubit/privacy_cubit.dart';
 import '../../features/app_info/presentation/manager/terms_cubit/terms_cubit.dart';
 
-
-
-
 final getIt = GetIt.instance;
 
 void setupServiceLocator() {
@@ -62,26 +68,65 @@ void setupServiceLocator() {
         () => NetworkConnectionCubit(getIt<NetworkInfo>()),
   );
 
-  getIt.registerLazySingleton<CatalogRepo>(() => CatalogRepoImpl(
-    dioConsumer: getIt<DioConsumer>(), networkCubit: getIt<NetworkConnectionCubit>(),
-    secureStorageHelper: getIt<SecureStorageHelper>(),
-  ));
+  getIt.registerLazySingleton<CatalogRepo>(
+        () => CatalogRepoImpl(
+      dioConsumer: getIt<DioConsumer>(),
+      networkCubit: getIt<NetworkConnectionCubit>(),
+      secureStorageHelper: getIt<SecureStorageHelper>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<CartRepo>(
+        () => CartRepoImpl(
+      dioConsumer: getIt<DioConsumer>(),
+      secureStorageHelper: getIt<SecureStorageHelper>(),
+      networkCubit: getIt<NetworkConnectionCubit>(),
+    ),
+  );
+  getIt.registerFactory<CartCubit>(() => CartCubit(repo: getIt<CartRepo>()));
+  getIt.registerLazySingleton<ServiceRequestRepo>(
+        () => ServiceRequestRepoImpl(
+      dioConsumer: getIt<DioConsumer>(),
+      secureStorageHelper: getIt<SecureStorageHelper>(),
+      networkCubit: getIt<NetworkConnectionCubit>(),
+    ),
+  );
+  getIt.registerFactory<ServiceRequestCubit>(
+        () => ServiceRequestCubit(repo: getIt<ServiceRequestRepo>()),
+  );
+
+  getIt.registerLazySingleton<OrdersHistoryRepo>(
+        () => OrdersHistoryRepoImpl(
+      dioConsumer: getIt<DioConsumer>(),
+      secureStorageHelper: getIt<SecureStorageHelper>(),
+      networkCubit: getIt<NetworkConnectionCubit>(),
+    ),
+  );
+  getIt.registerFactory<OrdersHistoryCubit>(
+        () => OrdersHistoryCubit(repo: getIt<OrdersHistoryRepo>()),
+  );
 
   // Banners dependencies
-  getIt.registerLazySingleton<BannersRepo>(() => BannersRepoImpl(
+  getIt.registerLazySingleton<BannersRepo>(
+        () => BannersRepoImpl(
       dioConsumer: getIt<DioConsumer>(),
-      networkCubit: getIt<NetworkConnectionCubit>()));
-  getIt.registerFactory<BannersCubit>(() => BannersCubit(
-    bannersRepo: getIt<BannersRepo>(),
-  ));
+      networkCubit: getIt<NetworkConnectionCubit>(),
+    ),
+  );
+  getIt.registerFactory<BannersCubit>(
+        () => BannersCubit(bannersRepo: getIt<BannersRepo>()),
+  );
 
   // Categories dependencies
-  getIt.registerLazySingleton<CategoriesRepo>(() => CategoriesRepoImpl(
+  getIt.registerLazySingleton<CategoriesRepo>(
+        () => CategoriesRepoImpl(
       dioConsumer: getIt<DioConsumer>(),
-      networkCubit: getIt<NetworkConnectionCubit>()));
-  getIt.registerFactory<CategoriesCubit>(() => CategoriesCubit(
-    categoriesRepo: getIt<CategoriesRepo>(),
-  ));
+      networkCubit: getIt<NetworkConnectionCubit>(),
+    ),
+  );
+  getIt.registerFactory<CategoriesCubit>(
+        () => CategoriesCubit(categoriesRepo: getIt<CategoriesRepo>()),
+  );
 
   // Register dependencies
   getIt.registerSingleton<RegisterRepoImpl>(
@@ -93,7 +138,8 @@ void setupServiceLocator() {
     ),
   );
   getIt.registerFactory<RegisterCubit>(
-          () => RegisterCubit(registerRepo: getIt<RegisterRepoImpl>()));
+        () => RegisterCubit(registerRepo: getIt<RegisterRepoImpl>()),
+  );
 
   // Login dependencies
   getIt.registerSingleton<LoginRepoImpl>(
@@ -102,77 +148,54 @@ void setupServiceLocator() {
       secureStorageHelper: getIt<SecureStorageHelper>(),
       networkCubit: getIt<NetworkConnectionCubit>(),
       userDataManager: getIt<UserDataManager>(),
-
     ),
   );
   getIt.registerFactory<LoginCubit>(
-        () => LoginCubit(
-      loginRepo: getIt<LoginRepoImpl>(),
-    ),
+        () => LoginCubit(loginRepo: getIt<LoginRepoImpl>()),
   );
 
   getIt.registerLazySingleton<AboutUsRepo>(
-        () => AboutUsRepoImpl(
-      dioConsumer: getIt<DioConsumer>(),
-    ),
+        () => AboutUsRepoImpl(dioConsumer: getIt<DioConsumer>()),
   );
-
 
   getIt.registerFactory<AboutUsCubit>(
-        () => AboutUsCubit(
-      repo: getIt<AboutUsRepo>(),
-    ),
+        () => AboutUsCubit(repo: getIt<AboutUsRepo>()),
   );
   getIt.registerLazySingleton<TermsRepo>(
-        () => TermsRepoImpl(
-      dioConsumer: getIt<DioConsumer>(),
-    ),
+        () => TermsRepoImpl(dioConsumer: getIt<DioConsumer>()),
   );
 
-
-  getIt.registerFactory<TermsCubit>(
-        () => TermsCubit(
-      repo: getIt<TermsRepo>(),
-    ),
-  );
-
+  getIt.registerFactory<TermsCubit>(() => TermsCubit(repo: getIt<TermsRepo>()));
 
   getIt.registerLazySingleton<PrivacyRepo>(
-        () => PrivacyRepoImpl(
-      dioConsumer: getIt<DioConsumer>(),
-
-    ),
+        () => PrivacyRepoImpl(dioConsumer: getIt<DioConsumer>()),
   );
 
-
   getIt.registerFactory<PrivacyCubit>(
-        () => PrivacyCubit(
-      repo: getIt<PrivacyRepo>(),
-    ),
+        () => PrivacyCubit(repo: getIt<PrivacyRepo>()),
   );
 
   getIt.registerSingleton<LogoutRepoImpl>(
     LogoutRepoImpl(
-        networkCubit: getIt(),
-        dioConsumer: getIt<DioConsumer>(),
-        secureStorageHelper: getIt<SecureStorageHelper>(),
-        userDataManager: getIt<UserDataManager>()),
+      networkCubit: getIt(),
+      dioConsumer: getIt<DioConsumer>(),
+      secureStorageHelper: getIt<SecureStorageHelper>(),
+      userDataManager: getIt<UserDataManager>(),
+    ),
   );
   getIt.registerFactory<LogoutCubit>(
-          () => LogoutCubit(logoutRepo: getIt<LogoutRepoImpl>()));
-
+        () => LogoutCubit(logoutRepo: getIt<LogoutRepoImpl>()),
+  );
 
   getIt.registerLazySingleton<DeleteAccountRepoImpl>(
-        () =>
-        DeleteAccountRepoImpl(
-            dioConsumer: getIt(),
-            secureStorageHelper: getIt(),
-            networkCubit: getIt(),
-            userDataManager: getIt()),
+        () => DeleteAccountRepoImpl(
+      dioConsumer: getIt(),
+      secureStorageHelper: getIt(),
+      networkCubit: getIt(),
+      userDataManager: getIt(),
+    ),
   );
   getIt.registerFactory(() => DeleteAccountCubit(deleteAccountRepo: getIt()));
-
-
 
   getIt.registerSingleton<UpdateProfileRepoImpl>(
     UpdateProfileRepoImpl(
@@ -182,21 +205,22 @@ void setupServiceLocator() {
       networkCubit: getIt<NetworkConnectionCubit>(),
     ),
   );
-  getIt.registerFactory<UpdateProfileCubit>(() =>
-      UpdateProfileCubit(updateProfileRepo: getIt<UpdateProfileRepoImpl>()));
+  getIt.registerFactory<UpdateProfileCubit>(
+        () => UpdateProfileCubit(updateProfileRepo: getIt<UpdateProfileRepoImpl>()),
+  );
 
-
-  getIt.registerLazySingleton<DefaultPageRepoImpl>(() =>
-      DefaultPageRepoImpl(
-        dioConsumer: getIt<DioConsumer>(),
-        networkCubit: getIt<NetworkConnectionCubit>(),
-      ));
-  getIt.registerFactory<DefaultPageCubit>(() =>
-      DefaultPageCubit(
-          repo: getIt<DefaultPageRepoImpl>(),
-          cacheHelper: getIt<CacheHelper>()
-      ));
-
+  getIt.registerLazySingleton<DefaultPageRepoImpl>(
+        () => DefaultPageRepoImpl(
+      dioConsumer: getIt<DioConsumer>(),
+      networkCubit: getIt<NetworkConnectionCubit>(),
+    ),
+  );
+  getIt.registerFactory<DefaultPageCubit>(
+        () => DefaultPageCubit(
+      repo: getIt<DefaultPageRepoImpl>(),
+      cacheHelper: getIt<CacheHelper>(),
+    ),
+  );
 
   getIt.registerSingleton<ContactUsRepoImpl>(
     ContactUsRepoImpl(
@@ -206,9 +230,6 @@ void setupServiceLocator() {
     ),
   );
   getIt.registerFactory<ContactUsCubit>(
-          () => ContactUsCubit(contactUsRepo: getIt<ContactUsRepoImpl>()));
-
-
-
-
+        () => ContactUsCubit(contactUsRepo: getIt<ContactUsRepoImpl>()),
+  );
 }

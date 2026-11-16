@@ -1,4 +1,9 @@
 class EndPoints {
+  static const String ordersHistory = '/orders/history';
+  static const String minusFromCart = '/cart/minusFromCart';
+  static String removeCartItem(int id) => '/cart/$id';
+  static const String addToCart = '/cart/addToCart';
+  static String serviceRequest(int id) => '/services/$id/request';
   static String categoryProducts(int id) => '/$id/products';
   static String categoryServices(int id) => '/$id/services';
   static const String baserUrl = "http://elitefm-eg.online/api";
@@ -13,7 +18,8 @@ class EndPoints {
   static const String updateProfile = "/profile/update";
   static const String aboutUs = '/general/default-pages/about-us';
   static const String privacyPolicy = '/general/default-pages/privacy-policy';
-  static const String termsAndConditions = '/general/default-pages/terms-and-conditions';
+  static const String termsAndConditions =
+      '/general/default-pages/terms-and-conditions';
   static const String contactUs = '/contact-requests';
   static const String defaultPage = '/general/default-pages/';
   static const String toggleWishlist = '/wishlist/toggle';

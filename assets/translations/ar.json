@@ -132,5 +132,10 @@
   "leaveARating": "ترك تقييم",
   "ourServices": "خدماتنا",
   "loginIsRequired": "تسجيل الدخول مطلوب",
-  "pleaseLogInToContinue": "يرجى تسجيل الدخول للمتابعة"
+  "pleaseLogInToContinue": "يرجى تسجيل الدخول للمتابعة",
+  "loginRequiredForCart": "سجلي الدخول لإضافة المنتجات للسلة",
+  "loginRequiredForOrder": "سجلي الدخول لتأكيد طلب الخدمة",
+  "invalidOrderImage": "الصورة لازم تكون PNG أو JPG أو WEBP وحجمها بحد أقصى ٢ ميجابايت",
+  "invalidServiceSelection": "اختاري خدمة واحدة وموعد صحيح",
+  "orderDetailsTooLong": "الملاحظات بحد أقصى ٥٠٠ حرف والعنوان بحد أقصى ٢٥٥ حرف"
 }

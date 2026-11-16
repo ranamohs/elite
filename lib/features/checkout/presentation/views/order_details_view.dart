@@ -109,6 +109,7 @@ class _OrderDetailsViewState extends State<OrderDetailsView> {
           TextField(
             controller: description,
             maxLines: 3,
+            maxLength: 500,
             decoration: InputDecoration(
               hintText: checkoutText(
                 context,

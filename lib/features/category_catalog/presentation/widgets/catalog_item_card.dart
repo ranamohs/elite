@@ -1,3 +1,4 @@
+import '../../data/models/cart_change_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -7,11 +8,18 @@ import 'catalog_item_image.dart';
 import 'catalog_quantity_control.dart';
 
 class CatalogItemCard extends StatelessWidget {
+  final CartOperation loadingOperation;
+  final VoidCallback? onRemove;
+  final bool enabled, loading;
   final CatalogItem item;
   final int count;
   final ValueChanged<int> onChanged;
   const CatalogItemCard({
     super.key,
+    this.onRemove,
+    this.loadingOperation = CartOperation.add,
+    this.enabled = true,
+    this.loading = false,
     required this.item,
     required this.count,
     required this.onChanged,
@@ -77,6 +85,10 @@ class CatalogItemCard extends StatelessWidget {
           SizedBox(height: 6.h),
           CatalogQuantityControl(
             item: item,
+            loadingOperation: loadingOperation,
+            onRemove: onRemove,
+            enabled: enabled,
+            loading: loading,
             count: count,
             onChanged: onChanged,
           ),
@@ -90,6 +102,10 @@ class CatalogItemCard extends StatelessWidget {
           SizedBox(width: 6.w),
           CatalogQuantityControl(
             item: item,
+            loadingOperation: loadingOperation,
+            onRemove: onRemove,
+            enabled: enabled,
+            loading: loading,
             count: count,
             onChanged: onChanged,
           ),

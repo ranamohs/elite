@@ -1,3 +1,7 @@
+import '../../data/models/cart_change_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../manager/cart_cubit.dart';
+import '../manager/cart_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -33,13 +37,17 @@ class CategoryCatalogView extends StatefulWidget {
 
 class _CategoryCatalogViewState extends State<CategoryCatalogView> {
   late final CatalogCubit services, products;
+  late final CartCubit cart;
   final Map<String, int> quantities = {};
+  final Map<String, int> cartItemIds = {};
   final Map<String, CatalogItem> selected = {};
   bool showProducts = false;
+  OrderDraft? checkoutDraft;
   bool get ar => isArabic(context);
   @override
   void initState() {
     super.initState();
+    cart = getIt<CartCubit>();
     services = CatalogCubit(
       repo: getIt<CatalogRepo>(),
       categoryId: widget.categoryId,
@@ -54,6 +62,7 @@ class _CategoryCatalogViewState extends State<CategoryCatalogView> {
 
   @override
   void dispose() {
+    cart.close();
     services.close();
     products.close();
     super.dispose();
@@ -73,81 +82,170 @@ class _CategoryCatalogViewState extends State<CategoryCatalogView> {
   }
 
   void change(CatalogItem item, int delta) {
-    final next = (quantities[item.key] ?? 0) + delta;
-    if (next < 0 ||
-        (item.isProduct && item.stock != null && next > item.stock!))
+    if (cart.state is CartLoading) return;
+    if (item.isProduct) {
+      if (delta < 0) {
+        if ((quantities[item.key] ?? 0) > 0) cart.decreaseProduct(item.id);
+        return;
+      }
+      if (delta == 0 ||
+          (item.stock != null && (quantities[item.key] ?? 0) >= item.stock!))
+        return;
+      cart.addProduct(item.id);
       return;
+    }
     setState(() {
-      quantities[item.key] = next;
-      if (next == 0) {
-        selected.remove(item.key);
-      } else {
+      checkoutDraft = null;
+      final oldServices = selected.values
+          .where((value) => !value.isProduct)
+          .map((value) => value.key)
+          .toList();
+      for (final key in oldServices) {
+        selected.remove(key);
+        quantities.remove(key);
+      }
+      if (delta > 0) {
         selected[item.key] = item;
+        quantities[item.key] = 1;
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: ar ? TextDirection.rtl : TextDirection.ltr,
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          textTheme: Theme.of(context).textTheme.apply(
-            fontFamily: AppStyles.styleMedium16(context).fontFamily,
-          ),
-        ),
-        child: Scaffold(
-          backgroundColor: AppColors.homeBackground,
-          appBar: AppBar(
-            backgroundColor: AppColors.homeBackground,
-            elevation: 0,
-            title: Text(
-              ar ? widget.arName : widget.enName,
-              style: AppStyles.styleMedium16(
-                context,
-              ).copyWith(fontWeight: FontWeight.bold),
+    return BlocConsumer<CartCubit, CartState>(
+      bloc: cart,
+      listener: (context, state) {
+        if (state is CartSuccess) {
+          final model = state.model;
+          setState(() {
+            checkoutDraft = null;
+            cartItemIds[model.product.key] = model.id;
+            selected[model.product.key] = model.product;
+            quantities[model.product.key] = model.quantity;
+          });
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(model.localizedMessage(ar))));
+        } else if (state is CartChanged) {
+          final model = state.model;
+          final key = 'product:${model.productId}';
+          setState(() {
+            checkoutDraft = null;
+            if (model.quantity == 0) {
+              selected.remove(key);
+              quantities.remove(key);
+              cartItemIds.remove(key);
+            } else {
+              quantities[key] = model.quantity;
+              if (model.product != null) selected[key] = model.product!;
+              if (model.cartItemId != null)
+                cartItemIds[key] = model.cartItemId!;
+            }
+          });
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(model.localizedMessage(ar))));
+        } else if (state is CartFailure) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.failure.errMessage)));
+        }
+      },
+      builder: (context, state) => Directionality(
+        textDirection: ar ? TextDirection.rtl : TextDirection.ltr,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            textTheme: Theme.of(context).textTheme.apply(
+              fontFamily: AppStyles.styleMedium16(context).fontFamily,
             ),
           ),
-          body: Column(
-            children: [
-              CatalogHeader(
-                arName: widget.arName,
-                enName: widget.enName,
-                mainArName: widget.mainArName,
-                mainEnName: widget.mainEnName,
-                parentArName: widget.parentArName,
-                parentEnName: widget.parentEnName,
-                services: services,
-                products: products,
-                showProducts: showProducts,
-                onTabChanged: (value) => setState(() => showProducts = value),
+          child: Scaffold(
+            backgroundColor: AppColors.homeBackground,
+            appBar: AppBar(
+              backgroundColor: AppColors.homeBackground,
+              elevation: 0,
+              title: Text(
+                ar ? widget.arName : widget.enName,
+                style: AppStyles.styleMedium16(
+                  context,
+                ).copyWith(fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10.h),
-              Expanded(
-                child: IndexedStack(
-                  index: showProducts ? 1 : 0,
-                  children: [
-                    CatalogItemsList(
-                      cubit: services,
-                      product: false,
-                      quantities: quantities,
-                      onQuantityChanged: change,
-                    ),
-                    CatalogItemsList(
-                      cubit: products,
-                      product: true,
-                      quantities: quantities,
-                      onQuantityChanged: change,
-                    ),
-                  ],
+            ),
+            body: Column(
+              children: [
+                CatalogHeader(
+                  arName: widget.arName,
+                  enName: widget.enName,
+                  mainArName: widget.mainArName,
+                  mainEnName: widget.mainEnName,
+                  parentArName: widget.parentArName,
+                  parentEnName: widget.parentEnName,
+                  services: services,
+                  products: products,
+                  showProducts: showProducts,
+                  onTabChanged: (value) => setState(() => showProducts = value),
                 ),
-              ),
-            ],
-          ),
-          bottomNavigationBar: CatalogBottomBar(
-            totalLabel: totalLabel,
-            onContinue: selected.isEmpty ? null : openOrderDetails,
+                SizedBox(height: 10.h),
+                Expanded(
+                  child: IndexedStack(
+                    index: showProducts ? 1 : 0,
+                    children: [
+                      CatalogItemsList(
+                        cubit: services,
+                        product: false,
+                        quantities: quantities,
+                        onQuantityChanged: change,
+                        onRemove: (item) {
+                          final id = cartItemIds[item.key];
+                          if (id != null) {
+                            cart.removeProduct(
+                              productId: item.id,
+                              cartItemId: id,
+                            );
+                          }
+                        },
+                        loadingOperation: state is CartLoading
+                            ? state.operation
+                            : CartOperation.add,
+                        enabled: state is! CartLoading,
+                        loadingProductId: state is CartLoading
+                            ? state.productId
+                            : null,
+                      ),
+                      CatalogItemsList(
+                        cubit: products,
+                        product: true,
+                        quantities: quantities,
+                        onQuantityChanged: change,
+                        onRemove: (item) {
+                          final id = cartItemIds[item.key];
+                          if (id != null) {
+                            cart.removeProduct(
+                              productId: item.id,
+                              cartItemId: id,
+                            );
+                          }
+                        },
+                        loadingOperation: state is CartLoading
+                            ? state.operation
+                            : CartOperation.add,
+                        enabled: state is! CartLoading,
+                        loadingProductId: state is CartLoading
+                            ? state.productId
+                            : null,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            bottomNavigationBar: CatalogBottomBar(
+              totalLabel: totalLabel,
+              onContinue: selected.isEmpty || state is CartLoading
+                  ? null
+                  : openOrderDetails,
+            ),
           ),
         ),
       ),
@@ -157,7 +255,7 @@ class _CategoryCatalogViewState extends State<CategoryCatalogView> {
   void openOrderDetails() => Navigator.of(context).push(
     MaterialPageRoute(
       builder: (_) => OrderDetailsView(
-        order: OrderDraft(
+        order: checkoutDraft ??= OrderDraft(
           items: selected.values.toList(),
           quantities: quantities,
         ),

@@ -50,7 +50,6 @@ class SubCategoryCardItem extends StatelessWidget {
 
     final iconBgColor = getSubCategoryIconBgColor(index);
 
-    // Badges/chips text (e.g. '3 خدمات • 4 منتجات' or count fallback)
     String badgeText;
     if (item.servicesCount != null && item.productsCount != null) {
       badgeText = isArabic
@@ -61,11 +60,10 @@ class SubCategoryCardItem extends StatelessWidget {
           ? '${item.servicesCount} خدمة'
           : '${item.servicesCount} services';
     } else {
-      // Default placeholder matching design visually
       final defaultCounts = [
-        isArabic ? '3 خدمات • 4 منتجات' : '3 services • 4 products',
-        isArabic ? '2 خدمة • 2 منتج' : '2 services • 2 products',
-        isArabic ? '2 خدمة' : '2 services',
+        isArabic ? '0 خدمات • 0 منتجات' : '0 services • 0 products',
+        isArabic ? '0 خدمة • 0 منتج' : '0 services • 0 products',
+        isArabic ? '0 خدمة' : '0 services',
       ];
       badgeText = defaultCounts[index % defaultCounts.length];
     }
@@ -97,7 +95,6 @@ class SubCategoryCardItem extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // 1) Icon Container (on the right in RTL, left in LTR)
                 Container(
                   width: 58.w,
                   height: 58.w,
@@ -136,8 +133,6 @@ class SubCategoryCardItem extends StatelessWidget {
                 ),
 
                 SizedBox(width: 14.w),
-
-                // 2) Content Column (Title, Description, Chip)
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

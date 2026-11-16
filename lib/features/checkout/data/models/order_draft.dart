@@ -17,13 +17,29 @@ class OrderAddress {
 }
 
 class OrderDraft {
+  int? orderId;
+  bool isSubmitting = false;
   final List<CatalogItem> items;
   final Map<String, int> quantities;
   String description = '';
   List<String> photos = [];
   OrderAddress? address;
   DateTime? day;
-  int? timeSlot;
+  int? timeMinutes;
+  DateTime? get appointment {
+    final date = day;
+    final minutes = timeMinutes;
+    if (date == null || minutes == null || minutes < 0 || minutes >= 24 * 60)
+      return null;
+    return DateTime(
+      date.year,
+      date.month,
+      date.day,
+      minutes ~/ 60,
+      minutes % 60,
+    );
+  }
+
   String paymentMethod = 'cash';
   int rating = 0;
   String review = '';

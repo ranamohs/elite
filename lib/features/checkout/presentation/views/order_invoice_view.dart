@@ -39,7 +39,7 @@ class _OrderInvoiceViewState extends State<OrderInvoiceView> {
 
   @override
   Widget build(BuildContext context) => CheckoutScaffold(
-    title: checkoutText(context, 'الفاتورة النهائية', 'Final invoice'),
+    title: checkoutText(context, 'معاينة الفاتورة', 'Invoice preview'),
     action: checkoutText(
       context,
       'تأكيد الدفع · ${widget.order.money(widget.order.subtotal)}',
@@ -70,8 +70,12 @@ class _OrderInvoiceViewState extends State<OrderInvoiceView> {
             Text(
               checkoutText(
                 context,
-                'طلب تجريبي • الفني لم يُحدد',
-                'Preview order • No technician assigned',
+                widget.order.orderId == null
+                    ? 'طلب تجريبي • الفني لم يُحدد'
+                    : 'طلب #${widget.order.orderId} • الفني لم يُحدد',
+                widget.order.orderId == null
+                    ? 'Preview order • No technician assigned'
+                    : 'Order #${widget.order.orderId} • No technician assigned',
               ),
               style: TextStyle(fontSize: 11.sp, color: Colors.grey),
             ),

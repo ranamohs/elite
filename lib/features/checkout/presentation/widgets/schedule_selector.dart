@@ -4,121 +4,130 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/functions/is_arabic.dart';
 import 'checkout_widgets.dart';
+import 'schedule_picker_tile.dart';
 
 class ScheduleSelector extends StatelessWidget {
-  final List<DateTime> days;
   final DateTime? selectedDay;
-  final int? selectedSlot;
+  final TimeOfDay? selectedTime;
   final ValueChanged<DateTime> onDay;
-  final ValueChanged<int> onSlot;
+  final ValueChanged<TimeOfDay> onTime;
   const ScheduleSelector({
     super.key,
-    required this.days,
     this.selectedDay,
-    this.selectedSlot,
+    this.selectedTime,
     required this.onDay,
-    required this.onSlot,
+    required this.onTime,
   });
-  @override
-  Widget build(BuildContext context) {
-    final slots = [
-      checkoutText(context, '١٠ – ١٢ ص', '10 AM – 12 PM'),
-      checkoutText(context, '١٢ – ٢ م', '12 PM – 2 PM'),
-      checkoutText(context, '٢ – ٤ م', '2 PM – 4 PM'),
-      checkoutText(context, '٤ – ٦ م', '4 PM – 6 PM'),
-    ];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        CheckoutSectionTitle(
-          checkoutText(context, 'اختار اليوم', 'Choose a day'),
-        ),
-        Row(
-          children: days.map((day) {
-            final selected = selectedDay == day;
-            return Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 3.w),
-                child: InkWell(
-                  onTap: () => onDay(day),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 14.h),
-                    decoration: BoxDecoration(
-                      color: selected ? AppColors.primaryColor : Colors.white,
-                      borderRadius: BorderRadius.circular(13.r),
-                      border: Border.all(
-                        color: selected
-                            ? AppColors.primaryColor
-                            : AppColors.unselectedBorder,
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          DateFormat.EEEE(
-                            isArabic(context) ? 'ar' : 'en',
-                          ).format(day),
-                          style: TextStyle(
-                            color: selected
-                                ? Colors.white
-                                : AppColors.subtitleGrey,
-                            fontSize: 11.sp,
-                          ),
-                        ),
-                        SizedBox(height: 6.h),
-                        Text(
-                          '${day.day}',
-                          style: TextStyle(
-                            color: selected
-                                ? Colors.white
-                                : AppColors.titleDark,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-        CheckoutSectionTitle(
-          checkoutText(context, 'اختار الفترة', 'Choose a time'),
-        ),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: slots.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisExtent: 48.h,
-            mainAxisSpacing: 10.h,
-            crossAxisSpacing: 10.w,
-          ),
-          itemBuilder: (_, i) => OutlinedButton(
-            onPressed: () => onSlot(i),
-            style: OutlinedButton.styleFrom(
-              backgroundColor: selectedSlot == i
-                  ? AppColors.primaryColor
-                  : Colors.white,
-              foregroundColor: selectedSlot == i
-                  ? Colors.white
-                  : AppColors.titleDark,
-              side: BorderSide(
-                color: selectedSlot == i
-                    ? AppColors.primaryColor
-                    : AppColors.unselectedBorder,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-            ),
-            child: Text(slots[i]),
-          ),
-        ),
-      ],
+
+  Widget pickerTheme(BuildContext context, Widget? child) => Theme(
+    data: Theme.of(context).copyWith(
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+        primary: AppColors.primaryColor,
+        onPrimary: Colors.white,
+      ),
+    ),
+    child: child!,
+  );
+
+  Future<DateTime?> pickDate(BuildContext context) async {
+    final today = DateUtils.dateOnly(DateTime.now());
+    final lastDay = DateTime(today.year + 1, today.month, today.day);
+    var initial = selectedDay == null
+        ? today
+        : DateUtils.dateOnly(selectedDay!);
+    if (initial.isBefore(today)) initial = today;
+    if (initial.isAfter(lastDay)) initial = lastDay;
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: initial,
+      firstDate: today,
+      lastDate: lastDay,
+      builder: pickerTheme,
+      helpText: checkoutText(
+        context,
+        'اختاري تاريخ الزيارة',
+        'Select visit date',
+      ),
     );
+    if (!context.mounted) return null;
+    if (picked != null) onDay(picked);
+    return picked;
   }
+
+  Future<void> pickTime(BuildContext context) async {
+    final day = selectedDay ?? await pickDate(context);
+    if (!context.mounted || day == null) return;
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: selectedTime ?? TimeOfDay.now(),
+      builder: pickerTheme,
+      helpText: checkoutText(
+        context,
+        'اختاري وقت الزيارة',
+        'Select visit time',
+      ),
+    );
+    if (!context.mounted || picked == null) return;
+    final appointment = DateTime(
+      day.year,
+      day.month,
+      day.day,
+      picked.hour,
+      picked.minute,
+    );
+    if (!appointment.isAfter(DateTime.now())) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            checkoutText(
+              context,
+              'اختاري وقت لسه مجاش',
+              'Please choose a time in the future',
+            ),
+          ),
+        ),
+      );
+      return;
+    }
+    onTime(picked);
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      CheckoutSectionTitle(
+        checkoutText(context, 'تاريخ ووقت الزيارة', 'Visit date and time'),
+      ),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: SchedulePickerTile(
+              icon: Icons.calendar_month_outlined,
+              label: selectedDay == null
+                  ? checkoutText(context, 'اختاري التاريخ', 'Select date')
+                  : DateFormat(
+                'yyyy/MM/dd',
+                isArabic(context) ? 'ar' : 'en',
+              ).format(selectedDay!),
+              selected: selectedDay != null,
+              onTap: () => pickDate(context),
+            ),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: SchedulePickerTile(
+              icon: Icons.access_time_rounded,
+              label:
+              selectedTime?.format(context) ??
+                  checkoutText(context, 'اختاري الوقت', 'Select time'),
+              selected: selectedTime != null,
+              onTap: () => pickTime(context),
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
 }

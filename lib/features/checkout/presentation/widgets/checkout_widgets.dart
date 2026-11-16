@@ -23,69 +23,66 @@ class CheckoutScaffold extends StatelessWidget {
     this.footer,
   });
   @override
-  Widget build(BuildContext context) => Directionality(
-    textDirection: isArabic(context) ? TextDirection.rtl : TextDirection.ltr,
-    child: Theme(
-      data: Theme.of(context).copyWith(
-        textTheme: Theme.of(context).textTheme.apply(
-          fontFamily: AppStyles.styleMedium16(context).fontFamily,
-        ),
-        colorScheme: Theme.of(
-          context,
-        ).colorScheme.copyWith(primary: AppColors.primaryColor),
+  Widget build(BuildContext context) => Theme(
+    data: Theme.of(context).copyWith(
+      textTheme: Theme.of(context).textTheme.apply(
+        fontFamily: AppStyles.styleMedium16(context).fontFamily,
       ),
-      child: Scaffold(
+      colorScheme: Theme.of(
+        context,
+      ).colorScheme.copyWith(primary: AppColors.primaryColor),
+    ),
+    child: Scaffold(
+      backgroundColor: AppColors.homeBackground,
+      appBar: AppBar(
         backgroundColor: AppColors.homeBackground,
-        appBar: AppBar(
-          backgroundColor: AppColors.homeBackground,
-          elevation: 0,
-          title: Text(
-            title,
-            style: AppStyles.styleMedium16(
-              context,
-            ).copyWith(fontWeight: FontWeight.bold),
-          ),
+        elevation: 0,
+        title: Text(
+          title,
+          style: AppStyles.styleMedium16(
+            context,
+          ).copyWith(fontWeight: FontWeight.bold),
         ),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(18.w, 12.h, 18.w, 24.h),
-          child: body,
-        ),
-        bottomNavigationBar: SafeArea(
-          top: false,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 14.h),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                top: BorderSide(color: AppColors.unselectedBorder),
-              ),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(18.w, 12.h, 18.w, 24.h),
+        child: body,
+      ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 14.h),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              top: BorderSide(color: AppColors.unselectedBorder),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: onAction,
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      minimumSize: Size(double.infinity, 48.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(13.r),
-                      ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: onAction,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppColors.primaryColor,
+                    minimumSize: Size(double.infinity, 48.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(13.r),
                     ),
-                    child: Text(
-                      action,
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  ),
+                  child: Text(
+                    action,
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                if (footer != null) footer!,
-              ],
-            ),
+              ),
+              if (footer != null) footer!,
+            ],
           ),
         ),
       ),

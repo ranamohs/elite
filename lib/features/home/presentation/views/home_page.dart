@@ -7,7 +7,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../features/home/presentation/views/home_view.dart';
 import '../../../account/presentation/views/update_profile_view.dart';
-import '../../../app_info/presentation/views/contact_us_view.dart';
+import '../../../orders/presentation/views/orders_history_view.dart';
 import '../../../settings/views/settings_view.dart';
 
 class AppLayout extends StatefulWidget {
@@ -21,10 +21,10 @@ class _AppLayoutState extends State<AppLayout> {
   int _currentIndex = 0;
   final PageController _pageController = PageController();
 
-  final List<Widget> _screens = [
+  List<Widget> get _screens => [
     const HomeView(),
-    const ContactUsView(), // orders placeholder / contact
-    const SettingsView(),  // offers / settings placeholder
+    OrdersHistoryView(isActive: _currentIndex == 1),
+    const SettingsView(), // offers / settings placeholder
     const UpdateProfileView(), // account
   ];
 
@@ -114,7 +114,9 @@ class _AppLayoutState extends State<AppLayout> {
     required String label,
   }) {
     final isSelected = _currentIndex == index;
-    final color = isSelected ? AppColors.homeHeaderGreen : AppColors.navInactiveGrey;
+    final color = isSelected
+        ? AppColors.homeHeaderGreen
+        : AppColors.navInactiveGrey;
 
     return Expanded(
       child: InkWell(
@@ -132,7 +134,7 @@ class _AppLayoutState extends State<AppLayout> {
             SizedBox(height: 4.h),
             Text(
               label,
-              style:AppStyles.styleRegular14(context).copyWith(
+              style: AppStyles.styleRegular14(context).copyWith(
                 fontSize: 11.sp,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: color,

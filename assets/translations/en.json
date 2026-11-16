@@ -187,7 +187,10 @@
   "leaveARating": "Leave a rating",
   "ourServices": "Our Services",
   "loginIsRequired": "Login is required",
-  "pleaseLogInToContinue": "Please log in to continue"
-
-
+  "pleaseLogInToContinue": "Please log in to continue",
+  "loginRequiredForCart": "Please sign in to add products to your cart",
+  "loginRequiredForOrder": "Please sign in to request a service",
+  "invalidOrderImage": "Photos must be PNG, JPG or WEBP and no larger than 2 MB",
+  "invalidServiceSelection": "Select one service and a valid appointment",
+  "orderDetailsTooLong": "Notes may contain up to 500 characters and the address up to 255 characters"
 }
