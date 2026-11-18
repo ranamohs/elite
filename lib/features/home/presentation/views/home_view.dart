@@ -3,13 +3,16 @@ import 'package:elite/core/constants/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/functions/internet_connection_status_snack_bar.dart';
+import '../../../../core/routes/app_router.dart';
 import '../../../../core/state_management/network_connection_cubit/network_connection_cubit.dart';
 import '../../../../core/state_management/network_connection_cubit/network_connection_state.dart';
 import '../manager/banners_cubit/banners_cubit.dart';
 import '../manager/categories_cubit/categories_cubit.dart';
+import '../manager/contracts_cubit/maintenance_contracts_cubit.dart';
 
 import '../widgets/home_banners_section.dart';
 import '../widgets/home_contract_section.dart';
@@ -43,6 +46,8 @@ class _HomeViewState extends State<HomeView> {
           onRefresh: () async {
             context.read<BannersCubit>().getBanners();
             context.read<CategoriesCubit>().refreshCategories();
+            context.read<MaintenanceContractsCubit>()
+                .refreshMaintenanceContracts();
           },
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(
@@ -75,7 +80,9 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){},
+                        onTap: () {
+                          GoRouter.of(context).push(AppRouter.allContractsView);
+                        },
                         child: Text(
                           'كل العقود ',
                           style: AppStyles.styleMedium18(context).copyWith(

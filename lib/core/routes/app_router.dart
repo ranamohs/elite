@@ -2,6 +2,7 @@ import 'package:elite/features/splash/presentation/views/intro_view.dart';
 
 import '../../features/category_catalog/presentation/views/category_catalog_view.dart';
 import 'package:elite/features/home/presentation/views/all_categories_view.dart';
+import 'package:elite/features/home/presentation/views/all_contracts_view.dart';
 import 'package:elite/features/register/presentation/views/register_view.dart';
 import 'package:elite/features/splash/presentation/views/welcome_view.dart';
 import 'package:elite/features/splash/presentation/views/splash_view.dart';
@@ -41,6 +42,7 @@ abstract class AppRouter {
   static const privacyPolicyView = '/privacyPolicyView';
   static const changeLanguageView = '/changeLanguageView';
   static const allCategoriesView = '/allCategoriesView';
+  static const allContractsView = '/allContractsView';
   static const allRecentShopsView = '/allRecentShopsView';
   static const rating = '/rating';
   static const wishlistView = '/wishlistView';
@@ -61,6 +63,7 @@ abstract class AppRouter {
 
       GoRoute(path: loginView, builder: (context, state) => LoginView()),
       GoRoute(path: allCategoriesView, builder: (context, state) => AllCategoriesView()),
+      GoRoute(path: allContractsView, builder: (context, state) => const AllContractsView()),
 
       GoRoute(path: registerView, builder: (context, state) => BlocProvider(
         create: (context) => getIt<RegisterCubit>(),

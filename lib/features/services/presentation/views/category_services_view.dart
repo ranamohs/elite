@@ -133,7 +133,7 @@ class _CategoryServicesContentState extends State<_CategoryServicesContent> {
               child: Padding(
                 padding: EdgeInsets.all(4.w),
                 child: Icon(
-              Icons.arrow_back_ios_rounded,
+                  Icons.arrow_back_ios_rounded,
                   size: 19.sp,
                   color: AppColors.homeContractBadgeGreen,
                 ),
@@ -193,7 +193,6 @@ class _CategoryServicesContentState extends State<_CategoryServicesContent> {
                           .refreshServices(widget.categoryId);
                     },
                     child: CategoryEmptyServicesWidget(
-                      isArabic: isAr,
                       categoryName: title,
                       onRefresh: () {
                         context

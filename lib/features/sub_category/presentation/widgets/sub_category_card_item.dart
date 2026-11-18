@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_styles.dart';
 import '../../../../core/constants/end_points.dart';
 import '../../data/models/sub_category_model.dart';
@@ -50,18 +52,21 @@ class SubCategoryCardItem extends StatelessWidget {
 
     String badgeText;
     if (item.servicesCount != null && item.productsCount != null) {
-      badgeText = isArabic
-          ? '${item.servicesCount} خدمات • ${item.productsCount} منتجات'
-          : '${item.servicesCount} services • ${item.productsCount} products';
+      badgeText = AppStrings.servicesWithProducts.tr(
+        namedArgs: {
+          'services': '${item.servicesCount}',
+          'products': '${item.productsCount}',
+        },
+      );
     } else if (item.servicesCount != null) {
-      badgeText = isArabic
-          ? '${item.servicesCount} خدمة'
-          : '${item.servicesCount} services';
+      badgeText = AppStrings.servicesCount.tr(
+        namedArgs: {'count': '${item.servicesCount}'},
+      );
     } else {
       final defaultCounts = [
-        isArabic ? '0 خدمات • 0 منتجات' : '0 services • 0 products',
-        isArabic ? '0 خدمة • 0 منتج' : '0 services • 0 products',
-        isArabic ? '0 خدمة' : '0 services',
+        AppStrings.zeroServicesWithProducts.tr(),
+        AppStrings.zeroServiceWithProduct.tr(),
+        AppStrings.zeroServices.tr(),
       ];
       badgeText = defaultCounts[index % defaultCounts.length];
     }

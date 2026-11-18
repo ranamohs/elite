@@ -26,8 +26,11 @@ import 'package:elite/features/home/data/repos/banners_repo/banners_repo.dart';
 import 'package:elite/features/home/data/repos/banners_repo/banners_repo_impl.dart';
 import 'package:elite/features/home/data/repos/categories_repo/categories_repo.dart';
 import 'package:elite/features/home/data/repos/categories_repo/categories_repo_impl.dart';
+import 'package:elite/features/home/data/repos/contracts_repo/maintenance_contracts_repo.dart';
+import 'package:elite/features/home/data/repos/contracts_repo/maintenance_contracts_repo_impl.dart';
 import 'package:elite/features/home/presentation/manager/banners_cubit/banners_cubit.dart';
 import 'package:elite/features/home/presentation/manager/categories_cubit/categories_cubit.dart';
+import 'package:elite/features/home/presentation/manager/contracts_cubit/maintenance_contracts_cubit.dart';
 import 'package:elite/features/login/data/repos/login_repo_impl.dart';
 import 'package:elite/features/login/presentation/manager/login_cubit.dart';
 import 'package:elite/features/register/data/repos/register_repo_impl.dart';
@@ -153,6 +156,19 @@ void setupServiceLocator() {
   );
   getIt.registerFactory<CategoriesCubit>(
         () => CategoriesCubit(categoriesRepo: getIt<CategoriesRepo>()),
+  );
+
+  // Maintenance contracts dependencies
+  getIt.registerLazySingleton<MaintenanceContractsRepo>(
+        () => MaintenanceContractsRepoImpl(
+      dioConsumer: getIt<DioConsumer>(),
+      networkCubit: getIt<NetworkConnectionCubit>(),
+    ),
+  );
+  getIt.registerFactory<MaintenanceContractsCubit>(
+        () => MaintenanceContractsCubit(
+      maintenanceContractsRepo: getIt<MaintenanceContractsRepo>(),
+    ),
   );
 
   // Register dependencies

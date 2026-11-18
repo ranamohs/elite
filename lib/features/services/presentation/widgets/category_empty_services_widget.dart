@@ -1,17 +1,17 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:elite/core/constants/app_colors.dart';
+import 'package:elite/core/constants/app_strings.dart';
 import 'package:elite/core/constants/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CategoryEmptyServicesWidget extends StatelessWidget {
-  final bool isArabic;
   final String categoryName;
   final VoidCallback? onRefresh;
   final VoidCallback? onBack;
 
   const CategoryEmptyServicesWidget({
     super.key,
-    required this.isArabic,
     required this.categoryName,
     this.onRefresh,
     this.onBack,
@@ -70,9 +70,7 @@ class CategoryEmptyServicesWidget extends StatelessWidget {
             SizedBox(height: 24.h),
 
             Text(
-              isArabic
-                  ? 'لا توجد خدمات متاحة حالياً'
-                  : 'No services available right now',
+              AppStrings.noServicesAvailable.tr(),
               textAlign: TextAlign.center,
               style: AppStyles.styleMedium16(context).copyWith(
                 fontSize: 18.sp,
@@ -82,9 +80,9 @@ class CategoryEmptyServicesWidget extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              isArabic
-                  ? 'قسم $categoryName قيد التحديث وسنضيف خدمات جديدة قريباً جداً'
-                  : 'The $categoryName section is being updated and new services will be added very soon',
+              AppStrings.sectionUpdatingServices.tr(
+                namedArgs: {'name': categoryName},
+              ),
               textAlign: TextAlign.center,
               style: AppStyles.styleRegular14(context).copyWith(
                 fontSize: 13.sp,
@@ -107,7 +105,7 @@ class CategoryEmptyServicesWidget extends StatelessWidget {
                       color: Colors.white,
                     ),
                     label: Text(
-                      isArabic ? 'تحديث' : 'Refresh',
+                      AppStrings.refresh.tr(),
                       style: AppStyles.styleRegular14(context).copyWith(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w700,

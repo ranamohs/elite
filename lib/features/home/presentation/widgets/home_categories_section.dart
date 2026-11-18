@@ -109,9 +109,9 @@ class HomeCategoriesSection extends StatelessWidget {
                             GoRouter.of(context).push(AppRouter.allCategoriesView);
                           },
                       child: Text(
-                        isAr
-                            ? 'كل الاقسام ($displayTotal)'
-                            : 'All Categories ($displayTotal)',
+                        AppStrings.allCategoriesWithCount.tr(
+                          namedArgs: {'count': '$displayTotal'},
+                        ),
                         style: AppStyles.styleMedium18(context).copyWith(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
@@ -151,7 +151,6 @@ class HomeCategoriesSection extends StatelessWidget {
               )
             else if (displayCategories.isEmpty)
               HomeEmptyCategoriesWidget(
-                isArabic: isAr,
                 onRefresh: () {
                   context.read<CategoriesCubit>().getCategories();
                 },

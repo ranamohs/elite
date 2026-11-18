@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:elite/core/constants/app_strings.dart';
 import 'package:elite/core/constants/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,12 +7,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../core/constants/app_colors.dart';
 
 class HomeEmptyCategoriesWidget extends StatelessWidget {
-  final bool isArabic;
   final VoidCallback? onRefresh;
 
   const HomeEmptyCategoriesWidget({
     super.key,
-    required this.isArabic,
     this.onRefresh,
   });
 
@@ -56,7 +56,7 @@ class HomeEmptyCategoriesWidget extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           Text(
-            isArabic ? 'لا توجد أقسام متاحة حالياً' : 'No categories available right now',
+            AppStrings.noCategoriesAvailable.tr(),
             textAlign: TextAlign.center,
             style:AppStyles.styleRegular14(context).copyWith(
               fontSize: 14.sp,
@@ -66,9 +66,7 @@ class HomeEmptyCategoriesWidget extends StatelessWidget {
           ),
           SizedBox(height: 4.h),
           Text(
-            isArabic
-                ? 'سيتم إضافة أقسام وخدمات جديدة قريباً'
-                : 'New categories and services will be added soon',
+            AppStrings.categoriesComingSoon.tr(),
             textAlign: TextAlign.center,
             style:AppStyles.styleRegular14(context).copyWith(
               fontSize: 11.5.sp,
@@ -97,7 +95,7 @@ class HomeEmptyCategoriesWidget extends StatelessWidget {
                     ),
                     SizedBox(width: 5.w),
                     Text(
-                      isArabic ? 'إعادة المحاولة' : 'Try again',
+                      AppStrings.tryAgain.tr(),
                       style:AppStyles.styleRegular14(context).copyWith(
                         fontSize: 11.5.sp,
                         fontWeight: FontWeight.w700,

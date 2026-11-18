@@ -89,4 +89,29 @@ class AppStrings {
   static const String contractDescription = "contractDescription";
   static const String contractPrice = "contractPrice";
   static const String orderContract = "orderContract";
+
+  static const String maintenanceContracts = "maintenanceContracts";
+  static const String allCategories = "allCategories";
+  static const String allCategoriesWithCount = "allCategoriesWithCount";
+  static const String searchInCategories = "searchInCategories";
+  static const String noCategoriesMatchingSearch = "noCategoriesMatchingSearch";
+  static const String noCategoriesAvailable = "noCategoriesAvailable";
+  static const String categoriesComingSoon = "categoriesComingSoon";
+  static const String tryAgain = "tryAgain";
+  static const String allContracts = "allContracts";
+  static const String noContractsAvailable = "noContractsAvailable";
+  static const String contractsComingSoon = "contractsComingSoon";
+  static const String refresh = "refresh";
+  static const String noServicesAvailable = "noServicesAvailable";
+  static const String sectionUpdatingServices = "sectionUpdatingServices";
+  static const String noItemsAvailable = "noItemsAvailable";
+  static const String sectionUpdatingItems = "sectionUpdatingItems";
+  static const String requestInspection = "requestInspection";
+  static const String servicesWithProducts = "servicesWithProducts";
+  static const String servicesCount = "servicesCount";
+  static const String zeroServicesWithProducts = "zeroServicesWithProducts";
+  static const String zeroServiceWithProduct = "zeroServiceWithProduct";
+  static const String zeroServices = "zeroServices";
+  static const String viewDetails = "viewDetails";
+
 }

@@ -1,4 +1,6 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:elite/core/constants/app_colors.dart';
+import 'package:elite/core/constants/app_strings.dart';
 import 'package:elite/core/functions/is_arabic.dart';
 import 'package:elite/core/routes/app_router.dart';
 import 'package:elite/core/widgets/fixit_app_bars.dart';
@@ -63,7 +65,7 @@ class _AllCategoriesViewState extends State<AllCategoriesView> {
     return Scaffold(
       backgroundColor:AppColors.homeBackground,
       appBar: PrimaryAppBar(
-        title: isAr ? 'كل الأقسام' : 'All Categories',
+        title: AppStrings.allCategories.tr(),
       ),
       body: Directionality(
         textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
@@ -138,9 +140,9 @@ class _AllCategoriesViewState extends State<AllCategoriesView> {
                           },
                           textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
-                            hintText: isAr
-                                ? 'ابحث في $displayTotal قسم...'
-                                : 'Search in $displayTotal category...',
+                            hintText: AppStrings.searchInCategories.tr(
+                              namedArgs: {'count': '$displayTotal'},
+                            ),
                             hintStyle: TextStyle(
                               fontSize: 13.sp,
                               color: const Color(0xFF9E9E9E),
@@ -216,9 +218,7 @@ class _AllCategoriesViewState extends State<AllCategoriesView> {
                               ),
                               SizedBox(height: 12.h),
                               Text(
-                                isAr
-                                    ? 'لا توجد أقسام مطابقة للبحث'
-                                    : 'No categories found matching your search',
+                                AppStrings.noCategoriesMatchingSearch.tr(),
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w600,

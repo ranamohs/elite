@@ -1,16 +1,16 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:elite/core/constants/app_colors.dart';
+import 'package:elite/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/constants/app_styles.dart';
 
 class SubCategoryBottomBanner extends StatelessWidget {
-  final bool isArabic;
   final VoidCallback? onTap;
 
   const SubCategoryBottomBanner({
     super.key,
-    required this.isArabic,
     this.onTap,
   });
 
@@ -25,9 +25,7 @@ class SubCategoryBottomBanner extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          isArabic
-              ? 'مش عارف المشكلة فين؟ اطلب معاينة وفني يحددها'
-              : 'Don’t know the problem? Request an inspection',
+          AppStrings.requestInspection.tr(),
           textAlign: TextAlign.center,
           style:AppStyles.styleMedium16(context).copyWith(
             fontSize: 13.sp,

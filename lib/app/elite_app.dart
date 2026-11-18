@@ -5,6 +5,7 @@ import 'package:elite/core/state_management/bottom_navigation_bar_cubit/bottom_n
 import 'package:elite/core/state_management/network_connection_cubit/network_connection_cubit.dart' show NetworkConnectionCubit;
 import 'package:elite/core/state_management/user_cubit/user_cubit.dart' show UserCubit;
 import 'package:elite/features/home/presentation/manager/categories_cubit/categories_cubit.dart';
+import 'package:elite/features/home/presentation/manager/contracts_cubit/maintenance_contracts_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider, MultiBlocProvider;
@@ -38,6 +39,10 @@ class EliteApp extends StatelessWidget {
             ),
             BlocProvider<CategoriesCubit>(
               create: (_) => getIt<CategoriesCubit>()..getCategories(),
+            ),
+            BlocProvider<MaintenanceContractsCubit>(
+              create: (_) => getIt<MaintenanceContractsCubit>()
+                ..getMaintenanceContracts(),
             ),
 
 

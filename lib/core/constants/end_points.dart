@@ -12,6 +12,7 @@ class EndPoints {
   static const String IMAGE_BASE_URL = 'http://elitefm-eg.online';
   static const String banners = "/banners";
   static const String categories = "/main-categories";
+  static const String maintenanceContracts = "/maintenance-contracts";
 
   static const String requestService = "/request";
   static const String deleteAccount = "/profile/delete";
@@ -70,6 +71,14 @@ class ApiKey {
   static const String shopId = 'shop_id';
   static const String rating = 'rating';
   static const String comment = 'comment';
+  static const String description = 'description';
+  static const String price = 'price';
+  static const String original = 'original';
+  static const String currency = 'currency';
+  static const String value = 'value';
+  static const String duration = 'duration';
+  static const String unit = 'unit';
+  static const String features = 'features';
 }
 
 class Params {

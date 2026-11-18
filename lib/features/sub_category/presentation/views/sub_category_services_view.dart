@@ -213,7 +213,6 @@ class _SubCategoryServicesContentState
                           .refreshSubCategories(widget.subCategoryId);
                     },
                     child: SubCategoryEmptyWidget(
-                      isArabic: isAr,
                       subCategoryName: title,
                       onRefresh: () {
                         context
@@ -272,7 +271,6 @@ class _SubCategoryServicesContentState
           Padding(
             padding: EdgeInsets.fromLTRB(18.w, 0, 18.w, 16.h),
             child: SubCategoryBottomBanner(
-              isArabic: isAr,
               onTap: () {},
             ),
           ),

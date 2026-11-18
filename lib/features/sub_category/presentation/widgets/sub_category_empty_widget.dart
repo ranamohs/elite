@@ -1,18 +1,18 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_styles.dart';
 
 class SubCategoryEmptyWidget extends StatelessWidget {
-  final bool isArabic;
   final String subCategoryName;
   final VoidCallback? onRefresh;
   final VoidCallback? onBack;
 
   const SubCategoryEmptyWidget({
     super.key,
-    required this.isArabic,
     required this.subCategoryName,
     this.onRefresh,
     this.onBack,
@@ -45,7 +45,7 @@ class SubCategoryEmptyWidget extends StatelessWidget {
             ),
             SizedBox(height: 20.h),
             Text(
-              isArabic ? 'لا توجد عناصر متاحة' : 'No items available',
+              AppStrings.noItemsAvailable.tr(),
               textAlign: TextAlign.center,
               style:AppStyles.styleMedium16(context).copyWith(
                 fontSize: 17.sp,
@@ -55,9 +55,9 @@ class SubCategoryEmptyWidget extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              isArabic
-                  ? 'قسم $subCategoryName قيد التحديث وسنضيف بنود جديدة قريباً'
-                  : 'Section $subCategoryName is being updated and new items will be added soon',
+              AppStrings.sectionUpdatingItems.tr(
+                namedArgs: {'name': subCategoryName},
+              ),
               textAlign: TextAlign.center,
               style:AppStyles.styleMedium16(context).copyWith(
                 fontSize: 13.sp,
@@ -79,7 +79,7 @@ class SubCategoryEmptyWidget extends StatelessWidget {
                       color: Colors.white,
                     ),
                     label: Text(
-                      isArabic ? 'تحديث' : 'Refresh',
+                      AppStrings.refresh.tr(),
                       style:AppStyles.styleMedium16(context).copyWith(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w700,
