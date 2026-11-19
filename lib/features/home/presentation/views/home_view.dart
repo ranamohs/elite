@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:elite/core/constants/app_strings.dart';
 import 'package:elite/core/constants/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -72,7 +73,7 @@ class _HomeViewState extends State<HomeView> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "عقود الصيانة",
+                        AppStrings.maintenanceContracts.tr(),
                         style: AppStyles.styleMedium18(context).copyWith(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w800,
@@ -84,7 +85,7 @@ class _HomeViewState extends State<HomeView> {
                           GoRouter.of(context).push(AppRouter.allContractsView);
                         },
                         child: Text(
-                          'كل العقود ',
+                          AppStrings.allContracts.tr(),
                           style: AppStyles.styleMedium18(context).copyWith(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w600,

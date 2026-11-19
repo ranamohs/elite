@@ -3,10 +3,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:elite/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_styles.dart';
+import '../../../../core/routes/app_router.dart';
 import '../../data/models/contracts_models/maintenance_contracts_model.dart';
 import 'contract_formatters.dart';
 
@@ -156,7 +158,7 @@ class MaintenanceContractCardItem extends StatelessWidget {
                     else
                       const Spacer(),
                     GestureDetector(
-                      onTap: onOrderTap,
+                      onTap: onOrderTap ?? () => _openDetails(context),
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 16.w,
@@ -167,7 +169,7 @@ class MaintenanceContractCardItem extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14.r),
                         ),
                         child: Text(
-                         AppStrings.viewDetails.tr(),
+                          AppStrings.viewDetails.tr(),
                           style: AppStyles.styleMedium16(context).copyWith(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w700,
@@ -183,6 +185,13 @@ class MaintenanceContractCardItem extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _openDetails(BuildContext context) {
+    GoRouter.of(context).push(
+      AppRouter.contractDetailsView,
+      extra: {'contractId': contract.id},
     );
   }
 

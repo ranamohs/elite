@@ -113,5 +113,27 @@ class AppStrings {
   static const String zeroServiceWithProduct = "zeroServiceWithProduct";
   static const String zeroServices = "zeroServices";
   static const String viewDetails = "viewDetails";
+  static const String contractDetails = "contractDetails";
+  static const String contractFeatures = "contractFeatures";
+  static const String contractDurationLabel = "contractDurationLabel";
+  static const String contractPriceLabel = "contractPriceLabel";
+  static const String orderNow = "orderNow";
+  static const String noFeaturesAvailable = "noFeaturesAvailable";
+  static const String contractId = "contractId";
+  static const String aboutThisContract = "aboutThisContract";
+
+  static const String noOffersAvailable = "noOffersAvailable";
+  static const String offersComingSoon = "offersComingSoon";
+  static const String discount = "discount";
+  static const String freeShipping = "freeShipping";
+  static const String withMaintenance = "withMaintenance";
+  static const String warranty = "warranty";
+  static const String year = "year";
+  static const String inStock = "inStock";
+  static const String outOfStock = "outOfStock";
+  static const String offerProductCode = "offerProductCode";
+  static const String addToCart = "addToCart";
+  static const String products = "products";
+  static const String services = "services";
 
 }

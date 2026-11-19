@@ -152,25 +152,25 @@ class SubCategoryCardItem extends StatelessWidget {
                           height: 1.25,
                         ),
                       ),
-                      SizedBox(height: 6.h),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 3.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF1F8E9),
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        child: Text(
-                          badgeText,
-                          style:AppStyles.styleMedium16(context).copyWith(
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.homeContractBadgeGreen,
-                          ),
-                        ),
-                      ),
+                      // SizedBox(height: 6.h),
+                      // Container(
+                      //   padding: EdgeInsets.symmetric(
+                      //     horizontal: 10.w,
+                      //     vertical: 3.h,
+                      //   ),
+                      //   decoration: BoxDecoration(
+                      //     color: const Color(0xFFF1F8E9),
+                      //     borderRadius: BorderRadius.circular(10.r),
+                      //   ),
+                      //   child: Text(
+                      //     badgeText,
+                      //     style:AppStyles.styleMedium16(context).copyWith(
+                      //       fontSize: 11.sp,
+                      //       fontWeight: FontWeight.w600,
+                      //       color: AppColors.homeContractBadgeGreen,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

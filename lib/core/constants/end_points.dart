@@ -13,6 +13,9 @@ class EndPoints {
   static const String banners = "/banners";
   static const String categories = "/main-categories";
   static const String maintenanceContracts = "/maintenance-contracts";
+  static String maintenanceContractDetails(int id) =>
+      "/maintenance-contracts/$id";
+  static const String offers = "/offers";
 
   static const String requestService = "/request";
   static const String deleteAccount = "/profile/delete";

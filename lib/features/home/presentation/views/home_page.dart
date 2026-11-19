@@ -1,14 +1,14 @@
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:elite/core/constants/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../features/home/presentation/views/home_view.dart';
 import '../../../account/presentation/views/account_view.dart';
+import '../../../offers/presentation/view/offers_view.dart';
 import '../../../orders/presentation/views/orders_history_view.dart';
-import '../../../settings/views/settings_view.dart';
 
 class AppLayout extends StatefulWidget {
   const AppLayout({super.key});
@@ -27,7 +27,7 @@ class _AppLayoutState extends State<AppLayout> {
       isActive: _currentIndex == 1,
       onRequestService: () => _onTabTapped(0),
     ),
-    const SettingsView(), // offers / settings placeholder
+    OffersView(isActive: _currentIndex == 2),
     AccountView(isActive: _currentIndex == 3, onOrders: () => _onTabTapped(1)),
   ];
 
@@ -83,25 +83,25 @@ class _AppLayoutState extends State<AppLayout> {
                 index: 0,
                 iconData: Icons.home_outlined,
                 activeIconData: Icons.home_rounded,
-                label: 'الرئيسية',
+                label: AppStrings.home.tr(),
               ),
               _buildNavItem(
                 index: 1,
                 iconData: Icons.assignment_outlined,
                 activeIconData: Icons.assignment_rounded,
-                label: 'طلباتي',
+                label: AppStrings.myOrders.tr(),
               ),
               _buildNavItem(
                 index: 2,
                 iconData: Icons.local_offer_outlined,
                 activeIconData: Icons.local_offer_rounded,
-                label: 'العروض',
+                label: AppStrings.offers.tr(),
               ),
               _buildNavItem(
                 index: 3,
                 iconData: Icons.person_outline_rounded,
                 activeIconData: Icons.person_rounded,
-                label: 'حسابي',
+                label: AppStrings.myAccount.tr(),
               ),
             ],
           ),

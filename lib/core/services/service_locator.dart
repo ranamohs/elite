@@ -1,6 +1,7 @@
 import '../../features/account/data/repos/addresses_repo/account_addresses_repo.dart';
 import '../../features/account/data/repos/addresses_repo/local_account_addresses_repo.dart';
 import '../../features/account/presentation/manager/addresses_cubit/account_addresses_cubit.dart';
+import '../../features/offers/presentation/manager/offers_cubit.dart';
 import '../../features/orders/data/repos/order_details_repo.dart';
 import '../../features/orders/data/repos/order_details_repo_impl.dart';
 import '../../features/orders/presentation/manager/order_details_cubit.dart';
@@ -28,8 +29,11 @@ import 'package:elite/features/home/data/repos/categories_repo/categories_repo.d
 import 'package:elite/features/home/data/repos/categories_repo/categories_repo_impl.dart';
 import 'package:elite/features/home/data/repos/contracts_repo/maintenance_contracts_repo.dart';
 import 'package:elite/features/home/data/repos/contracts_repo/maintenance_contracts_repo_impl.dart';
+import 'package:elite/features/offers/data/repos/offers_repo.dart';
+import 'package:elite/features/offers/data/repos/offers_repo_impl.dart';
 import 'package:elite/features/home/presentation/manager/banners_cubit/banners_cubit.dart';
 import 'package:elite/features/home/presentation/manager/categories_cubit/categories_cubit.dart';
+import 'package:elite/features/home/presentation/manager/contracts_cubit/maintenance_contract_details_cubit.dart';
 import 'package:elite/features/home/presentation/manager/contracts_cubit/maintenance_contracts_cubit.dart';
 import 'package:elite/features/login/data/repos/login_repo_impl.dart';
 import 'package:elite/features/login/presentation/manager/login_cubit.dart';
@@ -169,6 +173,22 @@ void setupServiceLocator() {
         () => MaintenanceContractsCubit(
       maintenanceContractsRepo: getIt<MaintenanceContractsRepo>(),
     ),
+  );
+  getIt.registerFactory<MaintenanceContractDetailsCubit>(
+        () => MaintenanceContractDetailsCubit(
+      maintenanceContractsRepo: getIt<MaintenanceContractsRepo>(),
+    ),
+  );
+
+  // Offers dependencies
+  getIt.registerLazySingleton<OffersRepo>(
+        () => OffersRepoImpl(
+      dioConsumer: getIt<DioConsumer>(),
+      networkCubit: getIt<NetworkConnectionCubit>(),
+    ),
+  );
+  getIt.registerFactory<OffersCubit>(
+        () => OffersCubit(offersRepo: getIt<OffersRepo>()),
   );
 
   // Register dependencies
