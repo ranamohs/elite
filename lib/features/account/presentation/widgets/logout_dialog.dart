@@ -1,3 +1,4 @@
+import 'package:elite/core/constants/app_styles.dart';
 import 'package:elite/core/state_management/user_cubit/user_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,7 @@ class LogoutDialog extends StatelessWidget {
                 // Title
                 Text(
                   AppStrings.logout.tr(),
-                  style: const TextStyle(
+                  style: AppStyles.styleRegular14(context).copyWith(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -79,9 +80,7 @@ class LogoutDialog extends StatelessWidget {
                 Text(
                   AppStrings.logoutMessage.tr(),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 14,
-                  ),
+                  style:AppStyles.styleRegular14(context),
                 ),
 
                 const SizedBox(height: 24),
@@ -103,9 +102,10 @@ class LogoutDialog extends StatelessWidget {
                         ),
                         child: Text(
                           AppStrings.cancel.tr(),
-                          style: const TextStyle(
+                          style:AppStyles.styleRegular14(context).copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
+                            color: AppColors.subtitleGrey
                           ),
                         ),
                       ),
@@ -141,10 +141,11 @@ class LogoutDialog extends StatelessWidget {
                         )
                             : Text(
                           AppStrings.logout.tr(),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+                            style:AppStyles.styleRegular14(context).copyWith(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.white
+                            ),
                         ),
                       ),
                     ),
