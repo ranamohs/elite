@@ -1,3 +1,4 @@
+import '../../../contract_subscription/presentation/views/contract_subscription_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:elite/core/constants/app_colors.dart';
@@ -49,8 +50,11 @@ class _ContractDetailsViewState extends State<ContractDetailsView> {
       textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: AppColors.homeBackground,
-        body: BlocBuilder<MaintenanceContractDetailsCubit,
-            MaintenanceContractDetailsState>(
+        body:
+        BlocBuilder<
+            MaintenanceContractDetailsCubit,
+            MaintenanceContractDetailsState
+        >(
           bloc: _cubit,
           builder: (context, state) {
             if (state is MaintenanceContractDetailsLoading) {
@@ -65,9 +69,10 @@ class _ContractDetailsViewState extends State<ContractDetailsView> {
                     Expanded(
                       child: RetryWidget(
                         message: state.failure.errMessage,
-                        onPressed: () => _cubit.getMaintenanceContractDetails(
-                          widget.contractId,
-                        ),
+                        onPressed: () =>
+                            _cubit.getMaintenanceContractDetails(
+                              widget.contractId,
+                            ),
                       ),
                     ),
                   ],
@@ -152,18 +157,17 @@ class _ContractDetailsViewState extends State<ContractDetailsView> {
                       child: features.isEmpty
                           ? Text(
                         AppStrings.noFeaturesAvailable.tr(),
-                        style:
-                        AppStyles.styleRegular14(context).copyWith(
+                        style: AppStyles.styleRegular14(context).copyWith(
                           fontSize: 12.5.sp,
                           color: AppColors.subtitleGrey,
                         ),
                       )
                           : Column(
                         children: features
-                            .map((feature) => _buildFeatureRow(
-                          context,
-                          feature,
-                        ))
+                            .map(
+                              (feature) =>
+                              _buildFeatureRow(context, feature),
+                        )
                             .toList(),
                       ),
                     ),
@@ -173,7 +177,7 @@ class _ContractDetailsViewState extends State<ContractDetailsView> {
             ),
           ],
         ),
-        _buildBottomBar(context),
+        _buildBottomBar(context, contract),
       ],
     );
   }
@@ -213,7 +217,7 @@ class _ContractDetailsViewState extends State<ContractDetailsView> {
                 ),
                 child: Text(
                   AppStrings.newBadge.tr(),
-                  style:AppStyles.styleRegular14(context).copyWith(
+                  style: AppStyles.styleRegular14(context).copyWith(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
@@ -305,11 +309,7 @@ class _ContractDetailsViewState extends State<ContractDetailsView> {
               valueColor: AppColors.homeContractBadgeGreen,
             ),
           ),
-          Container(
-            width: 1,
-            height: 42.h,
-            color: const Color(0xFFEDEFF2),
-          ),
+          Container(width: 1, height: 42.h, color: const Color(0xFFEDEFF2)),
           Expanded(
             child: _buildInfoTile(
               context,
@@ -462,7 +462,7 @@ class _ContractDetailsViewState extends State<ContractDetailsView> {
     );
   }
 
-  Widget _buildBottomBar(BuildContext context) {
+  Widget _buildBottomBar(BuildContext context, MaintenanceContract contract) {
     return Positioned(
       left: 0,
       right: 0,
@@ -488,8 +488,10 @@ class _ContractDetailsViewState extends State<ContractDetailsView> {
           height: 50.h,
           child: ElevatedButton(
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(AppStrings.orderContract.tr())),
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => ContractSubscriptionView(contract: contract),
+                ),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -521,10 +523,7 @@ class _ContractDetailsViewState extends State<ContractDetailsView> {
           const BackIconButton(),
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w700,
-            ),
+            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
           ),
         ],
       ),

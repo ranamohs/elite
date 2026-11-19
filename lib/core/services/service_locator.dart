@@ -1,3 +1,6 @@
+import '../../features/contract_subscription/data/repos/contract_subscription_repo.dart';
+import '../../features/contract_subscription/data/repos/contract_subscription_repo_impl.dart';
+import '../../features/contract_subscription/presentation/manager/contract_subscription_cubit.dart';
 import '../../features/account/data/repos/addresses_repo/account_addresses_repo.dart';
 import '../../features/account/data/repos/addresses_repo/local_account_addresses_repo.dart';
 import '../../features/account/presentation/manager/addresses_cubit/account_addresses_cubit.dart';
@@ -294,5 +297,15 @@ void setupServiceLocator() {
   );
   getIt.registerFactory<ContactUsCubit>(
         () => ContactUsCubit(contactUsRepo: getIt<ContactUsRepoImpl>()),
+  );
+  getIt.registerLazySingleton<ContractSubscriptionRepo>(
+        () => ContractSubscriptionRepoImpl(
+      dioConsumer: getIt<DioConsumer>(),
+      storage: getIt<SecureStorageHelper>(),
+      network: getIt<NetworkConnectionCubit>(),
+    ),
+  );
+  getIt.registerFactory<ContractSubscriptionCubit>(
+        () => ContractSubscriptionCubit(repo: getIt<ContractSubscriptionRepo>()),
   );
 }
