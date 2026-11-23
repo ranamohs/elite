@@ -1,3 +1,6 @@
+import '../../../../core/auth/account_access.dart';
+import '../../../../core/functions/is_arabic.dart';
+import '../../../account/presentation/widgets/account_ui.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:elite/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
@@ -17,19 +20,21 @@ import '../manager/login_cubit.dart';
 import '../manager/login_state.dart';
 
 class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+  final bool technical;
+  const LoginView({super.key, this.technical = false});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<LoginCubit>(),
-      child: const _LoginViewBody(),
+      child: _LoginViewBody(technical: technical),
     );
   }
 }
 
 class _LoginViewBody extends StatefulWidget {
-  const _LoginViewBody();
+  final bool technical;
+  const _LoginViewBody({required this.technical});
 
   @override
   State<_LoginViewBody> createState() => _LoginViewState();
@@ -53,11 +58,25 @@ class _LoginViewState extends State<_LoginViewBody> {
       listener: (context, state) {
         if (state is LoginSuccessState) {
           context.read<UserCubit>().setGuestStatus(false);
-          customGo(context, AppRouter.homePage);
+          final access = AccountAccess(
+            accountType:
+            state.login.user?.accountType?.toString() ?? 'customer',
+          );
+          customGo(
+            context,
+            access.isTechnical ? AppRouter.technicalHome : AppRouter.homePage,
+          );
         } else if (state is LoginFailureState) {
+          final errors =
+              state.failedModel.errors?.values.expand((e) => e).toList() ??
+                  <String>[];
           floatingSnackBar(
             context,
-            state.failedModel.errors?.values.first.first ??
+            errors.isNotEmpty
+                ? errors.first
+                : (isArabic(context)
+                ? state.failedModel.messageLocalized?.ar
+                : state.failedModel.messageLocalized?.en) ??
                 state.failedModel.message ??
                 'Login failed',
             icon: Icons.error_outline,
@@ -94,7 +113,10 @@ class _LoginViewState extends State<_LoginViewBody> {
                               if (Navigator.canPop(context)) {
                                 Navigator.pop(context);
                               } else {
-                                customPushReplacement(context, AppRouter.introView);
+                                customPushReplacement(
+                                  context,
+                                  AppRouter.introView,
+                                );
                               }
                             },
                           ),
@@ -128,8 +150,14 @@ class _LoginViewState extends State<_LoginViewBody> {
 
                         SizedBox(height: 18.h),
                         Text(
-                          AppStrings.login.tr(),
-                          style:AppStyles.styleRegular12(context).copyWith(
+                          widget.technical
+                              ? accountText(
+                            context,
+                            'دخول الفنيين',
+                            'Technician sign in',
+                          )
+                              : AppStrings.login.tr(),
+                          style: AppStyles.styleRegular12(context).copyWith(
                             fontSize: 22.sp,
                             fontWeight: FontWeight.w800,
                             color: AppColors.titleDark,
@@ -138,10 +166,16 @@ class _LoginViewState extends State<_LoginViewBody> {
                         ),
                         SizedBox(height: 6.h),
                         Text(
-                          'أهلاً بيك تاني! سجّل دخولك عشان تكمل',
-                          style:AppStyles.styleRegular12(context).copyWith(
-                              color: AppColors.subtitleGrey
-                          ),
+                          widget.technical
+                              ? accountText(
+                            context,
+                            'سجّل دخولك وابدأ استقبل الطلبات',
+                            'Sign in to your technician account',
+                          )
+                              : 'أهلاً بيك تاني! سجّل دخولك عشان تكمل',
+                          style: AppStyles.styleRegular12(
+                            context,
+                          ).copyWith(color: AppColors.subtitleGrey),
                           textAlign: TextAlign.center,
                         ),
 
@@ -169,8 +203,7 @@ class _LoginViewState extends State<_LoginViewBody> {
                                 _obscurePassword = !_obscurePassword;
                               });
                             },
-                            icon: Icon(Icons.lock) ,
-
+                            icon: Icon(Icons.lock),
                           ),
                         ),
 
@@ -181,7 +214,7 @@ class _LoginViewState extends State<_LoginViewBody> {
                             onTap: () {},
                             child: Text(
                               'نسيت كلمة السر؟',
-                              style:AppStyles.styleRegular12(context).copyWith(
+                              style: AppStyles.styleRegular12(context).copyWith(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w700,
                                 color: AppColors.subtitleGrey,
@@ -211,7 +244,7 @@ class _LoginViewState extends State<_LoginViewBody> {
                               FocusScope.of(context).unfocus();
                               context.read<LoginCubit>().login(
                                 phoneNumber: _phoneController.text.trim(),
-                                password: _passwordController.text.trim(),
+                                password: _passwordController.text,
                               );
                             },
                             child: state is LoginLoadingState
@@ -225,7 +258,8 @@ class _LoginViewState extends State<_LoginViewBody> {
                             )
                                 : Text(
                               'تسجيل الدخول',
-                              style: AppStyles.styleRegular16(context).copyWith(
+                              style: AppStyles.styleRegular16(context)
+                                  .copyWith(
                                 color: AppColors.white,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -235,7 +269,32 @@ class _LoginViewState extends State<_LoginViewBody> {
 
                         SizedBox(height: 18.h),
 
-
+                        if (widget.technical)
+                          AccountCard(
+                            child: Column(
+                              children: [
+                                Text(
+                                  accountText(
+                                    context,
+                                    'عايز تشتغل معانا؟',
+                                    'Want to work with us?',
+                                  ),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  accountText(
+                                    context,
+                                    'قدّم بياناتك ومستنداتك عشان نراجع طلبك',
+                                    'Submit your details and documents for review',
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
                         SizedBox(height: 24.h),
                       ],
                     ),
@@ -266,12 +325,23 @@ class _LoginViewState extends State<_LoginViewBody> {
                   child: Center(
                     child: GestureDetector(
                       onTap: () {
-                        customPushReplacement(context, AppRouter.registerView);
+                        customPush(
+                          context,
+                          widget.technical
+                              ? AppRouter.technicalRegister
+                              : AppRouter.selectRoleView,
+                        );
                       },
                       behavior: HitTestBehavior.opaque,
                       child: Text(
-                        'معندكش حساب ؟ أنشئ حساب جديد',
-                        style:AppStyles.styleRegular12(context).copyWith(
+                        widget.technical
+                            ? accountText(
+                          context,
+                          'انضم كفني جديد',
+                          'Join as a technician',
+                        )
+                            : 'معندكش حساب ؟ أنشئ حساب جديد',
+                        style: AppStyles.styleRegular12(context).copyWith(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w700,
                           color: AppColors.badgeTextGreen,

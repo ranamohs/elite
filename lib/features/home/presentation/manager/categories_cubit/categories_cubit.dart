@@ -8,7 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class CategoriesCubit extends Cubit<CategoriesState> {
   final CategoriesRepo categoriesRepo;
 
-  CategoriesCubit({required this.categoriesRepo}) : super(const CategoriesInitial());
+  CategoriesCubit({required this.categoriesRepo})
+      : super(const CategoriesInitial());
 
   bool get isLoadingMore => state is CategoriesLoadingMore;
 
@@ -32,29 +33,32 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     if (page == 1) {
       emit(const CategoriesLoading());
     } else if (oldModel != null) {
-      emit(CategoriesLoadingMore(
-        categoriesModel: oldModel,
-        currentPage: currentPage,
-        lastPage: lastPage,
-      ));
+      emit(
+        CategoriesLoadingMore(
+          categoriesModel: oldModel,
+          currentPage: currentPage,
+          lastPage: lastPage,
+        ),
+      );
     }
 
-    final Either<Failure, CategoriesModel> result = await categoriesRepo.getCategories(page: page);
+    final Either<Failure, CategoriesModel> result = await categoriesRepo
+        .getCategories(page: page);
 
-    result.fold(
-          (failure) => emit(CategoriesFailure(failure)),
-          (newModel) {
-        final mergedModel = (page == 1 || oldModel == null)
-            ? newModel
-            : _mergeCategories(oldModel, newModel);
+    if (isClosed) return;
+    result.fold((failure) => emit(CategoriesFailure(failure)), (newModel) {
+      final mergedModel = (page == 1 || oldModel == null)
+          ? newModel
+          : _mergeCategories(oldModel, newModel);
 
-        emit(CategoriesSuccess(
+      emit(
+        CategoriesSuccess(
           categoriesModel: mergedModel,
           currentPage: newModel.meta.currentPage,
           lastPage: newModel.meta.lastPage,
-        ));
-      },
-    );
+        ),
+      );
+    });
   }
 
   void loadNextPage() {
@@ -70,8 +74,12 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     getCategories(page: 1);
   }
 
-  CategoriesModel _mergeCategories(CategoriesModel oldData, CategoriesModel newData) {
-    final mergedData = List<CategoryData>.from(oldData.data)..addAll(newData.data);
+  CategoriesModel _mergeCategories(
+      CategoriesModel oldData,
+      CategoriesModel newData,
+      ) {
+    final mergedData = List<CategoryData>.from(oldData.data)
+      ..addAll(newData.data);
 
     return CategoriesModel(
       data: mergedData,

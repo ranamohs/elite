@@ -1,5 +1,3 @@
-
-
 import 'cache_helper.dart';
 
 class UserDataManager {
@@ -27,7 +25,6 @@ class UserDataManager {
     _cachedUserName ??= _cacheHelper.getData(key: 'name');
     return _cachedUserName;
   }
-
 
   int? getUserId() {
     if (_cachedUserId != null) return _cachedUserId;
@@ -82,7 +79,35 @@ class UserDataManager {
     return _cacheHelper.getData(key: 'isGuest');
   }
 
+  String? getAccountType() => _cacheHelper.getDataString(key: 'accountType');
+  bool? getIsActive() => _cacheHelper.getData(key: 'isActive') as bool?;
+  String? getRegistrationStatus() =>
+      _cacheHelper.getDataString(key: 'registrationStatus');
+  Future<void> saveAccountSession({
+    required String accountType,
+    bool? isActive,
+    String? registrationStatus,
+  }) async {
+    await _cacheHelper.saveData(key: 'accountType', value: accountType);
+    if (isActive == null) {
+      await _cacheHelper.removeData(key: 'isActive');
+    } else {
+      await _cacheHelper.saveData(key: 'isActive', value: isActive);
+    }
+    if (registrationStatus == null) {
+      await _cacheHelper.removeData(key: 'registrationStatus');
+    } else {
+      await _cacheHelper.saveData(
+        key: 'registrationStatus',
+        value: registrationStatus,
+      );
+    }
+  }
+
   Future<void> clearAllUserData() async {
+    await _cacheHelper.removeData(key: 'accountType');
+    await _cacheHelper.removeData(key: 'isActive');
+    await _cacheHelper.removeData(key: 'registrationStatus');
     await _cacheHelper.removeData(key: 'id');
     await _cacheHelper.removeData(key: 'name');
     await _cacheHelper.removeData(key: 'email');

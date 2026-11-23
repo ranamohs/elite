@@ -10,17 +10,18 @@ class LoginCubit extends Cubit<LoginState> {
 
   LoginCubit({required this.loginRepo}) : super(LoginInitialState());
 
-  Future<void> login({required String phoneNumber,required String password}) async {
+  Future<void> login({
+    required String phoneNumber,
+    required String password,
+  }) async {
+    if (state is LoginLoadingState) return;
     emit(LoginLoadingState());
 
-    final Either<AuthFailureModel, LoginSuccessModel> result =
-    await loginRepo.login(
-        phoneNumber: phoneNumber,
-      password: password
-    );
+    final Either<AuthFailureModel, LoginSuccessModel> result = await loginRepo
+        .login(phoneNumber: phoneNumber, password: password);
 
-    result.fold((failure) => emit(LoginFailureState(failure)),
-            (login) {
+    if (isClosed) return;
+    result.fold((failure) => emit(LoginFailureState(failure)), (login) {
       emit(LoginSuccessState(login: login));
     });
   }

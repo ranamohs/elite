@@ -25,8 +25,10 @@ class LoginRepoImpl implements LoginRepo {
   });
 
   @override
-  Future<Either<AuthFailureModel, LoginSuccessModel>> login(
-      {required String phoneNumber, required String password}) async {
+  Future<Either<AuthFailureModel, LoginSuccessModel>> login({
+    required String phoneNumber,
+    required String password,
+  }) async {
     final isConnected = await networkCubit.networkInfo.isConnected;
 
     if (!isConnected) {
@@ -34,9 +36,7 @@ class LoginRepoImpl implements LoginRepo {
         AuthFailureModel(
           message: AppStrings.noInternetConnection.tr(),
           errors: {
-            ApiKey.errors: [
-              AppStrings.noInternetConnection.tr(),
-            ]
+            ApiKey.errors: [AppStrings.noInternetConnection.tr()],
           },
         ),
       );
@@ -45,14 +45,13 @@ class LoginRepoImpl implements LoginRepo {
     try {
       final response = await dioConsumer.post(
         EndPoints.login,
-        data: {
-          ApiKey.phoneNumber: phoneNumber,
-          ApiKey.password: password,
-        },
+        data: {ApiKey.phoneNumber: phoneNumber, ApiKey.password: password},
       );
 
       if (response != null && response is Map<String, dynamic>) {
-        if (response.containsKey(ApiKey.token)) {
+        if (response[ApiKey.status] == true &&
+            response[ApiKey.token] is String &&
+            (response[ApiKey.token] as String).trim().isNotEmpty) {
           final loginSuccessModel = LoginSuccessModel.fromJson(response);
           await _cacheUserData(response);
           return Right(loginSuccessModel);
@@ -64,9 +63,7 @@ class LoginRepoImpl implements LoginRepo {
           AuthFailureModel(
             message: AppStrings.serverConnectionFailed.tr(),
             errors: {
-              ApiKey.errors: [
-                AppStrings.noInternetConnection.tr(),
-              ]
+              ApiKey.errors: [AppStrings.noInternetConnection.tr()],
             },
           ),
         );
@@ -76,9 +73,7 @@ class LoginRepoImpl implements LoginRepo {
         AuthFailureModel(
           message: AppStrings.unexpectedError.tr(),
           errors: {
-            ApiKey.errors: [
-              AppStrings.noInternetConnection.tr(),
-            ]
+            ApiKey.errors: [AppStrings.noInternetConnection.tr()],
           },
         ),
       );
@@ -86,6 +81,7 @@ class LoginRepoImpl implements LoginRepo {
   }
 
   Future<void> _cacheUserData(Map<String, dynamic> response) async {
+    await userDataManager.clearAllUserData();
     final token = response[ApiKey.token];
     if (token != null) {
       await secureStorageHelper.saveToken(token: token.toString());
@@ -93,6 +89,17 @@ class LoginRepoImpl implements LoginRepo {
 
     final userData = response[ApiKey.user];
     if (userData is Map<String, dynamic>) {
+      await userDataManager.saveAccountSession(
+        accountType: userData['account_type']?.toString() ?? 'customer',
+        isActive: userData['is_active'] is bool
+            ? userData['is_active'] as bool
+            : userData['is_active'] == 1
+            ? true
+            : userData['is_active'] == 0
+            ? false
+            : null,
+        registrationStatus: userData['registration_status']?.toString(),
+      );
       final rawId = userData[ApiKey.id];
       if (rawId != null) {
         final parsedId = rawId is int ? rawId : int.tryParse(rawId.toString());
@@ -117,7 +124,9 @@ class LoginRepoImpl implements LoginRepo {
       }
 
       final avatar = userData[ApiKey.avatar];
-      userDataManager.saveUserAvatarUrl(avatar: avatar != null ? avatar.toString() : '');
+      userDataManager.saveUserAvatarUrl(
+        avatar: avatar != null ? avatar.toString() : '',
+      );
     }
 
     userDataManager.saveUserStatus(isGuest: false);

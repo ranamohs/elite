@@ -1,3 +1,6 @@
+import '../../features/technical/data/repos/technical_registration_repo.dart';
+import '../../features/technical/data/repos/technical_registration_repo_impl.dart';
+import '../../features/technical/presentation/manager/technical_registration_cubit.dart';
 import '../../features/contract_subscription/data/repos/contract_subscription_repo.dart';
 import '../../features/contract_subscription/data/repos/contract_subscription_repo_impl.dart';
 import '../../features/contract_subscription/presentation/manager/contract_subscription_cubit.dart';
@@ -141,6 +144,18 @@ void setupServiceLocator() {
   );
   getIt.registerFactory<AccountAddressesCubit>(
         () => AccountAddressesCubit(repo: getIt<AccountAddressesRepo>()),
+  );
+
+  getIt.registerLazySingleton<TechnicalRegistrationRepo>(
+        () => TechnicalRegistrationRepoImpl(
+      dioConsumer: getIt<DioConsumer>(),
+      storage: getIt<SecureStorageHelper>(),
+      userData: getIt<UserDataManager>(),
+      network: getIt<NetworkConnectionCubit>(),
+    ),
+  );
+  getIt.registerFactory<TechnicalRegistrationCubit>(
+        () => TechnicalRegistrationCubit(repo: getIt<TechnicalRegistrationRepo>()),
   );
 
   // Banners dependencies

@@ -25,18 +25,20 @@ class RegisterRepoImpl implements RegisterRepo {
   });
 
   @override
-  Future<Either<AuthFailureModel, RegisterSuccessModel>> register(
-      {required RegisterDataModel registerData}) async {
+  Future<Either<AuthFailureModel, RegisterSuccessModel>> register({
+    required RegisterDataModel registerData,
+  }) async {
     final isConnected = await networkCubit.networkInfo.isConnected;
 
     if (!isConnected) {
-      return Left(AuthFailureModel(
+      return Left(
+        AuthFailureModel(
           message: AppStrings.noInternetConnection.tr(),
           errors: {
-            ApiKey.errors: [
-              AppStrings.noInternetConnection.tr(),
-            ]
-          }));
+            ApiKey.errors: [AppStrings.noInternetConnection.tr()],
+          },
+        ),
+      );
     }
 
     try {
@@ -53,11 +55,21 @@ class RegisterRepoImpl implements RegisterRepo {
             await secureStorageHelper.saveToken(token: token.toString());
           }
 
-          if (userDataManager != null && response[ApiKey.user] is Map<String, dynamic>) {
+          if (userDataManager != null &&
+              response[ApiKey.user] is Map<String, dynamic>) {
             final userData = response[ApiKey.user] as Map<String, dynamic>;
+            await userDataManager!.saveAccountSession(
+              accountType: userData['account_type']?.toString() ?? 'customer',
+              isActive: userData['is_active'] is bool
+                  ? userData['is_active'] as bool
+                  : null,
+              registrationStatus: userData['registration_status']?.toString(),
+            );
             final rawId = userData[ApiKey.id];
             if (rawId != null) {
-              final parsedId = rawId is int ? rawId : int.tryParse(rawId.toString());
+              final parsedId = rawId is int
+                  ? rawId
+                  : int.tryParse(rawId.toString());
               if (parsedId != null) {
                 userDataManager!.saveUserId(id: parsedId);
               }
@@ -73,13 +85,18 @@ class RegisterRepoImpl implements RegisterRepo {
               userDataManager!.saveUserEmail(email: email.toString());
             }
 
-            final phone = userData[ApiKey.phone] ?? userData[ApiKey.phoneNumber];
+            final phone =
+                userData[ApiKey.phone] ?? userData[ApiKey.phoneNumber];
             if (phone != null) {
-              userDataManager!.saveUserPhoneNumber(phoneNumber: phone.toString());
+              userDataManager!.saveUserPhoneNumber(
+                phoneNumber: phone.toString(),
+              );
             }
 
             final avatar = userData[ApiKey.avatar];
-            userDataManager!.saveUserAvatarUrl(avatar: avatar != null ? avatar.toString() : '');
+            userDataManager!.saveUserAvatarUrl(
+              avatar: avatar != null ? avatar.toString() : '',
+            );
             userDataManager!.saveUserStatus(isGuest: false);
           }
 
@@ -92,9 +109,7 @@ class RegisterRepoImpl implements RegisterRepo {
           AuthFailureModel(
             message: AppStrings.serverConnectionFailed.tr(),
             errors: {
-              ApiKey.errors: [
-                AppStrings.noInternetConnection.tr(),
-              ]
+              ApiKey.errors: [AppStrings.noInternetConnection.tr()],
             },
           ),
         );
@@ -104,9 +119,7 @@ class RegisterRepoImpl implements RegisterRepo {
         AuthFailureModel(
           message: AppStrings.unexpectedError.tr(),
           errors: {
-            ApiKey.errors: [
-              AppStrings.noInternetConnection.tr(),
-            ]
+            ApiKey.errors: [AppStrings.noInternetConnection.tr()],
           },
         ),
       );

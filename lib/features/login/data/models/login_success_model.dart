@@ -11,6 +11,8 @@ class AuthUserModel {
   final dynamic longitude;
   final String? pushNotificationsToken;
   final dynamic accountType;
+  final bool? isActive;
+  final String? registrationStatus;
 
   AuthUserModel({
     this.id,
@@ -22,6 +24,8 @@ class AuthUserModel {
     this.longitude,
     this.pushNotificationsToken,
     this.accountType,
+    this.isActive,
+    this.registrationStatus,
   });
 
   factory AuthUserModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +41,14 @@ class AuthUserModel {
       longitude: json['longitude'],
       pushNotificationsToken: json['push_notifications_token'] as String?,
       accountType: json['account_type'],
+      isActive: json['is_active'] is bool
+          ? json['is_active'] as bool
+          : json['is_active'] == 1
+          ? true
+          : json['is_active'] == 0
+          ? false
+          : null,
+      registrationStatus: json['registration_status']?.toString(),
     );
   }
 
@@ -51,6 +63,8 @@ class AuthUserModel {
       'longitude': longitude,
       'push_notifications_token': pushNotificationsToken,
       'account_type': accountType,
+      'is_active': isActive,
+      'registration_status': registrationStatus,
     };
   }
 }

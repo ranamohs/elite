@@ -1,4 +1,5 @@
 class EndPoints {
+  static const String technicalRegister = '/technicians/register';
   static const String subscribe = '/subscribe';
   static String orderHistoryDetails(int id) => '/orders/history/$id';
   static const String ordersHistory = '/orders/history';

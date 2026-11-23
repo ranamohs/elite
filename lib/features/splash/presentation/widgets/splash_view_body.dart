@@ -1,3 +1,5 @@
+import '../../../../core/auth/account_access.dart';
+import '../../../../core/databases/cache/user_data_manager.dart';
 import 'package:elite/core/constants/app_assets.dart';
 import 'package:elite/core/constants/app_colors.dart' show AppColors;
 import 'package:elite/core/databases/cache/app_data_manager.dart'
@@ -36,7 +38,13 @@ class _SplashViewBodyState extends State<SplashViewBody> {
       if (!mounted) return;
 
       if (!userCubit.state.isGuest) {
-        customGo(context, AppRouter.homePage);
+        final access = AccountAccess(
+          accountType: getIt<UserDataManager>().getAccountType() ?? 'customer',
+        );
+        customGo(
+          context,
+          access.isTechnical ? AppRouter.technicalHome : AppRouter.homePage,
+        );
       } else if (!isSelectLanguageViewVisited) {
         customGo(context, AppRouter.welcomeView);
       } else {
@@ -61,14 +69,9 @@ class _SplashViewBodyState extends State<SplashViewBody> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadiusGeometry.circular(50.r),
-                child: Image.asset(
-                  AppAssets.appLogo,
-                  width: 276,
-                  height: 276,
-                ),
-
+                child: Image.asset(AppAssets.appLogo, width: 276, height: 276),
               ),
-              SizedBox(height: 110.h,)
+              SizedBox(height: 110.h),
             ],
           ),
         ),
