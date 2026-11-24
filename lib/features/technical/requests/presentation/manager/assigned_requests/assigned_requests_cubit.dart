@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/models/assigned_requests_model.dart';
-import '../../data/repos/assigned_requests_repo.dart';
+import '../../../data/models/assigned_requests_model.dart';
+import '../../../data/repos/assigned_requests_repo.dart';
 import 'assigned_requests_state.dart';
 
 class AssignedRequestsCubit extends Cubit<AssignedRequestsState> {

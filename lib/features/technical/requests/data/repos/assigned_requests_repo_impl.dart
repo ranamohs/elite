@@ -1,13 +1,15 @@
+import '../models/technical_request_history.dart';
+import '../models/new_payment_request.dart';
 import 'package:dio/dio.dart';
 import '../models/deposit_receipt.dart';
 import 'package:dartz/dartz.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../../../core/constants/app_strings.dart';
-import '../../../../../../core/constants/end_points.dart';
-import '../../../../../../core/databases/api/dio_consumer.dart';
-import '../../../../../../core/databases/cache/secure_storage_helper.dart';
-import '../../../../../../core/errors/failure.dart';
-import '../../../../../../core/state_management/network_connection_cubit/network_connection_cubit.dart';
+import '../../../../../core/constants/app_strings.dart';
+import '../../../../../core/constants/end_points.dart';
+import '../../../../../core/databases/api/dio_consumer.dart';
+import '../../../../../core/databases/cache/secure_storage_helper.dart';
+import '../../../../../core/errors/failure.dart';
+import '../../../../../core/state_management/network_connection_cubit/network_connection_cubit.dart';
 import '../models/assigned_requests_model.dart';
 import 'assigned_requests_repo.dart';
 
@@ -46,6 +48,28 @@ class AssignedRequestsRepoImpl implements AssignedRequestsRepo {
           ),
         }),
       );
+  @override
+  Future<Either<Failure, String>> requestPayment(
+      int id,
+      NewPaymentRequest payment,
+      ) {
+    final data = FormData();
+    data.fields.addAll(payment.fields.entries);
+    data.fields.addAll(
+      payment.serviceIds.map((id) => MapEntry('services[]', '$id')),
+    );
+    data.files.add(
+      MapEntry(
+        'deposit_receipt',
+        MultipartFile.fromBytes(
+          payment.receipt.bytes,
+          filename: payment.receipt.filename,
+        ),
+      ),
+    );
+    return action(EndPoints.requestNewPayment(id), data: data);
+  }
+
   Future<Either<Failure, String>> action(String path, {dynamic data}) async {
     try {
       if (!await network.networkInfo.isConnected)
@@ -63,12 +87,7 @@ class AssignedRequestsRepoImpl implements AssignedRequestsRepo {
           Params.authorization: '${Params.bearer} $token',
         },
       );
-      final raw = response is Map ? response['message'] : null;
-      final message = raw is Map
-          ? '${raw['ar'] ?? raw['en'] ?? ''}'
-          : raw is String
-          ? raw
-          : '';
+      final message = assignedRequestActionMessage(response);
       if (response is Map && response['status'] == true) return Right(message);
       return Left(
         ServerFailure(
@@ -87,7 +106,21 @@ class AssignedRequestsRepoImpl implements AssignedRequestsRepo {
   @override
   Future<Either<Failure, AssignedRequestsModel>> getAssignedRequests({
     int page = 1,
-  }) async {
+  }) => getRequestPage(EndPoints.assignedRequests, page);
+  @override
+  Future<Either<Failure, AssignedRequestsModel>> getRequestHistory(
+      TechnicalRequestSource source, {
+        int page = 1,
+      }) => getRequestPage(switch (source) {
+    TechnicalRequestSource.received => EndPoints.receivedRequests,
+    TechnicalRequestSource.started => EndPoints.startedRequests,
+    TechnicalRequestSource.unpaid => EndPoints.completedUnpaidRequests,
+    TechnicalRequestSource.all => EndPoints.technicalOrders,
+  }, page);
+  Future<Either<Failure, AssignedRequestsModel>> getRequestPage(
+      String endpoint,
+      int page,
+      ) async {
     try {
       if (!await network.networkInfo.isConnected)
         return Left(
@@ -97,7 +130,7 @@ class AssignedRequestsRepoImpl implements AssignedRequestsRepo {
       if (token == null || token.isEmpty)
         return Left(ServerFailure(errMessage: 'loginRequiredForOrders'.tr()));
       final response = await dio.get(
-        EndPoints.assignedRequests,
+        endpoint,
         queryParameters: {Params.page: page},
         headers: {
           'Accept': 'application/json',
@@ -124,4 +157,26 @@ class AssignedRequestsRepoImpl implements AssignedRequestsRepo {
       );
     }
   }
+}
+
+String assignedRequestActionMessage(dynamic response) {
+  if (response is! Map) return '';
+  String read(dynamic value) {
+    if (value is String) return value.trim();
+    if (value is Map) {
+      for (final language in ['ar', 'en']) {
+        final message = value[language];
+        if (message is String && message.trim().isNotEmpty)
+          return message.trim();
+      }
+    }
+    return '';
+  }
+
+  if (response['status'] != true) {
+    final errors = response['errors'];
+    final detailed = read(errors is Map ? errors['message'] : null);
+    if (detailed.isNotEmpty) return detailed;
+  }
+  return read(response['message']);
 }

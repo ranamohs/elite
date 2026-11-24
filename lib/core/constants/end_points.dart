@@ -1,4 +1,9 @@
 class EndPoints {
+  static const String receivedRequests = '/recived-requests';
+  static const String startedRequests = '/started-requests';
+  static const String completedUnpaidRequests = '/completed-unpaid-requests';
+  static const String technicalOrders = '/orders';
+  static String requestNewPayment(int id) => '/orders/$id/request-new-payment';
   static String completeAssignedRequest(int id) => '/orders/$id/complete';
   static String startAssignedRequest(int id) => '/orders/$id/start';
   static String receiveAssignedRequest(int id) => '/orders/$id/receive';

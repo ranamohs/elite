@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-import '../../data/models/deposit_receipt.dart';
-import '../../data/repos/assigned_requests_repo.dart';
+import '../../../data/models/deposit_receipt.dart';
+import '../../../data/repos/assigned_requests_repo.dart';
 
 part 'complete_request_state.dart';
 

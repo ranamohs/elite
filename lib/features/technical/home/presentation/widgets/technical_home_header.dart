@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../../../core/constants/app_colors.dart';
-import '../../../../../../core/databases/cache/user_data_manager.dart';
+import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/databases/cache/user_data_manager.dart';
 import '../../../../account/presentation/widgets/account_avatar.dart';
 import '../../../../account/presentation/widgets/account_ui.dart';
 import '../../../requests/data/models/assigned_requests_model.dart';

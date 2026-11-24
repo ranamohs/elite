@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../../../../core/constants/app_colors.dart';
-import '../../../../../../core/widgets/retry_widget.dart';
+import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/widgets/retry_widget.dart';
 import '../../../../account/presentation/widgets/account_ui.dart';
-import '../manager/assigned_requests_cubit.dart';
-import '../manager/assigned_requests_state.dart';
+import '../manager/assigned_requests/assigned_requests_cubit.dart';
+
+import '../manager/assigned_requests/assigned_requests_state.dart';
 import '../views/assigned_request_details_view.dart';
+import '../views/technical_work_in_progress_view.dart';
 import 'assigned_request_card.dart';
 
 class AssignedRequestsContent extends StatelessWidget {
@@ -131,7 +133,10 @@ class AssignedRequestsContent extends StatelessWidget {
                 onDetails: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) =>
-                        AssignedRequestDetailsView(request: request),
+                    request.statusValue.trim().toLowerCase() ==
+                        'completed_unpaid'
+                        ? TechnicalWorkInProgressView(request: request)
+                        : AssignedRequestDetailsView(request: request),
                   ),
                 ),
               ),

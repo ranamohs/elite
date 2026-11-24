@@ -71,7 +71,7 @@ import '../../features/technical/auth/data/repos/technical_registration_repo_imp
 import '../../features/technical/auth/presentation/manager/technical_registration_cubit.dart';
 import '../../features/technical/requests/data/repos/assigned_requests_repo.dart';
 import '../../features/technical/requests/data/repos/assigned_requests_repo_impl.dart';
-import '../../features/technical/requests/presentation/manager/assigned_requests_cubit.dart';
+import '../../features/technical/requests/presentation/manager/assigned_requests/assigned_requests_cubit.dart';
 
 final getIt = GetIt.instance;
 

@@ -80,7 +80,10 @@ class AssignedRequest {
     'canceled',
     'cancelled',
     'rejected',
-  }.contains(statusValue.toLowerCase());
+    'declined_by_technical',
+    'cancelled_by_customer',
+    'canceled_by_customer',
+  }.contains(statusValue.trim().toLowerCase());
   bool get isCanceled => const {
     'canceled',
     'cancelled',

@@ -10,8 +10,8 @@ import '../../../../core/services/service_locator.dart';
 import '../../../orders/presentation/manager/orders_history_cubit.dart';
 import '../../../orders/presentation/manager/orders_history_state.dart';
 import '../../../settings/views/settings_view.dart';
-import '../../../technical/requests/presentation/manager/assigned_requests_cubit.dart';
-import '../../../technical/requests/presentation/manager/assigned_requests_state.dart';
+import '../../../technical/requests/presentation/manager/assigned_requests/assigned_requests_cubit.dart';
+import '../../../technical/requests/presentation/manager/assigned_requests/assigned_requests_state.dart';
 import '../../data/repos/addresses_repo/account_addresses_repo.dart';
 import '../widgets/account_actions.dart';
 import '../widgets/account_ui.dart';
@@ -109,32 +109,32 @@ class _AccountViewState extends State<AccountView>
         title: accountText(context, 'البيانات الشخصية', 'Personal information'),
         onTap: edit,
       ),
-      if (technical) ...[
-        for (final item in <(IconData, String, String)>[
-          (
-          Icons.handyman_outlined,
-          'التخصصات ومناطق الشغل',
-          'Specialties and work areas',
-          ),
-          (Icons.calendar_month_outlined, 'مواعيد الشغل', 'Work schedule'),
-          (Icons.description_outlined, 'المستندات', 'Documents'),
-          (Icons.star_outline_rounded, 'التقييمات', 'Reviews'),
-          (
-          Icons.account_balance_wallet_outlined,
-          'سحب الرصيد وطرق التحويل',
-          'Withdrawals and transfers',
-          ),
-        ])
-          AccountMenuTile(
-            icon: item.$1,
-            title: accountText(context, item.$2, item.$3),
-            onTap: () => accountInfo(
-              context,
-              'الخدمة غير متاحة حاليًا',
-              'This service is currently unavailable',
-            ),
-          ),
-      ],
+      // if (technical) ...[
+      //   for (final item in <(IconData, String, String)>[
+      //     (
+      //     Icons.handyman_outlined,
+      //     'التخصصات ومناطق الشغل',
+      //     'Specialties and work areas',
+      //     ),
+      //     // (Icons.calendar_month_outlined, 'مواعيد الشغل', 'Work schedule'),
+      //     // (Icons.description_outlined, 'المستندات', 'Documents'),
+      //     // (Icons.star_outline_rounded, 'التقييمات', 'Reviews'),
+      //     // (
+      //     // Icons.account_balance_wallet_outlined,
+      //     // 'سحب الرصيد وطرق التحويل',
+      //     // 'Withdrawals and transfers',
+      //     // ),
+      //   ])
+      //     AccountMenuTile(
+      //       icon: item.$1,
+      //       title: accountText(context, item.$2, item.$3),
+      //       onTap: () => accountInfo(
+      //         context,
+      //         'الخدمة غير متاحة حاليًا',
+      //         'This service is currently unavailable',
+      //       ),
+      //     ),
+      // ],
       if (!technical)
         AccountMenuTile(
           icon: Icons.location_on_outlined,
@@ -162,11 +162,7 @@ class _AccountViewState extends State<AccountView>
           context,
         ).push(MaterialPageRoute(builder: (_) => const SettingsView())),
       ),
-      AccountMenuTile(
-        icon: Icons.help_outline,
-        title: accountText(context, 'الدعم والمساعدة', 'Help and support'),
-        onTap: () => context.push(AppRouter.helpAndSupportView),
-      ),
+
       AccountMenuTile(
         icon: Icons.description_outlined,
         title: accountText(context, 'الشروط والأحكام', 'Terms and conditions'),

@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../../core/constants/app_colors.dart';
-import '../../../../../../core/constants/app_styles.dart';
-import '../../../../../../core/functions/is_arabic.dart';
-import '../../../../../../core/databases/cache/user_data_manager.dart';
-import '../../../../../../core/services/service_locator.dart';
+import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_styles.dart';
+import '../../../../../core/functions/is_arabic.dart';
+import '../../../../../core/databases/cache/user_data_manager.dart';
+import '../../../../../core/services/service_locator.dart';
 import '../../../../account/presentation/views/account_view.dart';
 import '../../../../account/presentation/widgets/account_ui.dart';
 import '../../../earings/presentation/views/technical_earnings_view.dart';
-import '../../../requests/presentation/manager/assigned_requests_cubit.dart';
-import '../../../requests/presentation/manager/assigned_requests_state.dart';
+import '../../../requests/presentation/manager/assigned_requests/assigned_requests_cubit.dart';
+import '../../../requests/presentation/manager/assigned_requests/assigned_requests_state.dart';
 import '../../../requests/presentation/widgets/assigned_requests_content.dart';
 import '../../../requests/presentation/views/technical_requests_view.dart';
 import '../widgets/technical_home_header.dart';
-
 
 class TechnicalHomeView extends StatefulWidget {
   const TechnicalHomeView({super.key});
@@ -66,7 +65,7 @@ class _TechnicalHomeViewState extends State<TechnicalHomeView> {
                   ),
                 ],
               ),
-              TechnicalRequestsView(cubit: cubit),
+              TechnicalRequestsView(cubit: cubit, isActive: selected == 1),
               const TechnicalEarningsView(),
               AccountView(
                 isActive: selected == 3,

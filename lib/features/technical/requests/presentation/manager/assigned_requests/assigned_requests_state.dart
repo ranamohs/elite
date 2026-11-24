@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../../../../../core/errors/failure.dart';
-import '../../data/models/assigned_requests_model.dart';
+import '../../../data/models/assigned_requests_model.dart';
 
 abstract class AssignedRequestsState extends Equatable {
   const AssignedRequestsState();

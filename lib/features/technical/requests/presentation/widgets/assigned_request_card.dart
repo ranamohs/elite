@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../../../core/constants/app_colors.dart';
-import '../../../../../../core/functions/is_arabic.dart';
+import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/functions/is_arabic.dart';
 import '../../../../account/presentation/widgets/account_ui.dart';
 import '../../data/models/assigned_requests_model.dart';
 
