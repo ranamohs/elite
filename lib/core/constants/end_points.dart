@@ -1,6 +1,14 @@
 class EndPoints {
+  static String completeAssignedRequest(int id) => '/orders/$id/complete';
+  static String startAssignedRequest(int id) => '/orders/$id/start';
+  static String receiveAssignedRequest(int id) => '/orders/$id/receive';
+  static String declineAssignedRequest(int id) => '/orders/$id/decline';
+  static const String assignedRequests = '/assigned-requests';
   static const String technicalRegister = '/technicians/register';
   static const String subscribe = '/subscribe';
+  static const String maintenanceContracts = '/maintenance-contracts';
+  static String maintenanceContractDetails(int id) =>
+      '/maintenance-contracts/$id';
   static String orderHistoryDetails(int id) => '/orders/history/$id';
   static const String ordersHistory = '/orders/history';
   static const String minusFromCart = '/cart/minusFromCart';
@@ -14,9 +22,6 @@ class EndPoints {
   static const String IMAGE_BASE_URL = 'http://elitefm-eg.online';
   static const String banners = "/banners";
   static const String categories = "/main-categories";
-  static const String maintenanceContracts = "/maintenance-contracts";
-  static String maintenanceContractDetails(int id) =>
-      "/maintenance-contracts/$id";
   static const String offers = "/offers";
 
   static const String requestService = "/request";
@@ -37,6 +42,14 @@ class EndPoints {
 }
 
 class ApiKey {
+  static const String currency = 'currency';
+  static const String description = 'description';
+  static const String duration = 'duration';
+  static const String features = 'features';
+  static const String original = 'original';
+  static const String price = 'price';
+  static const String unit = 'unit';
+  static const String value = 'value';
   static const String data = "data";
   static const String id = "id";
   static const String name = "name";
@@ -76,14 +89,6 @@ class ApiKey {
   static const String shopId = 'shop_id';
   static const String rating = 'rating';
   static const String comment = 'comment';
-  static const String description = 'description';
-  static const String price = 'price';
-  static const String original = 'original';
-  static const String currency = 'currency';
-  static const String value = 'value';
-  static const String duration = 'duration';
-  static const String unit = 'unit';
-  static const String features = 'features';
 }
 
 class Params {

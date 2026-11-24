@@ -1,6 +1,4 @@
-import '../../features/technical/data/repos/technical_registration_repo.dart';
-import '../../features/technical/data/repos/technical_registration_repo_impl.dart';
-import '../../features/technical/presentation/manager/technical_registration_cubit.dart';
+
 import '../../features/contract_subscription/data/repos/contract_subscription_repo.dart';
 import '../../features/contract_subscription/data/repos/contract_subscription_repo_impl.dart';
 import '../../features/contract_subscription/presentation/manager/contract_subscription_cubit.dart';
@@ -68,10 +66,26 @@ import '../../features/app_info/presentation/manager/contact_us_cubit/contact_us
 import '../../features/app_info/presentation/manager/default_page_cubit/default_page_cubit.dart';
 import '../../features/app_info/presentation/manager/privacy_cubit/privacy_cubit.dart';
 import '../../features/app_info/presentation/manager/terms_cubit/terms_cubit.dart';
+import '../../features/technical/auth/data/repos/technical_registration_repo.dart';
+import '../../features/technical/auth/data/repos/technical_registration_repo_impl.dart';
+import '../../features/technical/auth/presentation/manager/technical_registration_cubit.dart';
+import '../../features/technical/requests/data/repos/assigned_requests_repo.dart';
+import '../../features/technical/requests/data/repos/assigned_requests_repo_impl.dart';
+import '../../features/technical/requests/presentation/manager/assigned_requests_cubit.dart';
 
 final getIt = GetIt.instance;
 
 void setupServiceLocator() {
+  getIt.registerLazySingleton<AssignedRequestsRepo>(
+        () => AssignedRequestsRepoImpl(
+      dio: getIt<DioConsumer>(),
+      storage: getIt<SecureStorageHelper>(),
+      network: getIt<NetworkConnectionCubit>(),
+    ),
+  );
+  getIt.registerFactory<AssignedRequestsCubit>(
+        () => AssignedRequestsCubit(repo: getIt<AssignedRequestsRepo>()),
+  );
   // Core shops
   getIt.registerLazySingleton<CacheHelper>(() => CacheHelper());
   getIt.registerSingleton<AppDataManager>(AppDataManager(getIt<CacheHelper>()));

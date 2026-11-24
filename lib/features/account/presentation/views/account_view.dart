@@ -1,3 +1,4 @@
+import '../../../../core/auth/account_access.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +10,8 @@ import '../../../../core/services/service_locator.dart';
 import '../../../orders/presentation/manager/orders_history_cubit.dart';
 import '../../../orders/presentation/manager/orders_history_state.dart';
 import '../../../settings/views/settings_view.dart';
+import '../../../technical/requests/presentation/manager/assigned_requests_cubit.dart';
+import '../../../technical/requests/presentation/manager/assigned_requests_state.dart';
 import '../../data/repos/addresses_repo/account_addresses_repo.dart';
 import '../widgets/account_actions.dart';
 import '../widgets/account_ui.dart';
@@ -19,8 +22,14 @@ import 'account_payment_methods_view.dart';
 
 class AccountView extends StatefulWidget {
   final bool isActive;
+  final AssignedRequestsCubit? assignedRequests;
   final VoidCallback? onOrders;
-  const AccountView({super.key, this.isActive = true, this.onOrders});
+  const AccountView({
+    super.key,
+    this.isActive = true,
+    this.onOrders,
+    this.assignedRequests,
+  });
   @override
   State<AccountView> createState() => _AccountViewState();
 }
@@ -28,14 +37,22 @@ class AccountView extends StatefulWidget {
 class _AccountViewState extends State<AccountView>
     with AutomaticKeepAliveClientMixin {
   final user = getIt<UserDataManager>();
-  late final OrdersHistoryCubit orders;
+  OrdersHistoryCubit? orders;
+  AssignedRequestsCubit? assigned;
+  bool get technical => AccountAccess(
+    accountType: user.getAccountType() ?? 'customer',
+  ).isTechnical;
   int? addressCount;
   @override
   bool get wantKeepAlive => true;
   @override
   void initState() {
     super.initState();
-    orders = getIt<OrdersHistoryCubit>();
+    if (technical) {
+      assigned = widget.assignedRequests ?? getIt<AssignedRequestsCubit>();
+    } else {
+      orders = getIt<OrdersHistoryCubit>();
+    }
     if (widget.isActive) refresh();
   }
 
@@ -46,6 +63,10 @@ class _AccountViewState extends State<AccountView>
   }
 
   Future<void> refresh() async {
+    if (technical) {
+      await assigned?.load();
+      return;
+    }
     try {
       final values = await getIt<AccountAddressesRepo>().load();
       if (mounted) setState(() => addressCount = values.length);
@@ -54,7 +75,7 @@ class _AccountViewState extends State<AccountView>
     }
     try {
       final token = await getIt<SecureStorageHelper>().getToken();
-      if (mounted && token?.isNotEmpty == true) await orders.load();
+      if (mounted && token?.isNotEmpty == true) await orders?.load();
     } catch (_) {
       // Account information remains usable when the order count is unavailable.
     }
@@ -62,7 +83,8 @@ class _AccountViewState extends State<AccountView>
 
   @override
   void dispose() {
-    orders.close();
+    orders?.close();
+    if (widget.assignedRequests == null) assigned?.close();
     super.dispose();
   }
 
@@ -87,18 +109,48 @@ class _AccountViewState extends State<AccountView>
         title: accountText(context, 'البيانات الشخصية', 'Personal information'),
         onTap: edit,
       ),
-      AccountMenuTile(
-        icon: Icons.location_on_outlined,
-        title: accountText(context, 'عناويني', 'My addresses'),
-        onTap: addresses,
-      ),
-      // AccountMenuTile(
-      //   icon: Icons.credit_card_outlined,
-      //   title: accountText(context, 'طرق الدفع', 'Payment methods'),
-      //   onTap: () => Navigator.of(context).push(
-      //     MaterialPageRoute(builder: (_) => const AccountPaymentMethodsView()),
-      //   ),
-      // ),
+      if (technical) ...[
+        for (final item in <(IconData, String, String)>[
+          (
+          Icons.handyman_outlined,
+          'التخصصات ومناطق الشغل',
+          'Specialties and work areas',
+          ),
+          (Icons.calendar_month_outlined, 'مواعيد الشغل', 'Work schedule'),
+          (Icons.description_outlined, 'المستندات', 'Documents'),
+          (Icons.star_outline_rounded, 'التقييمات', 'Reviews'),
+          (
+          Icons.account_balance_wallet_outlined,
+          'سحب الرصيد وطرق التحويل',
+          'Withdrawals and transfers',
+          ),
+        ])
+          AccountMenuTile(
+            icon: item.$1,
+            title: accountText(context, item.$2, item.$3),
+            onTap: () => accountInfo(
+              context,
+              'الخدمة غير متاحة حاليًا',
+              'This service is currently unavailable',
+            ),
+          ),
+      ],
+      if (!technical)
+        AccountMenuTile(
+          icon: Icons.location_on_outlined,
+          title: accountText(context, 'عناويني', 'My addresses'),
+          onTap: addresses,
+        ),
+      if (!technical)
+        AccountMenuTile(
+          icon: Icons.credit_card_outlined,
+          title: accountText(context, 'طرق الدفع', 'Payment methods'),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const AccountPaymentMethodsView(),
+            ),
+          ),
+        ),
       AccountMenuTile(
         icon: Icons.settings_outlined,
         title: accountText(
@@ -110,11 +162,11 @@ class _AccountViewState extends State<AccountView>
           context,
         ).push(MaterialPageRoute(builder: (_) => const SettingsView())),
       ),
-      // AccountMenuTile(
-      //   icon: Icons.help_outline,
-      //   title: accountText(context, 'الدعم والمساعدة', 'Help and support'),
-      //   onTap: () => context.push(AppRouter.helpAndSupportView),
-      // ),
+      AccountMenuTile(
+        icon: Icons.help_outline,
+        title: accountText(context, 'الدعم والمساعدة', 'Help and support'),
+        onTap: () => context.push(AppRouter.helpAndSupportView),
+      ),
       AccountMenuTile(
         icon: Icons.description_outlined,
         title: accountText(context, 'الشروط والأحكام', 'Terms and conditions'),
@@ -130,29 +182,44 @@ class _AccountViewState extends State<AccountView>
           physics: const AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.fromLTRB(18.w, 4.h, 18.w, 18.h),
           children: [
-            AccountHeaderCard(user: user, onEdit: edit),
-            SizedBox(height: 10.h),
-            BlocBuilder<OrdersHistoryCubit, OrdersHistoryState>(
-              bloc: orders,
-              builder: (context, state) {
-                final model = switch (state) {
-                  OrdersHistorySuccess() => state.model,
-                  OrdersHistoryLoadingMore() => state.model,
-                  OrdersHistoryFailure() => state.model,
-                  _ => null,
-                };
-                return AccountStatisticsRow(
-                  orders:
-                  model?.total ??
-                      (model?.lastPage == 1 ? model?.orders.length : null),
-                  addresses: addressCount,
-                  onOrders:
-                  widget.onOrders ?? () => context.push(AppRouter.homePage),
-                  onAddresses: addresses,
-                );
-              },
-            ),
-            SizedBox(height: 10.h),
+            if (technical)
+              BlocBuilder<AssignedRequestsCubit, AssignedRequestsState>(
+                bloc: assigned!,
+                builder: (context, state) => AccountHeaderCard(
+                  user: user,
+                  onEdit: edit,
+                  technicalStats: assignedRequestsData(state)?.stats,
+                  onOrders: widget.onOrders,
+                ),
+              )
+            else ...[
+              AccountHeaderCard(user: user, onEdit: edit),
+              SizedBox(height: 10.h),
+
+              BlocBuilder<OrdersHistoryCubit, OrdersHistoryState>(
+                bloc: orders!,
+                builder: (context, state) {
+                  final model = switch (state) {
+                    OrdersHistorySuccess() => state.model,
+                    OrdersHistoryLoadingMore() => state.model,
+                    OrdersHistoryFailure() => state.model,
+                    _ => null,
+                  };
+                  return AccountStatisticsRow(
+                    orders:
+                    model?.total ??
+                        (model?.lastPage == 1 ? model?.orders.length : null),
+                    addresses: addressCount,
+                    onOrders:
+                    widget.onOrders ??
+                            () => context.push(AppRouter.homePage),
+                    onAddresses: addresses,
+                  );
+                },
+              ),
+              SizedBox(height: 10.h),
+            ],
+            if (technical) SizedBox(height: 10.h),
             AccountCard(
               padding: EdgeInsets.zero,
               child: Column(

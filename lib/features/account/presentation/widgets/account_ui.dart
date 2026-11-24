@@ -24,35 +24,32 @@ class AccountScaffold extends StatelessWidget {
     this.embedded = false,
   });
   @override
-  Widget build(BuildContext context) => Directionality(
-    textDirection: isArabic(context) ? TextDirection.rtl : TextDirection.ltr,
-    child: Theme(
-      data: Theme.of(context).copyWith(
-        textTheme: Theme.of(context).textTheme.apply(
-          fontFamily: AppStyles.styleMedium16(context).fontFamily,
-        ),
-        colorScheme: Theme.of(
-          context,
-        ).colorScheme.copyWith(primary: AppColors.primaryColor),
+  Widget build(BuildContext context) => Theme(
+    data: Theme.of(context).copyWith(
+      textTheme: Theme.of(context).textTheme.apply(
+        fontFamily: AppStyles.styleMedium16(context).fontFamily,
       ),
-      child: Scaffold(
+      colorScheme: Theme.of(
+        context,
+      ).colorScheme.copyWith(primary: AppColors.primaryColor),
+    ),
+    child: Scaffold(
+      backgroundColor: AppColors.homeBackground,
+      appBar: AppBar(
         backgroundColor: AppColors.homeBackground,
-        appBar: AppBar(
-          backgroundColor: AppColors.homeBackground,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          automaticallyImplyLeading: !embedded,
-          title: Text(
-            title,
-            style: AppStyles.styleMedium16(
-              context,
-            ).copyWith(fontWeight: FontWeight.bold),
-          ),
-          centerTitle: false,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        automaticallyImplyLeading: !embedded,
+        title: Text(
+          title,
+          style: AppStyles.styleMedium16(
+            context,
+          ).copyWith(fontWeight: FontWeight.bold),
         ),
-        body: SafeArea(top: false, bottom: !embedded, child: body),
-        bottomNavigationBar: bottomBar,
+        centerTitle: false,
       ),
+      body: SafeArea(top: false, bottom: !embedded, child: body),
+      bottomNavigationBar: bottomBar,
     ),
   );
 }

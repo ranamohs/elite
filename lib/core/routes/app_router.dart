@@ -1,11 +1,13 @@
-import '../../features/technical/presentation/views/technical_home_view.dart';
+import '../../features/technical/auth/presentation/views/select_role_view.dart';
+import '../../features/technical/auth/presentation/views/technical_account_view.dart';
+import '../../features/technical/auth/presentation/views/technical_login_view.dart';
+import '../../features/technical/auth/presentation/views/technical_register_view.dart';
+
+
+import '../../features/technical/home/presentation/views/technical_home_view.dart';
 import '../auth/account_access.dart';
 import '../databases/cache/user_data_manager.dart';
 import '../databases/cache/secure_storage_helper.dart';
-import '../../features/technical/presentation/views/select_role_view.dart';
-import '../../features/technical/presentation/views/technical_register_view.dart';
-import '../../features/technical/presentation/views/technical_login_view.dart';
-import '../../features/technical/presentation/views/technical_account_view.dart';
 import 'package:elite/features/splash/presentation/views/intro_view.dart';
 
 import '../../features/category_catalog/presentation/views/category_catalog_view.dart';
