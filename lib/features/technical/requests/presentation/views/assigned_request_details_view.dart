@@ -45,12 +45,10 @@ class AssignedRequestDetailsView extends StatelessWidget {
       bottomBar: AccountSaveBar(
         label: accountText(
           context,
-          'ابدأ التحرك للعميل',
-          'Navigate to customer',
+          'ابدأ العمل ',
+          'start job',
         ),
-        onPressed: request.hasLocation && !request.isClosed
-            ? () => open(context, directions)
-            : null,
+        onPressed:(){},
       ),
       body: ListView(
         padding: EdgeInsets.fromLTRB(18.w, 4.h, 18.w, 20.h),
