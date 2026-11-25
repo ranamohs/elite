@@ -17,7 +17,7 @@ class TechnicalHistoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final request = entry.request;
     final status = request.statusLabel.trim().isNotEmpty
-        ? request.statusLabel
+        ? request.statusValue
         : entry.unpaid
         ? accountText(context, 'مكتملة غير مدفوعة الأجر', 'Completed, unpaid')
         : entry.started
