@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -81,19 +80,21 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
         controller: controller,
         keyboardType: keyboard,
         validator: (value) {
-          if (value == null || value.trim().isEmpty)
+          if (value == null || value.trim().isEmpty) {
             return accountText(
               context,
               'هذا الحقل مطلوب',
               'This field is required',
             );
+          }
           if (keyboard == TextInputType.emailAddress &&
-              !RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(value.trim()))
+              !RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(value.trim())) {
             return accountText(
               context,
               'اكتبي بريد إلكتروني صحيح',
               'Enter a valid email address',
             );
+          }
           return null;
         },
         decoration: InputDecoration(
@@ -127,12 +128,13 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
             );
             if (!saved) throw StateError('Birth date was not stored');
           } catch (_) {
-            if (context.mounted)
+            if (context.mounted) {
               accountInfo(
                 context,
                 'تم تحديث حسابك، لكن تعذر حفظ تاريخ الميلاد على الجهاز',
                 'Profile updated, but the birth date could not be saved on this device',
               );
+            }
           }
         }
         if (!context.mounted) return;
@@ -170,13 +172,14 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
           label: accountText(context, 'حفظ التعديلات', 'Save changes'),
           loading: state is UpdateProfileLoading,
           onPressed: () {
-            if (form.currentState!.validate())
+            if (form.currentState!.validate()) {
               cubit.updateProfile(
                 name: name.text.trim(),
                 phoneNumber: phone.text.trim(),
                 email: email.text.trim(),
                 avatar: avatar,
               );
+            }
           },
         ),
         body: AbsorbPointer(

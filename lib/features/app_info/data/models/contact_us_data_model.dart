@@ -10,10 +10,10 @@ class ContactUsDataModel {
 
   ContactUsDataModel(
       {required this.subject,
-      required this.name,
-      required this.phoneNumber,
-      required this.email,
-      required this.message});
+        required this.name,
+        required this.phoneNumber,
+        required this.email,
+        required this.message});
 
   Map<String, dynamic> toJson() {
     return {

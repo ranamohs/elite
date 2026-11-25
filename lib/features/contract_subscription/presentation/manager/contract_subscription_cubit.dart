@@ -10,8 +10,9 @@ class ContractSubscriptionCubit extends Cubit<ContractSubscriptionState> {
   Future<void> subscribe(ContractSubscriptionRequest request) async {
     if (state is ContractSubscriptionLoading ||
         state is ContractSubscriptionSuccess ||
-        state is ContractSubscriptionNotice)
+        state is ContractSubscriptionNotice) {
       return;
+    }
     emit(ContractSubscriptionLoading());
     final result = await repo.subscribe(request);
     if (isClosed) return;

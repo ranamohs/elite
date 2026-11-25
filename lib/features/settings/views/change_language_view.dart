@@ -31,12 +31,13 @@ class _ChangeLanguageViewState extends State<ChangeLanguageView> {
       } catch (_) {}
       if (mounted) {
         if (context.locale != previous) await context.setLocale(previous);
-        if (mounted)
+        if (mounted) {
           accountInfo(
             context,
             'تعذر تغيير اللغة، حاولي مرة أخرى',
             'Could not change language. Please try again.',
           );
+        }
       }
     } finally {
       if (mounted) setState(() => pending = null);

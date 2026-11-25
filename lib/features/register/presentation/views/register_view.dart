@@ -94,9 +94,9 @@ class RegisterView extends StatelessWidget {
                           Text(
                             'أهلاً بيك في ELITE',
                             style: AppStyles.styleRegular16(context).copyWith(
-                              color: AppColors.titleDark,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 22
+                                color: AppColors.titleDark,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 22
                             ),
                             textAlign: TextAlign.right,
                           ),

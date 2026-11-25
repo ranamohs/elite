@@ -10,8 +10,9 @@ class ProductOrderModel {
   factory ProductOrderModel.fromJson(Map<String, dynamic> json) {
     final id = int.tryParse('${json['order_id']}'),
         total = double.tryParse('${json['total']}');
-    if (json['status'] != true || id == null || id <= 0)
+    if (json['status'] != true || id == null || id <= 0) {
       throw const FormatException('Invalid product order');
+    }
     return ProductOrderModel(
       orderId: id,
       total: total != null && total.isFinite ? total : null,

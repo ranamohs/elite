@@ -7,8 +7,9 @@ class ContractSubscriptionResult {
   const ContractSubscriptionResult({required this.message, this.subscription});
 
   factory ContractSubscriptionResult.fromJson(Map<String, dynamic> json) {
-    if (json['status'] != true)
+    if (json['status'] != true) {
       throw const FormatException('Subscription was not accepted');
+    }
     final rawMessage = json['message'];
     final message = rawMessage is Map
         ? ContractLocalizedText.fromJson(Map<String, dynamic>.from(rawMessage))

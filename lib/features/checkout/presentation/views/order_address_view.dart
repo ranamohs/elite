@@ -8,7 +8,6 @@ import '../../data/models/order_draft.dart';
 import '../widgets/checkout_widgets.dart';
 import '../widgets/order_address_view.dart';
 import '../widgets/order_photos_picker.dart';
-import 'order_address_view.dart';
 import 'order_schedule_view.dart';
 
 class OrderDetailsView extends StatefulWidget {
@@ -70,7 +69,7 @@ class _OrderDetailsViewState extends State<OrderDetailsView> {
         ].take(3).toList(),
       );
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -82,6 +81,7 @@ class _OrderDetailsViewState extends State<OrderDetailsView> {
             ),
           ),
         );
+      }
     }
   }
 

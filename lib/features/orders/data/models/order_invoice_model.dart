@@ -15,13 +15,15 @@ class OrderInvoiceModel {
     this.receiptUrl,
   });
   factory OrderInvoiceModel.fromJson(Map<String, dynamic> response) {
-    if (response['status'] != true || response['invoice'] is! Map)
+    if (response['status'] != true || response['invoice'] is! Map) {
       throw const FormatException('Invalid invoice');
+    }
     final json = Map<String, dynamic>.from(response['invoice'] as Map);
     final id = int.tryParse('${json['id']}'),
         orderId = int.tryParse('${json['order_id']}');
-    if (id == null || id <= 0 || orderId == null || orderId <= 0)
+    if (id == null || id <= 0 || orderId == null || orderId <= 0) {
       throw const FormatException('Invalid invoice IDs');
+    }
     double? number(dynamic raw) {
       final value = double.tryParse('$raw');
       return value != null && value.isFinite ? value : null;

@@ -26,7 +26,6 @@ import '../../features/services/presentation/views/category_services_view.dart';
 import '../../features/settings/views/change_language_view.dart';
 import '../../features/account/presentation/views/update_profile_view.dart';
 import '../../features/settings/views/about_us_view.dart';
-import '../../features/app_info/presentation/views/contact_us_view.dart';
 import '../../features/settings/views/privacy_policy_view.dart';
 import '../../features/register/presentation/manager/register_cubit.dart';
 import '../../features/settings/views/terms_and_conditions_view.dart';
@@ -44,12 +43,10 @@ abstract class AppRouter {
   static const welcomeView = '/welcomeView';
   static const loginView = '/loginView';
   static const registerView = '/registerView';
-  static const introViewWithButton = '/introViewWithButton';
   static const homePage = '/homePage';
   static const categoryDetailsView = '/categoryDetailsView';
   static const subCategoryServicesView = '/subCategoryServicesView';
   static const categoryCatalogView = '/categoryCatalogView';
-  static const serviceDetailsView = '/serviceDetailsView';
   static const updateProfileView = '/updateProfileView';
   static const helpAndSupportView = '/helpAndSupportView';
   static const contactUsView = '/contactUsView';
@@ -60,14 +57,6 @@ abstract class AppRouter {
   static const allCategoriesView = '/allCategoriesView';
   static const allContractsView = '/allContractsView';
   static const contractDetailsView = '/contractDetailsView';
-  static const allRecentShopsView = '/allRecentShopsView';
-  static const rating = '/rating';
-  static const wishlistView = '/wishlistView';
-  static const searchView = '/searchView';
-
-  //////////////////
-
-  //FiXIT
 
   static const introView = '/introView';
 
@@ -78,8 +67,9 @@ abstract class AppRouter {
           location == technicalHome || location == technicalPending;
       if (!protectedTechnical && location != homePage) return null;
       final token = await getIt<SecureStorageHelper>().getToken();
-      if (token?.trim().isNotEmpty != true)
+      if (token?.trim().isNotEmpty != true) {
         return protectedTechnical ? technicalLogin : null;
+      }
       final access = AccountAccess(
         accountType: getIt<UserDataManager>().getAccountType() ?? 'customer',
       );
@@ -195,10 +185,7 @@ abstract class AppRouter {
           );
         },
       ),
-      GoRoute(
-        path: contactUsView,
-        builder: (context, state) => const ContactUsView(),
-      ),
+
       GoRoute(
         path: helpAndSupportView,
         builder: (context, state) => const HelpAndSupportView(),

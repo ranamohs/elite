@@ -12,8 +12,9 @@ class ServiceRequestCubit extends Cubit<ServiceRequestState> {
   Future<void> submit(OrderDraft order) async {
     if (state is ServiceRequestLoading ||
         order.isSubmitting ||
-        order.orderId != null)
+        order.orderId != null) {
       return;
+    }
     ServiceRequestPayload payload;
     try {
       payload = ServiceRequestPayload.fromOrder(order);
@@ -25,7 +26,6 @@ class ServiceRequestCubit extends Cubit<ServiceRequestState> {
     emit(ServiceRequestLoading());
     final result = await repo.requestService(payload);
     order.isSubmitting = false;
-    // Preserve the server ID even if the screen was closed during the request.
     result.fold((_) {}, (model) => order.orderId = model.orderId);
     if (isClosed) return;
     result.fold(

@@ -284,7 +284,7 @@ class _HomeBannersSectionState extends State<HomeBannersSection> {
             bottom: 10.h,
             width: 80.w,
             child: Image.asset(
-              AppAssets.logo,
+              AppAssets.appLogo,
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) =>
               const SizedBox.shrink(),

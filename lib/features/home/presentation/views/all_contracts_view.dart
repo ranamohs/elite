@@ -3,7 +3,7 @@ import 'package:elite/core/constants/app_colors.dart';
 import 'package:elite/core/constants/app_strings.dart';
 import 'package:elite/core/constants/app_styles.dart';
 import 'package:elite/core/functions/is_arabic.dart';
-import 'package:elite/core/widgets/fixit_app_bars.dart';
+import 'package:elite/core/widgets/app_bars.dart';
 import 'package:elite/core/widgets/retry_widget.dart';
 import 'package:elite/features/home/data/models/contracts_models/maintenance_contracts_model.dart';
 import 'package:elite/features/home/presentation/manager/contracts_cubit/maintenance_contracts_cubit.dart';

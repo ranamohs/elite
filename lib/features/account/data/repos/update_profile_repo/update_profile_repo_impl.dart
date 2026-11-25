@@ -60,7 +60,7 @@ class UpdateProfileRepoImpl implements UpdateProfileRepo {
         EndPoints.updateProfile,
         headers: {
           'Accept':'application/json',
-         Params.authorization: "${Params.bearer} $token",
+          Params.authorization: "${Params.bearer} $token",
         },
         isFormData: true,
         data: formData,

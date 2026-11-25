@@ -42,7 +42,7 @@ class CategoryCardItem extends StatelessWidget {
     String? fullImageUrl = imageUrl;
     if (fullImageUrl != null && fullImageUrl.isNotEmpty) {
       if (!fullImageUrl.startsWith('http')) {
-        fullImageUrl = '${EndPoints.IMAGE_BASE_URL}$fullImageUrl';
+        fullImageUrl = '${EndPoints.imageBaseUrl}$fullImageUrl';
       }
     }
 

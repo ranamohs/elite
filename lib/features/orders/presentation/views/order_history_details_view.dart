@@ -72,15 +72,17 @@ class _OrderHistoryDetailsViewState extends State<OrderHistoryDetailsView> {
             child: BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
               bloc: cubit,
               builder: (context, state) {
-                if (state is OrderDetailsFailure)
+                if (state is OrderDetailsFailure) {
                   return Center(
                     child: RetryWidget(
                       message: state.failure.errMessage,
                       onPressed: () => cubit.load(widget.orderId),
                     ),
                   );
-                if (state is! OrderDetailsSuccess)
+                }
+                if (state is! OrderDetailsSuccess) {
                   return const OrdersHistoryLoadingWidget();
+                }
                 final model = state.model;
                 return RefreshIndicator(
                   onRefresh: () => cubit.load(widget.orderId),

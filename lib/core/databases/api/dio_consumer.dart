@@ -1,4 +1,3 @@
-import 'package:elite/core/databases/api/api_consumer.dart';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -49,7 +48,7 @@ class DioConsumer extends ApiConsumer {
     }
   }
 
-  //! PuT
+  @override
   Future put(
       String path, {
         dynamic data,

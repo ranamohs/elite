@@ -41,8 +41,9 @@ class _SettingsViewState extends State<SettingsView> {
       if (!await cache.saveData(
         key: 'notification_preference.$key',
         value: value,
-      ))
+      )) {
         throw StateError('Preference save failed');
+      }
     } catch (_) {
       if (mounted) {
         setState(() => preferences[key] = old);
@@ -102,7 +103,7 @@ class _SettingsViewState extends State<SettingsView> {
                     color: AppColors.badgeTextGreen,
                   ),
                 ),
-                 Icon(Icons.arrow_forward_ios, size: 12.sp),
+                Icon(Icons.arrow_forward_ios, size: 12.sp),
               ],
             ),
           ),

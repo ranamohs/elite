@@ -30,7 +30,7 @@ class AboutUsRepoImpl implements AboutUsRepo {
         return const Left('Invalid response format');
       }
 
-      String _normMsg(dynamic m) {
+      String normMsg(dynamic m) {
         if (m == null) return '';
         if (m is String) return m.trim();
         if (m is Map) {
@@ -52,7 +52,7 @@ class AboutUsRepoImpl implements AboutUsRepo {
       if (ok) {
         return Right(model);
       } else {
-        final msg = _normMsg(body['message']);
+        final msg = normMsg(body['message']);
         return Left(msg.isNotEmpty ? msg : 'Failed to load About-us');
       }
     } on DioException catch (e) {

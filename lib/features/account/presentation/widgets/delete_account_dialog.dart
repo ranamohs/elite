@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/databases/cache/user_data_manager.dart';
@@ -129,7 +128,7 @@ class DeleteAccountDialog extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
-                          disabledBackgroundColor: Colors.red.withOpacity(0.5),
+                          disabledBackgroundColor: Colors.red.withValues(alpha: 0.5),
                         ),
                         child: state is DeleteAccountLoadingState
                             ? const SizedBox(

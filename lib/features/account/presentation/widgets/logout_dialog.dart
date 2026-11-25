@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/databases/cache/user_data_manager.dart';
@@ -103,9 +102,9 @@ class LogoutDialog extends StatelessWidget {
                         child: Text(
                           AppStrings.cancel.tr(),
                           style:AppStyles.styleRegular14(context).copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.subtitleGrey
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.subtitleGrey
                           ),
                         ),
                       ),
@@ -128,7 +127,7 @@ class LogoutDialog extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
-                          disabledBackgroundColor: Colors.grey.withOpacity(0.5),
+                          disabledBackgroundColor: Colors.grey.withValues(alpha: 0.5),
                         ),
                         child: state is LogoutLoadingState
                             ? const SizedBox(
@@ -141,11 +140,11 @@ class LogoutDialog extends StatelessWidget {
                         )
                             : Text(
                           AppStrings.logout.tr(),
-                            style:AppStyles.styleRegular14(context).copyWith(
+                          style:AppStyles.styleRegular14(context).copyWith(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: AppColors.white
-                            ),
+                          ),
                         ),
                       ),
                     ),

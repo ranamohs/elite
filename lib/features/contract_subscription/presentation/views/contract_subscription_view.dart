@@ -6,7 +6,6 @@ import '../../../../core/services/service_locator.dart';
 import '../../../account/data/repos/addresses_repo/account_addresses_repo.dart';
 import '../../../account/presentation/widgets/account_ui.dart';
 import '../../../checkout/data/models/order_draft.dart';
-import '../../../checkout/presentation/views/order_address_view.dart';
 import '../../../checkout/presentation/widgets/order_address_view.dart';
 import '../../../home/data/models/contracts_models/maintenance_contracts_model.dart';
 import '../../data/models/contract_subscription_model.dart';
@@ -69,22 +68,24 @@ class _ContractSubscriptionViewState extends State<ContractSubscriptionView> {
       final ext = value.path.toLowerCase().split('.').last;
       if (!['jpg', 'jpeg', 'png', 'webp'].contains(ext) ||
           await File(value.path).length() > 5120 * 1024) {
-        if (mounted)
+        if (mounted) {
           accountInfo(
             context,
             'الصورة لازم تكون JPG أو PNG أو WEBP وأقل من 5 ميجابايت',
             'Choose a JPG, JPEG, PNG or WEBP photo up to 5 MB',
           );
+        }
         return;
       }
       if (mounted) setState(() => imagePath = value.path);
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         accountInfo(
           context,
           'تعذر اختيار الصورة',
           'Could not select the photo',
         );
+      }
     } finally {
       picking = false;
     }
@@ -123,12 +124,13 @@ class _ContractSubscriptionViewState extends State<ContractSubscriptionView> {
     );
     if (!mounted) return;
     setState(() => reviewing = false);
-    if (result != null)
+    if (result != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (_) => ContractSubscriptionSuccessView(subscription: result),
         ),
       );
+    }
   }
 
   @override

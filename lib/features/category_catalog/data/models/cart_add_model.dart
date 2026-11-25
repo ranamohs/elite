@@ -13,8 +13,9 @@ class CartAddModel {
   factory CartAddModel.fromJson(Map<String, dynamic> json) {
     final item = json['item'] as Map<String, dynamic>;
     final quantity = (item['quantity'] as num).toInt();
-    if (json['status'] != true || quantity < 1)
+    if (json['status'] != true || quantity < 1) {
       throw const FormatException('Invalid cart response');
+    }
     return CartAddModel(
       id: (item['id'] as num).toInt(),
       quantity: quantity,

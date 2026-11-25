@@ -89,8 +89,9 @@ class _CategoryCatalogViewState extends State<CategoryCatalogView> {
         return;
       }
       if (delta == 0 ||
-          (item.stock != null && (quantities[item.key] ?? 0) >= item.stock!))
+          (item.stock != null && (quantities[item.key] ?? 0) >= item.stock!)) {
         return;
+      }
       cart.addProduct(item.id);
       return;
     }
@@ -139,8 +140,9 @@ class _CategoryCatalogViewState extends State<CategoryCatalogView> {
             } else {
               quantities[key] = model.quantity;
               if (model.product != null) selected[key] = model.product!;
-              if (model.cartItemId != null)
+              if (model.cartItemId != null) {
                 cartItemIds[key] = model.cartItemId!;
+              }
             }
           });
           ScaffoldMessenger.of(
@@ -314,7 +316,7 @@ class _CategoryCatalogViewState extends State<CategoryCatalogView> {
     await Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (_) => OrderDetailsView(order: order)));
-    if (mounted && order.orderId != null && items.every((e) => e.isProduct))
+    if (mounted && order.orderId != null && items.every((e) => e.isProduct)) {
       setState(() {
         for (final item in items) {
           selected.remove(item.key);
@@ -323,5 +325,6 @@ class _CategoryCatalogViewState extends State<CategoryCatalogView> {
         }
         checkoutDraft = null;
       });
+    }
   }
 }

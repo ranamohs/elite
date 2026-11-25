@@ -24,13 +24,15 @@ class LocalAccountAddressesRepo implements AccountAddressesRepo {
       String ownerKey,
       List<SavedAddress> values,
       ) async {
-    if (values.isNotEmpty && !values.any((e) => e.isDefault))
+    if (values.isNotEmpty && !values.any((e) => e.isDefault)) {
       values[0] = values.first.asDefault(true);
+    }
     if (!await cache.saveData(
       key: ownerKey,
       value: jsonEncode(values.map((e) => e.toJson()).toList()),
-    ))
+    )) {
       throw StateError('Address storage failed');
+    }
     return values;
   }
 

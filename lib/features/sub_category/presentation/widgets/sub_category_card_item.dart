@@ -1,11 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_styles.dart';
 import '../../../../core/constants/end_points.dart';
 import '../../data/models/sub_category_model.dart';
@@ -44,32 +42,11 @@ class SubCategoryCardItem extends StatelessWidget {
     String? fullImageUrl = item.image;
     if (fullImageUrl != null && fullImageUrl.isNotEmpty) {
       if (!fullImageUrl.startsWith('http')) {
-        fullImageUrl = '${EndPoints.IMAGE_BASE_URL}$fullImageUrl';
+        fullImageUrl = '${EndPoints.imageBaseUrl}$fullImageUrl';
       }
     }
 
     final iconBgColor = getSubCategoryIconBgColor(index);
-
-    String badgeText;
-    if (item.servicesCount != null && item.productsCount != null) {
-      badgeText = AppStrings.servicesWithProducts.tr(
-        namedArgs: {
-          'services': '${item.servicesCount}',
-          'products': '${item.productsCount}',
-        },
-      );
-    } else if (item.servicesCount != null) {
-      badgeText = AppStrings.servicesCount.tr(
-        namedArgs: {'count': '${item.servicesCount}'},
-      );
-    } else {
-      final defaultCounts = [
-        AppStrings.zeroServicesWithProducts.tr(),
-        AppStrings.zeroServiceWithProduct.tr(),
-        AppStrings.zeroServices.tr(),
-      ];
-      badgeText = defaultCounts[index % defaultCounts.length];
-    }
 
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
@@ -152,25 +129,6 @@ class SubCategoryCardItem extends StatelessWidget {
                           height: 1.25,
                         ),
                       ),
-                      // SizedBox(height: 6.h),
-                      // Container(
-                      //   padding: EdgeInsets.symmetric(
-                      //     horizontal: 10.w,
-                      //     vertical: 3.h,
-                      //   ),
-                      //   decoration: BoxDecoration(
-                      //     color: const Color(0xFFF1F8E9),
-                      //     borderRadius: BorderRadius.circular(10.r),
-                      //   ),
-                      //   child: Text(
-                      //     badgeText,
-                      //     style:AppStyles.styleMedium16(context).copyWith(
-                      //       fontSize: 11.sp,
-                      //       fontWeight: FontWeight.w600,
-                      //       color: AppColors.homeContractBadgeGreen,
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),

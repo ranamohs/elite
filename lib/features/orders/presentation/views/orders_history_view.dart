@@ -85,8 +85,9 @@ class _OrdersHistoryViewState extends State<OrdersHistoryView>
                       bloc: cubit,
                       builder: (context, state) {
                         if (state is OrdersHistoryLoading ||
-                            state is OrdersHistoryInitial)
+                            state is OrdersHistoryInitial) {
                           return const OrdersHistoryLoadingWidget();
+                        }
                         // Render from this builder's state snapshot. cubit.state may
                         // already be Loading while BlocBuilder still holds Success.
                         final model = switch (state) {

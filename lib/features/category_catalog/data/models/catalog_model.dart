@@ -58,7 +58,7 @@ class CatalogItem {
           ''),
       image: rawImage.isEmpty
           ? ''
-          : Uri.parse(EndPoints.IMAGE_BASE_URL).resolve(rawImage).toString(),
+          : Uri.parse(EndPoints.imageBaseUrl).resolve(rawImage).toString(),
       stock: json['stock'] == null ? null : int.tryParse('${json['stock']}'),
       isProduct: isProduct,
     );

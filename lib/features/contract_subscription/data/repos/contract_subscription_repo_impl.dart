@@ -26,19 +26,22 @@ class ContractSubscriptionRepoImpl implements ContractSubscriptionRepo {
       ContractSubscriptionRequest request,
       ) async {
     try {
-      if (!request.isValid)
+      if (!request.isValid) {
         return Left(
           UnexpectedFailure(errMessage: 'subscriptionMissingFields'.tr()),
         );
-      if (!await network.networkInfo.isConnected)
+      }
+      if (!await network.networkInfo.isConnected) {
         return Left(
           NoInternetFailure(errMessage: AppStrings.noInternetConnection.tr()),
         );
+      }
       final token = (await storage.getToken())?.trim();
-      if (token == null || token.isEmpty)
+      if (token == null || token.isEmpty) {
         return Left(
           ServerFailure(errMessage: 'loginRequiredForSubscription'.tr()),
         );
+      }
       final file = File(request.imagePath);
       final extension = request.imagePath.toLowerCase().split('.').last;
       if (!['jpg', 'jpeg', 'png', 'webp'].contains(extension) ||
@@ -64,15 +67,17 @@ class ContractSubscriptionRepoImpl implements ContractSubscriptionRepo {
         final result = ContractSubscriptionResult.fromJson(response);
         final subscription = result.subscription;
         if (subscription == null ||
-            subscription.contract.id == request.contractId)
+            subscription.contract.id == request.contractId) {
           return Right(result);
+        }
       }
       final message = response is Map ? response['message'] : null;
       final errors = response is Map ? response['errors'] : null;
       if (errors is Map) {
         for (final value in errors.values) {
-          if (value is List && value.isNotEmpty)
+          if (value is List && value.isNotEmpty) {
             return Left(ServerFailure(errMessage: value.first.toString()));
+          }
         }
       }
       return Left(

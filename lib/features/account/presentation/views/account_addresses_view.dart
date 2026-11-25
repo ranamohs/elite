@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/services/service_locator.dart';
 import '../../../checkout/data/models/order_draft.dart';
-import '../../../checkout/presentation/views/order_address_view.dart';
 import '../../../checkout/presentation/widgets/order_address_view.dart';
 import '../../data/models/saved_address.dart';
 import '../manager/addresses_cubit/account_addresses_cubit.dart';
@@ -67,9 +66,10 @@ class _AccountAddressesViewState extends State<AccountAddressesView> {
       bloc: cubit,
       builder: (context, state) {
         if (state is AccountAddressesInitial ||
-            state is AccountAddressesLoading)
+            state is AccountAddressesLoading) {
           return const Center(child: CircularProgressIndicator());
-        if (state is AccountAddressesFailure)
+        }
+        if (state is AccountAddressesFailure) {
           return Center(
             child: TextButton(
               onPressed: cubit.load,
@@ -82,6 +82,7 @@ class _AccountAddressesViewState extends State<AccountAddressesView> {
               ),
             ),
           );
+        }
         final values = (state as AccountAddressesSuccess).addresses;
         return ListView(
           padding: EdgeInsets.all(18.w),

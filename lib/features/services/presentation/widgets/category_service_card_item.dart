@@ -54,7 +54,7 @@ class CategoryServiceCardItem extends StatelessWidget {
 
     if (fullImageUrl != null && fullImageUrl.isNotEmpty) {
       if (!fullImageUrl.startsWith('http')) {
-        fullImageUrl = '${EndPoints.IMAGE_BASE_URL}$fullImageUrl';
+        fullImageUrl = '${EndPoints.imageBaseUrl}$fullImageUrl';
       }
     }
 
@@ -161,7 +161,7 @@ class CategoryServiceCardItem extends StatelessWidget {
 
                 SizedBox(width: 8.w),
                 Icon(
-                 Icons.arrow_forward_ios_rounded,
+                  Icons.arrow_forward_ios_rounded,
                   color: AppColors.subtitleGrey,
                   size: 15.sp,
                 ),

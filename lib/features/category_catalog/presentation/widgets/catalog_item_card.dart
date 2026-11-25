@@ -1,7 +1,9 @@
 import '../../data/models/cart_change_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/functions/is_arabic.dart';
 import '../../data/models/catalog_model.dart';
 import 'catalog_item_image.dart';
@@ -28,7 +30,6 @@ class CatalogItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ar = isArabic(context);
-    String text(String arabic, String english) => ar ? arabic : english;
 
     final product = item.isProduct;
     final available = !product || item.stock == null || item.stock! > 0;
@@ -76,10 +77,29 @@ class CatalogItemCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            child: CatalogItemImage(item: item, size: double.infinity),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                CatalogItemImage(item: item, size: double.infinity),
+                if (!available)
+                  Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.45),
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Text(
+                      AppStrings.outOfStock.tr(),
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
-          SizedBox(height: 5.h),
-
           SizedBox(height: 5.h),
           info,
           SizedBox(height: 6.h),

@@ -23,13 +23,15 @@ class CartRepoImpl implements CartRepo {
   @override
   Future<Either<Failure, CartAddModel>> addProduct(int productId) async {
     try {
-      if (!await networkCubit.networkInfo.isConnected)
+      if (!await networkCubit.networkInfo.isConnected) {
         return Left(
           NoInternetFailure(errMessage: AppStrings.noInternetConnection.tr()),
         );
+      }
       final token = await secureStorageHelper.getToken();
-      if (token == null || token.isEmpty)
+      if (token == null || token.isEmpty) {
         return Left(ServerFailure(errMessage: 'loginRequiredForCart'.tr()));
+      }
       final response = await dioConsumer.post(
         EndPoints.addToCart,
         data: FormData.fromMap({'product_id': productId}),
@@ -65,13 +67,15 @@ class CartRepoImpl implements CartRepo {
     int? cartItemId,
   }) async {
     try {
-      if (!await networkCubit.networkInfo.isConnected)
+      if (!await networkCubit.networkInfo.isConnected) {
         return Left(
           NoInternetFailure(errMessage: AppStrings.noInternetConnection.tr()),
         );
+      }
       final token = await secureStorageHelper.getToken();
-      if (token == null || token.isEmpty)
+      if (token == null || token.isEmpty) {
         return Left(ServerFailure(errMessage: 'loginRequiredForCart'.tr()));
+      }
       final headers = {
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
@@ -105,8 +109,9 @@ class CartRepoImpl implements CartRepo {
 
   String _message(dynamic response) {
     final message = response is Map ? response['message'] : null;
-    if (message is Map)
+    if (message is Map) {
       return '${message['ar'] ?? message['en'] ?? AppStrings.serverConnectionFailed.tr()}';
+    }
     return message is String ? message : AppStrings.serverConnectionFailed.tr();
   }
 }

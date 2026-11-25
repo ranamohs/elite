@@ -19,9 +19,9 @@ class LogoutRepoImpl implements LogoutRepo {
 
   LogoutRepoImpl(
       {required this.dioConsumer,
-      required this.secureStorageHelper,
-      required this.networkCubit,
-      required this.userDataManager});
+        required this.secureStorageHelper,
+        required this.networkCubit,
+        required this.userDataManager});
 
   @override
   Future<BasicModel> logout() async {

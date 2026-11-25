@@ -83,7 +83,7 @@ class MaintenanceContract {
   static String? _resolveImage(String? raw) {
     if (raw == null || raw.isEmpty) return null;
     if (raw.startsWith('http://') || raw.startsWith('https://')) return raw;
-    return '${EndPoints.IMAGE_BASE_URL}$raw';
+    return '${EndPoints.imageBaseUrl}$raw';
   }
 }
 

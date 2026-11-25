@@ -18,8 +18,6 @@ class AppAssets {
   /// assets/images/delete_account_icon.png
   static const String deleteAccount = "assets/images/delete_account_icon.png";
 
-  /// assets/images/lock_icon.svg
-  static const String lockIcon = "assets/images/lock_icon.svg";
 
   /// assets/images/notifications_icon.svg
   static const String notificationsIcon= "assets/images/notifications_icon.svg";
@@ -30,8 +28,7 @@ class AppAssets {
   /// assets/images/phone_icon.svg
   static const String phoneIcon = "assets/images/phone_icon.svg";
 
-  /// assets/images/profile_icon.svg
-  static const String profileIcon = "assets/images/profile_icon.svg";
+
 
   /// assets/images/logout_icon.png
   static const String logoutIcon = "assets/images/logout_icon.png";
@@ -56,31 +53,19 @@ class AppAssets {
   /// englishLanguage
   static const String englishImage = "assets/images/America-01 1.png";
 
-  /// chooseLanguageBG
-  static const String chooseLanguageBg = "assets/images/choose_language_bc.png";
 
 
-  /// introBc
-  static const String introBackground = "assets/images/intro_bacground.png";
 
-  /// introImage
-  static const String introImage = "assets/images/intro_image.png";
 
-  /// homeIcon
-  static const String homeIcon = "assets/images/home_icon.png";
 
-  /// categoriesIcon
-  static const String settingsIcon = "assets/images/settings_icon.png";
 
-  /// notificationsIcon
-  static const String supportIcon = "assets/images/support_icon.png";
 
-  /// profileIcon
-  static const String accountIcon = "assets/images/account_icon.png";
 
-  static const String settingsBackground = "assets/images/settings_bg.png";
 
-  static const String successDialog = "assets/images/success_dialog.png";
+
+
+
+
 
   static const String splashBackground = "assets/images/splash-background.png";
 

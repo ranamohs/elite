@@ -15,7 +15,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(RegisterLoadingState());
 
     final Either<AuthFailureModel, RegisterSuccessModel> result =
-        await registerRepo.register(registerData: registerData);
+    await registerRepo.register(registerData: registerData);
 
     result.fold((failure) => emit(RegisterFailureState(failure)), (register) {
       emit(RegisterSuccessState(register: register));

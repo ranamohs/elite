@@ -15,12 +15,14 @@ class ContractSubscriptionModel {
     this.endDate,
   });
   factory ContractSubscriptionModel.fromJson(Map<String, dynamic> json) {
-    if (json['status'] != true || json['data'] is! Map)
+    if (json['status'] != true || json['data'] is! Map) {
       throw const FormatException('Invalid subscription response');
+    }
     final data = Map<String, dynamic>.from(json['data'] as Map);
     final id = int.tryParse('${data['id']}');
-    if (id == null || id <= 0 || data['maintenance_contracts'] is! Map)
+    if (id == null || id <= 0 || data['maintenance_contracts'] is! Map) {
       throw const FormatException('Missing subscription data');
+    }
     return ContractSubscriptionModel(
       id: id,
       status: '${data['status'] ?? ''}',

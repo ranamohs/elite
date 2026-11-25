@@ -168,7 +168,7 @@ class HomeContractSection extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14.r),
                         ),
                         child: Text(
-                          AppStrings.orderContract.tr(),
+                          AppStrings.viewDetails.tr(),
                           style: AppStyles.styleRegular14(context).copyWith(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w700,
@@ -229,7 +229,7 @@ class HomeContractSection extends StatelessWidget {
   Widget _buildContractImage(String? imageUrl) {
     if (imageUrl == null || imageUrl.isEmpty) {
       return Image.asset(
-        AppAssets.logo,
+        AppAssets.appLogo,
         fit: BoxFit.contain,
         errorBuilder: (context, error, stackTrace) {
           return const Icon(

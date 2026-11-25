@@ -26,13 +26,15 @@ class ServiceRequestRepoImpl implements ServiceRequestRepo {
       ServiceRequestPayload payload,
       ) async {
     try {
-      if (!await networkCubit.networkInfo.isConnected)
+      if (!await networkCubit.networkInfo.isConnected) {
         return Left(
           NoInternetFailure(errMessage: AppStrings.noInternetConnection.tr()),
         );
+      }
       final token = await secureStorageHelper.getToken();
-      if (token == null || token.isEmpty)
+      if (token == null || token.isEmpty) {
         return Left(ServerFailure(errMessage: 'loginRequiredForOrder'.tr()));
+      }
       final form = FormData.fromMap(payload.fields);
       for (final path in payload.photos) {
         final extension = path.toLowerCase().split('.').last;
@@ -52,8 +54,9 @@ class ServiceRequestRepoImpl implements ServiceRequestRepo {
           'Authorization': 'Bearer $token',
         },
       );
-      if (response is Map<String, dynamic> && response['status'] == true)
+      if (response is Map<String, dynamic> && response['status'] == true) {
         return Right(ServiceRequestModel.fromJson(response));
+      }
       final message = response is Map ? response['message'] : null;
       return Left(
         ServerFailure(

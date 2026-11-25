@@ -3,7 +3,7 @@ import 'package:elite/core/constants/app_colors.dart';
 import 'package:elite/core/constants/app_strings.dart';
 import 'package:elite/core/functions/is_arabic.dart';
 import 'package:elite/core/routes/app_router.dart';
-import 'package:elite/core/widgets/fixit_app_bars.dart';
+import 'package:elite/core/widgets/app_bars.dart';
 import 'package:elite/features/home/data/models/categories_models/categories_model.dart';
 import 'package:elite/features/home/presentation/manager/categories_cubit/categories_cubit.dart';
 import 'package:elite/features/home/presentation/manager/categories_cubit/categories_state.dart';

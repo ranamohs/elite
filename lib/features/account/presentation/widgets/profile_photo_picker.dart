@@ -35,8 +35,9 @@ class _ProfilePhotoPickerState extends State<ProfilePhotoPicker> {
       setState(() => image = value);
       widget.onChanged(value);
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         accountInfo(context, 'تعذر اختيار الصورة', 'Could not select a photo');
+      }
     } finally {
       picking = false;
     }

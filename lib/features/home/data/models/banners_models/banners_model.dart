@@ -12,31 +12,31 @@ class BannersModel {
   BannersModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message =
-    json['message'] != null ? new Message.fromJson(json['message']) : null;
+    json['message'] != null ? Message.fromJson(json['message']) : null;
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
-    links = json['links'] != null ? new Links.fromJson(json['links']) : null;
-    meta = json['meta'] != null ? new Meta.fromJson(json['meta']) : null;
+    links = json['links'] != null ? Links.fromJson(json['links']) : null;
+    meta = json['meta'] != null ? Meta.fromJson(json['meta']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    if (this.message != null) {
-      data['message'] = this.message!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    if (message != null) {
+      data['message'] = message!.toJson();
     }
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    if (this.links != null) {
-      data['links'] = this.links!.toJson();
+    if (links != null) {
+      data['links'] = links!.toJson();
     }
-    if (this.meta != null) {
-      data['meta'] = this.meta!.toJson();
+    if (meta != null) {
+      data['meta'] = meta!.toJson();
     }
     return data;
   }
@@ -54,9 +54,9 @@ class Message {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ar'] = this.ar;
-    data['en'] = this.en;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['ar'] = ar;
+    data['en'] = en;
     return data;
   }
 }
@@ -72,14 +72,14 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name'] != null ? new Message.fromJson(json['name']) : null;
+    name = json['name'] != null ? Message.fromJson(json['name']) : null;
     url = json['url'];
     final rawImage = json['image']?.toString();
     if (rawImage != null && rawImage.isNotEmpty) {
       if (rawImage.startsWith('http://') || rawImage.startsWith('https://')) {
         image = rawImage;
       } else {
-        image = '${EndPoints.IMAGE_BASE_URL}$rawImage';
+        image = '${EndPoints.imageBaseUrl}$rawImage';
       }
     } else {
       image = null;
@@ -87,13 +87,13 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.name != null) {
-      data['name'] = this.name!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    if (name != null) {
+      data['name'] = name!.toJson();
     }
-    data['url'] = this.url;
-    data['image'] = this.image;
+    data['url'] = url;
+    data['image'] = image;
     return data;
   }
 }
@@ -101,24 +101,17 @@ class Data {
 class Links {
   String? first;
   String? last;
-  Null? prev;
-  Null? next;
-
-  Links({this.first, this.last, this.prev, this.next});
+  Links({this.first, this.last});
 
   Links.fromJson(Map<String, dynamic> json) {
     first = json['first'];
     last = json['last'];
-    prev = json['prev'];
-    next = json['next'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['first'] = this.first;
-    data['last'] = this.last;
-    data['prev'] = this.prev;
-    data['next'] = this.next;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['first'] = first;
+    data['last'] = last;
     return data;
   }
 }
@@ -150,7 +143,7 @@ class Meta {
     if (json['links'] != null) {
       links = <MetaLink>[];
       json['links'].forEach((v) {
-        links!.add(new MetaLink.fromJson(v));
+        links!.add(MetaLink.fromJson(v));
       });
     }
     path = json['path'];
@@ -160,17 +153,17 @@ class Meta {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['current_page'] = this.currentPage;
-    data['from'] = this.from;
-    data['last_page'] = this.lastPage;
-    if (this.links != null) {
-      data['links'] = this.links!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['current_page'] = currentPage;
+    data['from'] = from;
+    data['last_page'] = lastPage;
+    if (links != null) {
+      data['links'] = links!.map((v) => v.toJson()).toList();
     }
-    data['path'] = this.path;
-    data['per_page'] = this.perPage;
-    data['to'] = this.to;
-    data['total'] = this.total;
+    data['path'] = path;
+    data['per_page'] = perPage;
+    data['to'] = to;
+    data['total'] = total;
     return data;
   }
 }
@@ -190,10 +183,10 @@ class MetaLink {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['url'] = this.url;
-    data['label'] = this.label;
-    data['active'] = this.active;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['url'] = url;
+    data['label'] = label;
+    data['active'] = active;
     return data;
   }
 }

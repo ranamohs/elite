@@ -18,11 +18,13 @@ class OrderDetailsModel {
     required this.rejectedCount,
   });
   factory OrderDetailsModel.fromJson(Map<String, dynamic> response) {
-    if (response['status'] != true || response['data'] is! Map)
+    if (response['status'] != true || response['data'] is! Map) {
       throw const FormatException('Invalid order details');
+    }
     final data = Map<String, dynamic>.from(response['data'] as Map);
-    if (orderInt(data['id']) <= 0)
+    if (orderInt(data['id']) <= 0) {
       throw const FormatException('Missing order ID');
+    }
     return OrderDetailsModel(
       order: OrderHistoryItem.fromJson(data),
       lines: (data['items'] as List? ?? [])

@@ -26,13 +26,15 @@ class ProductOrderRepoImpl implements ProductOrderRepo {
       ProductOrderPayload payload,
       ) async {
     try {
-      if (!await network.networkInfo.isConnected)
+      if (!await network.networkInfo.isConnected) {
         return Left(
           NoInternetFailure(errMessage: AppStrings.noInternetConnection.tr()),
         );
+      }
       final token = (await storage.getToken())?.trim();
-      if (token == null || token.isEmpty)
+      if (token == null || token.isEmpty) {
         return Left(ServerFailure(errMessage: 'loginRequiredForCart'.tr()));
+      }
       final form = FormData.fromMap(payload.fields);
       for (final path in payload.photos) {
         final file = XFile(path);
@@ -66,8 +68,9 @@ class ProductOrderRepoImpl implements ProductOrderRepo {
           Params.authorization: '${Params.bearer} $token',
         },
       );
-      if (response is Map<String, dynamic> && response['status'] == true)
+      if (response is Map<String, dynamic> && response['status'] == true) {
         return Right(ProductOrderModel.fromJson(response));
+      }
       final errors = response is Map ? response['errors'] : null;
       final raw = errors is Map && errors['message'] != null
           ? errors['message']

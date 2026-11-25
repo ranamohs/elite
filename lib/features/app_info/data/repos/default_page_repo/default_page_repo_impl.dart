@@ -37,8 +37,8 @@ class DefaultPageRepoImpl implements DefaultPageRepo {
         final json = jsonDecode(cached) as Map<String, dynamic>;
         final model = DefaultPageModel.fromJson(json);
         return Right(model);
-      } catch (e) {
-
+      } catch (_) {
+        // Ignore a corrupt cache entry and fall through to the network.
       }
     }
 
@@ -89,7 +89,7 @@ class DefaultPageRepoImpl implements DefaultPageRepo {
           ),
         ),
       );
-    } catch (e, stack) {
+    } catch (e) {
       return Left(
         BasicModel(
           payload: null,

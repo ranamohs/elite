@@ -70,7 +70,7 @@ class CatalogQuantityControl extends StatelessWidget {
       );
     }
     final available = !item.isProduct || item.stock == null || item.stock! > 0;
-    if (count == 0)
+    if (count == 0) {
       return OutlinedButton(
         onPressed: enabled && !loading && available ? () => onChanged(1) : null,
         style: OutlinedButton.styleFrom(
@@ -106,6 +106,7 @@ class CatalogQuantityControl extends StatelessWidget {
           ),
         ),
       );
+    }
     return Wrap(
       alignment: WrapAlignment.center,
       crossAxisAlignment: WrapCrossAlignment.center,

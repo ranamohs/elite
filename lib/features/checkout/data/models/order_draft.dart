@@ -32,8 +32,9 @@ class OrderDraft {
   DateTime? get appointment {
     final date = day;
     final minutes = timeMinutes;
-    if (date == null || minutes == null || minutes < 0 || minutes >= 24 * 60)
+    if (date == null || minutes == null || minutes < 0 || minutes >= 24 * 60) {
       return null;
+    }
     return DateTime(
       date.year,
       date.month,

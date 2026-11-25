@@ -47,14 +47,16 @@ class CatalogItemsList extends StatelessWidget {
         final model = catalogPage(state);
         final items = model?.items ?? <CatalogItem>[];
         final error = state is CatalogFailure ? state.failure.errMessage : null;
-        if (state is CatalogLoading || state is CatalogInitial)
+        if (state is CatalogLoading || state is CatalogInitial) {
           return const Center(
             child: CircularProgressIndicator(color: AppColors.primaryColor),
           );
-        if (error != null && items.isEmpty)
+        }
+        if (error != null && items.isEmpty) {
           return Center(
             child: RetryWidget(message: error, onPressed: () => cubit.load()),
           );
+        }
         return RefreshIndicator(
           onRefresh: () => cubit.load(),
           color: AppColors.primaryColor,

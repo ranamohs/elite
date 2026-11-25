@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/end_points.dart';
 
@@ -25,7 +24,7 @@ class AccountAvatar extends StatelessWidget {
             ? icon
             : CachedNetworkImage(
           imageUrl: Uri.parse(
-            EndPoints.IMAGE_BASE_URL,
+            EndPoints.imageBaseUrl,
           ).resolve(raw).toString(),
           fit: BoxFit.cover,
           errorWidget: (_, _, _) => icon,

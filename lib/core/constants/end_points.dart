@@ -26,7 +26,7 @@ class EndPoints {
   static String categoryServices(int id) => '/$id/services';
   static const String baserUrl = "http://elitefm-eg.online/api";
 
-  static const String IMAGE_BASE_URL = 'http://elitefm-eg.online';
+  static const String imageBaseUrl = 'http://elitefm-eg.online';
   static const String banners = "/banners";
   static const String categories = "/main-categories";
   static const String offers = "/offers";

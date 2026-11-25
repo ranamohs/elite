@@ -12,13 +12,15 @@ class ProductOrderPayload {
   factory ProductOrderPayload.fromOrder(OrderDraft order) {
     if (order.items.length != 1 ||
         order.items.any((e) => !e.isProduct) ||
-        order.items.any((e) => (order.quantities[e.key] ?? 0) <= 0))
+        order.items.any((e) => (order.quantities[e.key] ?? 0) <= 0)) {
       throw const FormatException('اختار منتجات لإكمال الطلب');
+    }
     final id = order.cartId, address = order.address;
-    if (id == null || id <= 0)
+    if (id == null || id <= 0) {
       throw const FormatException(
         'تعذر تحديد السلة، أعد تحميل السلة وحاول مرة أخرى',
       );
+    }
     final lat = address?.latitude, lng = address?.longitude;
     if (address == null ||
         address.details.trim().isEmpty ||
@@ -27,8 +29,9 @@ class ProductOrderPayload {
         !lat.isFinite ||
         !lng.isFinite ||
         lat.abs() > 90 ||
-        lng.abs() > 180)
+        lng.abs() > 180) {
       throw const FormatException('حدد عنوان الطلب وموقعه على الخريطة');
+    }
     return ProductOrderPayload(
       fields: {
         'cart_id': id,

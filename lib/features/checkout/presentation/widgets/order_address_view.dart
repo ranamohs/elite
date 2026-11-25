@@ -44,10 +44,11 @@ class _OrderAddressViewState extends State<OrderAddressView> {
           .join('، ');
       // Keep any text the user has entered while reverse geocoding runs.
       if (fields[0].text.isEmpty) fields[0].text = area;
-      if (fields[1].text.isEmpty)
+      if (fields[1].text.isEmpty) {
         fields[1].text = place.thoroughfare?.isNotEmpty == true
             ? place.thoroughfare!
             : (place.street ?? '');
+      }
     } catch (_) {
       if (mounted && request == locationRequest) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -63,8 +64,9 @@ class _OrderAddressViewState extends State<OrderAddressView> {
         );
       }
     } finally {
-      if (mounted && request == locationRequest)
+      if (mounted && request == locationRequest) {
         setState(() => findingAddress = false);
+      }
     }
   }
 
@@ -82,10 +84,11 @@ class _OrderAddressViewState extends State<OrderAddressView> {
       a?.floor,
       a?.apartment,
     ].map((e) => TextEditingController(text: e ?? '')).toList();
-    if (a != null)
+    if (a != null) {
       label =
           ['البيت', 'الشغل', 'تاني', 'Home', 'Work', 'Other'].indexOf(a.label) %
               3;
+    }
     if (label < 0) label = 0;
   }
 

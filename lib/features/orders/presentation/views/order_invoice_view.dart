@@ -38,12 +38,13 @@ class _OrderInvoiceViewState extends State<OrderInvoiceView> {
     body: BlocBuilder<OrderInvoiceCubit, OrderInvoiceState>(
       bloc: cubit,
       builder: (context, state) {
-        if (state.loading)
+        if (state.loading) {
           return const Center(
             child: CircularProgressIndicator(color: AppColors.primaryColor),
           );
+        }
         final invoice = state.invoice;
-        if (invoice == null)
+        if (invoice == null) {
           return Center(
             child: Padding(
               padding: EdgeInsets.all(24.w),
@@ -70,6 +71,7 @@ class _OrderInvoiceViewState extends State<OrderInvoiceView> {
               ),
             ),
           );
+        }
         final status = switch (invoice.status.toLowerCase()) {
           'unpaid' => accountText(context, 'غير مدفوعة', 'Unpaid'),
           'paid' => accountText(context, 'مدفوعة', 'Paid'),
@@ -83,7 +85,7 @@ class _OrderInvoiceViewState extends State<OrderInvoiceView> {
         final raw = invoice.receiptUrl;
         final uri = raw == null
             ? null
-            : Uri.tryParse(EndPoints.IMAGE_BASE_URL)?.resolve(raw);
+            : Uri.tryParse(EndPoints.imageBaseUrl)?.resolve(raw);
         final receiptUrl =
         uri != null && const {'http', 'https'}.contains(uri.scheme)
             ? uri.toString()

@@ -26,14 +26,16 @@ class CartChangeModel {
     }
     final message = Map<String, dynamic>.from(json['message'] as Map? ?? {});
     final item = removed ? null : json['item'];
-    if (item == null)
+    if (item == null) {
       return CartChangeModel(
         productId: productId,
         quantity: 0,
         message: message,
       );
-    if (item is! Map || item['quantity'] is! num)
+    }
+    if (item is! Map || item['quantity'] is! num) {
       throw const FormatException('Invalid cart item');
+    }
     final quantity = (item['quantity'] as num).toInt();
     if (quantity < 0) throw const FormatException('Invalid cart quantity');
     final product = item['product'] is Map
@@ -42,8 +44,9 @@ class CartChangeModel {
       isProduct: true,
     )
         : null;
-    if (product != null && product.id != productId)
+    if (product != null && product.id != productId) {
       throw const FormatException('Mismatched product');
+    }
     return CartChangeModel(
       productId: productId,
       quantity: quantity,

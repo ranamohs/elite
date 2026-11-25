@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_styles.dart';
@@ -12,12 +11,9 @@ import '../../../../core/functions/is_arabic.dart';
 import '../../../../core/services/service_locator.dart';
 import '../../../../core/state_management/bottom_navigation_bar_cubit/bottom_navigation_bar_cubit.dart';
 
-import '../../../../core/widgets/fixit_app_bars.dart';
-import '../../../../core/widgets/fixit_buttons.dart';
-import '../../../../core/widgets/fixit_indicators.dart';
-import '../../../../core/widgets/fixit_text_fields.dart';
-import '../../../../core/widgets/spacing.dart';
-import '../../data/models/contact_us_data_model.dart';
+import '../../../../core/widgets/app_buttons.dart';
+import '../../../../core/widgets/app_indicators.dart';
+import '../../../../core/widgets/app_text_fields.dart';
 import '../manager/contact_us_cubit/contact_us_cubit.dart';
 import '../manager/contact_us_cubit/contact_us_state.dart';
 
@@ -123,22 +119,22 @@ class _ContactUsForm extends State<HelpAndSupportView> {
                   // Message Field
                   Container(
                     height: 100,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: TextField(
-                        controller: _messageController,
-                        maxLines: null,
-                        expands: true,
-                        textAlignVertical: TextAlignVertical.top,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(12),
-                          border: InputBorder.none,
-                          hintText: AppStrings.yourMessage.tr(),
-                        ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: TextField(
+                      controller: _messageController,
+                      maxLines: null,
+                      expands: true,
+                      textAlignVertical: TextAlignVertical.top,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(12),
+                        border: InputBorder.none,
+                        hintText: AppStrings.yourMessage.tr(),
                       ),
                     ),
+                  ),
 
 
                   const SizedBox(height: 30),
@@ -146,14 +142,6 @@ class _ContactUsForm extends State<HelpAndSupportView> {
                   // Send Button
                   PrimaryButton(
                     onPressed: () {
-                      final ContactUsDataModel contactUsDataModel =
-                      ContactUsDataModel(
-                        subject: _subjectController.text,
-                        name: _nameController.text,
-                        phoneNumber: _phoneNumberController.text,
-                        email: _emailController.text,
-                        message: _messageController.text,
-                      );
                       FocusScope.of(context).unfocus();
                       context.read<ContactUsCubit>().contactUs(
                         name: _nameController.text,

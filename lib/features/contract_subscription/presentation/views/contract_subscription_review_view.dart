@@ -49,8 +49,9 @@ class _ContractSubscriptionReviewViewState
       ) => BlocConsumer<ContractSubscriptionCubit, ContractSubscriptionState>(
     bloc: cubit,
     listener: (context, state) {
-      if (state is ContractSubscriptionSuccess)
+      if (state is ContractSubscriptionSuccess) {
         Navigator.of(context).pop(state.model);
+      }
       if (state is ContractSubscriptionNotice) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -58,10 +59,11 @@ class _ContractSubscriptionReviewViewState
           ),
         );
       }
-      if (state is ContractSubscriptionFailure)
+      if (state is ContractSubscriptionFailure) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(state.failure.errMessage)));
+      }
     },
     builder: (context, state) => PopScope(
       canPop: state is! ContractSubscriptionLoading,
@@ -142,16 +144,7 @@ class _ContractSubscriptionReviewViewState
                 ),
               ),
             ),
-            SizedBox(height: 14.h),
-            Text(
-              accountText(
-                context,
-                'التأكيد بيرسل طلب الاشتراك. مفيش خصم مبلغ من خلال الخطوة دي.',
-                'Confirmation submits your subscription. No payment is collected in this step.',
-              ),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 11.sp, color: Colors.grey),
-            ),
+
           ],
         ),
       ),

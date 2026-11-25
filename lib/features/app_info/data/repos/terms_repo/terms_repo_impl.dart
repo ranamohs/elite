@@ -26,7 +26,7 @@ class TermsRepoImpl implements TermsRepo {
       }
       if (body == null) return const Left('Invalid response format');
 
-      String _msg(dynamic m) {
+      String msg(dynamic m) {
         if (m == null) return '';
         if (m is String) return m.trim();
         if (m is Map) {
@@ -41,10 +41,10 @@ class TermsRepoImpl implements TermsRepo {
 
       final ok = (body['status'] == true) ||
           (body['success'] == true) ||
-          (statusCode != null && statusCode! >= 200 && statusCode! < 300);
+          (statusCode != null && statusCode >= 200 && statusCode < 300);
 
       final model = AboutUsModel.fromJson(body);
-      return ok ? Right(model) : Left(_msg(body['message']).isNotEmpty ? _msg(body['message']) : 'Failed to load terms');
+      return ok ? Right(model) : Left(msg(body['message']).isNotEmpty ? msg(body['message']) : 'Failed to load terms');
     } on DioException catch (e) {
       var msg = e.message ?? 'Request failed';
       final d = e.response?.data;

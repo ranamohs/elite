@@ -102,8 +102,9 @@ class _OrderScheduleViewState extends State<OrderScheduleView> {
                   widget.order.day = day;
                   final appointment = widget.order.appointment;
                   if (appointment != null &&
-                      !appointment.isAfter(DateTime.now()))
+                      !appointment.isAfter(DateTime.now())) {
                     widget.order.timeMinutes = null;
+                  }
                 }),
                 onTime: (time) => setState(
                       () => widget.order.timeMinutes = time.hour * 60 + time.minute,

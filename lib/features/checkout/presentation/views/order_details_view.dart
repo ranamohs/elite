@@ -7,7 +7,6 @@ import '../../data/models/order_draft.dart';
 import '../widgets/checkout_widgets.dart';
 import '../widgets/order_address_view.dart';
 import '../widgets/order_photos_picker.dart';
-import 'order_address_view.dart';
 import 'order_schedule_view.dart';
 
 class OrderDetailsView extends StatefulWidget {
@@ -54,7 +53,7 @@ class _OrderDetailsViewState extends State<OrderDetailsView> {
         ].take(3).toList(),
       );
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -66,6 +65,7 @@ class _OrderDetailsViewState extends State<OrderDetailsView> {
             ),
           ),
         );
+      }
     }
   }
 
@@ -95,8 +95,9 @@ class _OrderDetailsViewState extends State<OrderDetailsView> {
                 : OrderScheduleView(order: order),
           ),
         );
-        if (mounted && productOrder && order.orderId != null)
+        if (mounted && context.mounted && productOrder && order.orderId != null) {
           Navigator.pop(context, true);
+        }
       },
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

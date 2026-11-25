@@ -207,23 +207,23 @@ class _LoginViewState extends State<_LoginViewBody> {
                           ),
                         ),
 
-                        SizedBox(height: 10.h),
-                        Align(
-                          alignment: AlignmentDirectional.centerStart,
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: Text(
-                              'نسيت كلمة السر؟',
-                              style: AppStyles.styleRegular12(context).copyWith(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.subtitleGrey,
-                              ),
-                            ),
-                          ),
-                        ),
+                        // SizedBox(height: 10.h),
+                        // Align(
+                        //   alignment: AlignmentDirectional.centerStart,
+                        //   child: GestureDetector(
+                        //     onTap: () {},
+                        //     child: Text(
+                        //       'نسيت كلمة السر؟',
+                        //       style: AppStyles.styleRegular12(context).copyWith(
+                        //         fontSize: 12.sp,
+                        //         fontWeight: FontWeight.w700,
+                        //         color: AppColors.subtitleGrey,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
 
-                        SizedBox(height: 20.h),
+                        SizedBox(height: 40.h),
 
                         // Primary Login Button
                         SizedBox(
