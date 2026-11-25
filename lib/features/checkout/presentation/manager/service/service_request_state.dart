@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import '../../../../core/errors/failure.dart';
-import '../../data/models/service_request_model.dart';
+import '../../../../../core/errors/failure.dart';
+import '../../../data/models/service_request_model.dart';
 
 abstract class ServiceRequestState extends Equatable {
   const ServiceRequestState();

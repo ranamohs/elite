@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/services/service_locator.dart';
 import '../../../../core/functions/is_arabic.dart';
-import '../manager/service_request_cubit.dart';
-import '../manager/service_request_state.dart';
+import '../manager/service/service_request_cubit.dart';
+import '../manager/service/service_request_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../data/models/order_draft.dart';
@@ -132,22 +132,7 @@ class _OrderScheduleViewState extends State<OrderScheduleView> {
                 ),
               ),
               SizedBox(height: 12.h),
-              CheckoutNotice(
-                title: checkoutText(
-                  context,
-                  'تفاصيل التأكيد',
-                  'Confirmation details',
-                ),
-                message: checkoutText(
-                  context,
-                  widget.order.items.any((item) => !item.isProduct)
-                      ? 'التأكيد هيبعت طلب الخدمة بالموعد والعنوان والصور. المنتجات بتتضاف للسلة بشكل منفصل، والدفع لسه غير مربوط.'
-                      : 'المنتجات اتضافت للسلة. إكمال شراء المنتجات والدفع لسه غير مربوطين.',
-                  widget.order.items.any((item) => !item.isProduct)
-                      ? 'Confirmation submits the service, appointment, address and photos. Products are added to the cart separately. Payment is not connected yet.'
-                      : 'Products were added to the cart. Product checkout and payment are not connected yet.',
-                ),
-              ),
+
             ],
           ),
         ),

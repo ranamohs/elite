@@ -50,17 +50,7 @@ class _OrderInvoiceViewState extends State<OrderInvoiceView> {
         builder: (_) => OrderCompletedView(order: widget.order),
       ),
     ),
-    footer: TextButton(
-      onPressed: objection,
-      child: Text(
-        checkoutText(
-          context,
-          'عندك اعتراض على الفاتورة؟',
-          'Have an invoice objection?',
-        ),
-        style: const TextStyle(color: Colors.deepOrange),
-      ),
-    ),
+
     body: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

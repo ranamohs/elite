@@ -133,8 +133,10 @@ class AssignedRequestsContent extends StatelessWidget {
                 onDetails: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) =>
-                    request.statusValue.trim().toLowerCase() ==
-                        'completed_unpaid'
+                    const {
+                      'completed_unpaid',
+                      'started_by_technical',
+                    }.contains(request.statusValue.trim().toLowerCase())
                         ? TechnicalWorkInProgressView(request: request)
                         : AssignedRequestDetailsView(request: request),
                   ),

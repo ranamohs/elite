@@ -5,6 +5,8 @@ import '../../data/models/orders_history_model.dart';
 String ordersText(BuildContext context, String ar, String en) =>
     isArabic(context) ? ar : en;
 String orderStatusText(BuildContext context, OrderHistoryItem order) {
+  if (order.statusValue.trim().toLowerCase() == 'invoiced')
+    return ordersText(context, 'تم إصدار الفاتورة', 'Invoiced');
   if (isArabic(context) && order.statusLabel.isNotEmpty)
     return order.statusLabel;
   const names = {

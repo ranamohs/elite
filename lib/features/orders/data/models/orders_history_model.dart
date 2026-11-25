@@ -5,6 +5,7 @@ class OrderHistoryItem {
   final Map<String, dynamic> fallbackName;
   final double price;
   final bool hasInvoice;
+  final bool priceAvailable;
   final DateTime? date;
   const OrderHistoryItem({
     required this.id,
@@ -16,6 +17,7 @@ class OrderHistoryItem {
     required this.hasInvoice,
     required this.fallbackName,
     this.date,
+    this.priceAvailable = true,
   });
 
   bool get isPrevious => const {
@@ -53,6 +55,7 @@ class OrderHistoryItem {
   factory OrderHistoryItem.fromJson(Map<String, dynamic> json) {
     final status = json['status'];
     final nameSource = json['product'] ?? json['category'];
+    final returnedPrice = orderHistoryReturnedPrice(json);
     return OrderHistoryItem(
       id: orderInt(json['id']),
       code: '${json['code'] ?? json['id'] ?? ''}',
@@ -67,7 +70,8 @@ class OrderHistoryItem {
           .map((e) => OrderHistoryLine.fromJson(Map<String, dynamic>.from(e)))
           .toList(),
       fallbackName: nameSource is Map ? orderMap(nameSource['name']) : {},
-      price: orderDouble(json['price']),
+      price: returnedPrice ?? 0,
+      priceAvailable: returnedPrice != null,
       hasInvoice: json['has_invoice'] == true || json['has_invoice'] == 1,
       date: DateTime.tryParse('${json['date'] ?? json['created_at'] ?? ''}'),
     );
@@ -140,3 +144,28 @@ int orderInt(dynamic value, [int fallback = 0]) =>
 double orderDouble(dynamic value) => double.tryParse('$value') ?? 0;
 String localizedOrderText(Map<String, dynamic> value, bool ar) =>
     '${value[ar ? 'ar' : 'en'] ?? value[ar ? 'en' : 'ar'] ?? ''}';
+
+double? orderHistoryReturnedPrice(Map<String, dynamic> json) {
+  double? number(dynamic raw) {
+    final value = raw is Map ? raw['value'] : raw;
+    final parsed = double.tryParse('$value');
+    return parsed != null && parsed.isFinite ? parsed : null;
+  }
+
+  for (final key in ['price', 'total', 'total_price']) {
+    final value = number(json[key]);
+    if (value != null) return value;
+  }
+  final lines = json['items'] ?? json['products'];
+  if (lines is List && lines.isNotEmpty) {
+    double total = 0;
+    for (final line in lines) {
+      if (line is! Map) return null;
+      final value = number(line['total_price']);
+      if (value == null) return null;
+      total += value;
+    }
+    return total.isFinite ? total : null;
+  }
+  return null;
+}

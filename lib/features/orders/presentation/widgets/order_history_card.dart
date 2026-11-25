@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/functions/is_arabic.dart';
 import '../../data/models/orders_history_model.dart';
+import '../views/order_invoice_view.dart';
 import 'orders_history_helpers.dart';
 
 class OrderHistoryCard extends StatelessWidget {
@@ -17,26 +18,18 @@ class OrderHistoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final title = order.title(isArabic(context));
+    final invoiced = order.statusValue.trim().toLowerCase() == 'invoiced';
     final color = order.isCancelled
         ? const Color(0xFFE46A4B)
         : order.isPrevious
         ? AppColors.badgeTextGreen
-        : const {'new', 'pending'}.contains(order.statusValue.toLowerCase())
-        ? const Color(0xFFAD7918)
         : const Color(0xFF3678E9);
-    final background = order.isCancelled
-        ? const Color(0xFFFFEDE7)
-        : order.isPrevious
-        ? AppColors.badgeBg
-        : const {'new', 'pending'}.contains(order.statusValue.toLowerCase())
-        ? const Color(0xFFFFF3DD)
-        : const Color(0xFFE6F0FF);
     return Container(
-      margin: EdgeInsets.only(bottom: 12.h),
-      padding: EdgeInsets.all(15.w),
+      margin: EdgeInsets.only(bottom: 14.h),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(18.r),
         border: Border.all(color: AppColors.unselectedBorder),
       ),
       child: Column(
@@ -46,6 +39,7 @@ class OrderHistoryCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
+                flex: 3,
                 child: Text(
                   title.isEmpty
                       ? ordersText(
@@ -54,28 +48,30 @@ class OrderHistoryCard extends StatelessWidget {
                     'Order #${order.code}',
                   )
                       : title,
-                  maxLines: 2,
+                  maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
                     fontSize: 15.sp,
+                    fontWeight: FontWeight.bold,
+                    height: 1.5,
                   ),
                 ),
               ),
-              Spacer(),
+              SizedBox(width: 10.w),
               Flexible(
+                flex: 2,
                 child: Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: 10.w,
-                    vertical: 5.h,
+                    vertical: 6.h,
                   ),
                   decoration: BoxDecoration(
-                    color: background,
-                    borderRadius: BorderRadius.circular(20.r),
+                    color: color.withValues(alpha: .1),
+                    borderRadius: BorderRadius.circular(18.r),
                   ),
                   child: Text(
                     orderStatusText(context, order),
-                    style: TextStyle(color: color, fontSize: 10.sp),
+                    style: TextStyle(fontSize: 10.sp, color: color),
                   ),
                 ),
               ),
@@ -87,43 +83,35 @@ class OrderHistoryCard extends StatelessWidget {
               '#${order.code}',
               if (order.date != null)
                 DateFormat(
-                  'EEEE، d MMMM',
+                  'd MMMM yyyy',
                   isArabic(context) ? 'ar' : 'en',
                 ).format(order.date!.toLocal()),
-            ].join(' • '),
-            style: TextStyle(color: AppColors.subtitleGrey, fontSize: 11.sp),
+            ].join(' · '),
+            style: TextStyle(fontSize: 11.sp, color: AppColors.subtitleGrey),
           ),
-          SizedBox(height: 6.h),
-          const Divider(color: AppColors.unselectedBorder),
+          SizedBox(height: 14.h),
+          const Divider(height: 1, color: AppColors.unselectedBorder),
+          SizedBox(height: 10.h),
           Row(
             children: [
               Expanded(
                 child: Text(
-                  order.awaitingPrice
-                      ? ordersText(
-                    context,
-                    'السعر بعد المعاينة',
-                    'Price after inspection',
-                  )
-                      : (order.isCancelled &&
-                      !order.hasInvoice &&
-                      order.price == 0
-                      ? '—'
-                      : '${order.price.toStringAsFixed(3)} ${order.currency}')
-                      .trim(),
+                  order.priceAvailable
+                      ? '${order.price.toStringAsFixed(2)} ${order.currency}'
+                      .trim()
+                      : '—',
                   style: TextStyle(
-                    color: AppColors.badgeTextGreen,
+                    fontSize: 17.sp,
                     fontWeight: FontWeight.bold,
-                    fontSize: 14.sp,
+                    color: AppColors.badgeTextGreen,
                   ),
                 ),
               ),
               TextButton(
                 onPressed: onDetails,
                 style: TextButton.styleFrom(
-                  foregroundColor: AppColors.badgeTextGreen,
-                  padding: EdgeInsets.zero,
-                  minimumSize: Size(55.w, 28.h),
+                  foregroundColor: AppColors.subtitleGrey,
+                  padding: EdgeInsets.symmetric(horizontal: 8.w),
                 ),
                 child: Text(
                   ordersText(context, 'التفاصيل', 'Details'),
@@ -132,6 +120,26 @@ class OrderHistoryCard extends StatelessWidget {
               ),
             ],
           ),
+          if (invoiced) ...[
+            SizedBox(height: 6.h),
+            OutlinedButton.icon(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => OrderInvoiceView(orderId: order.id),
+                ),
+              ),
+              style: OutlinedButton.styleFrom(
+                minimumSize: Size(double.infinity, 40.h),
+                foregroundColor: AppColors.badgeTextGreen,
+                side: const BorderSide(color: AppColors.primaryColor),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              ),
+              icon: const Icon(Icons.receipt_long_outlined, size: 18),
+              label: Text(ordersText(context, 'عرض الفاتورة', 'View invoice')),
+            ),
+          ],
         ],
       ),
     );

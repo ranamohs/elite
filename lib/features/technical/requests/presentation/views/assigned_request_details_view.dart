@@ -102,8 +102,10 @@ class _AssignedRequestDetailsViewState
             loading: state.loading,
             onPressed:
             request.isClosed ||
-                request.statusValue.trim().toLowerCase() ==
-                    'declined_by_technical'
+                const {
+                  'declined_by_technical',
+                  'invoiced',
+                }.contains(request.statusValue.trim().toLowerCase())
                 ? null
                 : () {
               final startedAt = state.startedAt;

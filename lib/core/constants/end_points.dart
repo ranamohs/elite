@@ -1,4 +1,6 @@
 class EndPoints {
+  static const String createFromCart = '/create-from-cart';
+  static String getOrderInvoice(int id) => '/orders/$id/get-invoice';
   static const String receivedRequests = '/recived-requests';
   static const String startedRequests = '/started-requests';
   static const String completedUnpaidRequests = '/completed-unpaid-requests';

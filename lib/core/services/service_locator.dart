@@ -1,3 +1,7 @@
+import '../../features/checkout/data/repos/product_order_repo.dart';
+import '../../features/checkout/data/repos/product_order_repo_impl.dart';
+import '../../features/orders/data/repos/order_invoice_repo.dart';
+import '../../features/orders/data/repos/order_invoice_repo_impl.dart';
 
 import '../../features/contract_subscription/data/repos/contract_subscription_repo.dart';
 import '../../features/contract_subscription/data/repos/contract_subscription_repo_impl.dart';
@@ -17,7 +21,7 @@ import '../../features/category_catalog/data/repos/cart_repo_impl.dart';
 import '../../features/category_catalog/presentation/manager/cart_cubit.dart';
 import '../../features/checkout/data/repos/service_request_repo.dart';
 import '../../features/checkout/data/repos/service_request_repo_impl.dart';
-import '../../features/checkout/presentation/manager/service_request_cubit.dart';
+import '../../features/checkout/presentation/manager/service/service_request_cubit.dart';
 import '../../features/category_catalog/data/repos/catalog_repo.dart';
 import '../../features/category_catalog/data/repos/catalog_repo_impl.dart';
 import 'package:elite/core/databases/api/dio_consumer.dart';
@@ -76,6 +80,20 @@ import '../../features/technical/requests/presentation/manager/assigned_requests
 final getIt = GetIt.instance;
 
 void setupServiceLocator() {
+  getIt.registerLazySingleton<ProductOrderRepo>(
+        () => ProductOrderRepoImpl(
+      dio: getIt<DioConsumer>(),
+      storage: getIt<SecureStorageHelper>(),
+      network: getIt<NetworkConnectionCubit>(),
+    ),
+  );
+  getIt.registerLazySingleton<OrderInvoiceRepo>(
+        () => OrderInvoiceRepoImpl(
+      dio: getIt<DioConsumer>(),
+      storage: getIt<SecureStorageHelper>(),
+      network: getIt<NetworkConnectionCubit>(),
+    ),
+  );
   getIt.registerLazySingleton<AssignedRequestsRepo>(
         () => AssignedRequestsRepoImpl(
       dio: getIt<DioConsumer>(),

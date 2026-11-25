@@ -18,6 +18,9 @@ class OrderAddress {
 
 class OrderDraft {
   int? orderId;
+  int? cartId;
+  String? depositReceiptPath;
+  double? confirmedTotal;
   bool isSubmitting = false;
   final List<CatalogItem> items;
   final Map<String, int> quantities;
@@ -46,6 +49,7 @@ class OrderDraft {
   OrderDraft({
     required List<CatalogItem> items,
     required Map<String, int> quantities,
+    this.cartId,
   }) : items = List.unmodifiable(items),
         quantities = Map.unmodifiable(quantities);
   double get subtotal => items.fold(

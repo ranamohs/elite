@@ -50,23 +50,6 @@ class _OrderCompletedViewState extends State<OrderCompletedView> {
         ),
       );
     },
-    footer: TextButton(
-      onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            checkoutText(
-              context,
-              'تحميل PDF هيتاح بعد تجهيز خدمة الفواتير',
-              'PDF download will be available when the invoice service is ready',
-            ),
-          ),
-        ),
-      ),
-      child: Text(
-        checkoutText(context, 'تحميل الفاتورة PDF', 'Download invoice PDF'),
-        style: const TextStyle(color: AppColors.badgeTextGreen),
-      ),
-    ),
     body: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -126,21 +109,6 @@ class _OrderCompletedViewState extends State<OrderCompletedView> {
           ),
         ),
         SizedBox(height: 12.h),
-        Container(
-          padding: EdgeInsets.all(12.w),
-          decoration: BoxDecoration(
-            color: AppColors.badgeBg,
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          child: Text(
-            checkoutText(
-              context,
-              'تفاصيل ضمان الخدمة هتظهر هنا بعد ربط بيانات الطلب.',
-              'Service warranty details will appear here when order data is connected.',
-            ),
-            style: TextStyle(color: AppColors.badgeTextGreen, fontSize: 11.sp),
-          ),
-        ),
       ],
     ),
   );

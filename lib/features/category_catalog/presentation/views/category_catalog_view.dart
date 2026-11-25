@@ -68,12 +68,12 @@ class _CategoryCatalogViewState extends State<CategoryCatalogView> {
     super.dispose();
   }
 
-  double get total => selected.values.fold(
-    0,
-        (sum, item) => sum + item.price * (quantities[item.key] ?? 0),
-  );
+  double get total => selected.values
+      .where((item) => item.isProduct == showProducts)
+      .fold(0, (sum, item) => sum + item.price * (quantities[item.key] ?? 0));
   String get totalLabel {
     final currencies = selected.values
+        .where((item) => item.isProduct == showProducts)
         .map((e) => e.currency)
         .where((e) => e.isNotEmpty)
         .toSet();
@@ -242,7 +242,11 @@ class _CategoryCatalogViewState extends State<CategoryCatalogView> {
             ),
             bottomNavigationBar: CatalogBottomBar(
               totalLabel: totalLabel,
-              onContinue: selected.isEmpty || state is CartLoading
+              onContinue:
+              !selected.values.any(
+                    (item) => item.isProduct == showProducts,
+              ) ||
+                  state is CartLoading
                   ? null
                   : openOrderDetails,
             ),
@@ -252,14 +256,72 @@ class _CategoryCatalogViewState extends State<CategoryCatalogView> {
     );
   }
 
-  void openOrderDetails() => Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (_) => OrderDetailsView(
-        order: checkoutDraft ??= OrderDraft(
-          items: selected.values.toList(),
-          quantities: quantities,
+  Future<void> openOrderDetails() async {
+    var items = selected.values
+        .where((item) => item.isProduct == showProducts)
+        .toList();
+    if (items.isEmpty) return;
+    if (showProducts && items.length > 1) {
+      final chosen = await showModalBottomSheet<CatalogItem>(
+        context: context,
+        builder: (context) => SafeArea(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(18.w),
+                child: Text(
+                  ar
+                      ? 'اختاري المنتج اللي عايزة تكمّلي طلبه'
+                      : 'Choose the product to order',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              ...items.map(
+                    (item) => ListTile(
+                  title: Text(item.title(ar)),
+                  subtitle: Text(
+                    '${quantities[item.key] ?? 0} × ${item.price.toStringAsFixed(2)} ${item.currency}',
+                  ),
+                  onTap: () => Navigator.pop(context, item),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    ),
-  );
+      );
+      if (chosen == null || !mounted) return;
+      items = [chosen];
+    }
+    final cartId = showProducts ? cartItemIds[items.single.key] : null;
+    final keys = items.map((e) => e.key).toSet();
+    final draft = checkoutDraft;
+    final reuse =
+        draft != null &&
+            draft.orderId == null &&
+            draft.items.map((e) => e.key).toSet().containsAll(keys) &&
+            draft.items.length == keys.length;
+    checkoutDraft = reuse
+        ? draft
+        : OrderDraft(
+      items: items,
+      quantities: {
+        for (final item in items) item.key: quantities[item.key] ?? 0,
+      },
+      cartId: cartId,
+    );
+    final order = checkoutDraft!;
+    await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => OrderDetailsView(order: order)));
+    if (mounted && order.orderId != null && items.every((e) => e.isProduct))
+      setState(() {
+        for (final item in items) {
+          selected.remove(item.key);
+          quantities.remove(item.key);
+          cartItemIds.remove(item.key);
+        }
+        checkoutDraft = null;
+      });
+  }
 }

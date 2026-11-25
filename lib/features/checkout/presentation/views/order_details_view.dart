@@ -1,3 +1,4 @@
+import 'product_order_review_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -71,12 +72,14 @@ class _OrderDetailsViewState extends State<OrderDetailsView> {
   @override
   Widget build(BuildContext context) {
     final order = widget.order;
+    final productOrder =
+        order.items.isNotEmpty && order.items.every((item) => item.isProduct);
     return CheckoutScaffold(
       title: checkoutText(context, 'تفاصيل الطلب', 'Order details'),
       action: checkoutText(
         context,
-        'التالي: الموعد والدفع',
-        'Next: schedule and payment',
+        productOrder ? 'التالي: تأكيد طلب المنتجات' : 'التالي: الموعد والدفع',
+        productOrder ? 'Next: confirm products' : 'Next: schedule and payment',
       ),
       onAction: () async {
         order.description = description.text.trim();
@@ -85,9 +88,15 @@ class _OrderDetailsViewState extends State<OrderDetailsView> {
           if (!mounted || order.address == null) return;
         }
         if (!context.mounted) return;
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => OrderScheduleView(order: order)),
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => productOrder
+                ? ProductOrderReviewView(order: order)
+                : OrderScheduleView(order: order),
+          ),
         );
+        if (mounted && productOrder && order.orderId != null)
+          Navigator.pop(context, true);
       },
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -100,40 +109,46 @@ class _OrderDetailsViewState extends State<OrderDetailsView> {
               'Selected services and products',
             ),
           ),
-          CheckoutSectionTitle(
-            checkoutText(
-              context,
-              'اوصف المشكلة (اختياري)',
-              'Describe the issue (optional)',
-            ),
-          ),
-          TextField(
-            controller: description,
-            maxLines: 3,
-            maxLength: 500,
-            decoration: InputDecoration(
-              hintText: checkoutText(
+          if (!productOrder) ...[
+            CheckoutSectionTitle(
+              checkoutText(
                 context,
-                'مثال: السخان القديم محتاج يتفك، والجديد يتركب، وفيه تسريب من الوصلة…',
-                'Describe the work or issue…',
-              ),
-              hintStyle: TextStyle(
-                color: AppColors.subtitleGrey,
-                fontSize: 12.sp,
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16.r),
-                borderSide: const BorderSide(color: AppColors.unselectedBorder),
+                'اوصف المشكلة (اختياري)',
+                'Describe the issue (optional)',
               ),
             ),
-          ),
+            TextField(
+              controller: description,
+              maxLines: 3,
+              maxLength: 500,
+              decoration: InputDecoration(
+                hintText: checkoutText(
+                  context,
+                  'مثال: السخان القديم محتاج يتفك، والجديد يتركب، وفيه تسريب من الوصلة…',
+                  'Describe the work or issue…',
+                ),
+                hintStyle: TextStyle(
+                  color: AppColors.subtitleGrey,
+                  fontSize: 12.sp,
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                  borderSide: const BorderSide(
+                    color: AppColors.unselectedBorder,
+                  ),
+                ),
+              ),
+            ),
+          ],
           CheckoutSectionTitle(
             checkoutText(
               context,
-              'صور المشكلة (اختياري)',
-              'Issue photos (optional)',
+              productOrder ? 'صور المكان (اختياري)' : 'صور المشكلة (اختياري)',
+              productOrder
+                  ? 'Place photos (optional)'
+                  : 'Issue photos (optional)',
             ),
           ),
           OrderPhotosPicker(

@@ -211,26 +211,26 @@ class OfferProductCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 8.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: inStock
-                              ? AppColors.homeHeaderGreen
-                              : AppColors.navInactiveGrey,
-                          borderRadius: BorderRadius.circular(14.r),
-                        ),
-                        child: Text(
-                          AppStrings.addToCart.tr(),
-                          style: AppStyles.styleMedium16(context).copyWith(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                      // Container(
+                      //   padding: EdgeInsets.symmetric(
+                      //     horizontal: 16.w,
+                      //     vertical: 8.h,
+                      //   ),
+                      //   decoration: BoxDecoration(
+                      //     color: inStock
+                      //         ? AppColors.homeHeaderGreen
+                      //         : AppColors.navInactiveGrey,
+                      //     borderRadius: BorderRadius.circular(14.r),
+                      //   ),
+                      //   child: Text(
+                      //     AppStrings.addToCart.tr(),
+                      //     style: AppStyles.styleMedium16(context).copyWith(
+                      //       fontSize: 12.sp,
+                      //       fontWeight: FontWeight.w700,
+                      //       color: Colors.white,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],

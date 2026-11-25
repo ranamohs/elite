@@ -7,7 +7,6 @@ import '../../../../../core/databases/cache/user_data_manager.dart';
 import '../../../../../core/services/service_locator.dart';
 import '../../../../account/presentation/views/account_view.dart';
 import '../../../../account/presentation/widgets/account_ui.dart';
-import '../../../earings/presentation/views/technical_earnings_view.dart';
 import '../../../requests/presentation/manager/assigned_requests/assigned_requests_cubit.dart';
 import '../../../requests/presentation/manager/assigned_requests/assigned_requests_state.dart';
 import '../../../requests/presentation/widgets/assigned_requests_content.dart';
@@ -57,7 +56,7 @@ class _TechnicalHomeViewState extends State<TechnicalHomeView> {
                     builder: (context, state) => TechnicalHomeHeader(
                       user: getIt<UserDataManager>(),
                       stats: assignedRequestsData(state)?.stats,
-                      onProfile: () => setState(() => selected = 3),
+                      onProfile: () => setState(() => selected = 2),
                     ),
                   ),
                   Expanded(
@@ -66,9 +65,8 @@ class _TechnicalHomeViewState extends State<TechnicalHomeView> {
                 ],
               ),
               TechnicalRequestsView(cubit: cubit, isActive: selected == 1),
-              const TechnicalEarningsView(),
               AccountView(
-                isActive: selected == 3,
+                isActive: selected == 2,
                 assignedRequests: cubit,
                 onOrders: () => setState(() => selected = 1),
               ),
@@ -92,10 +90,6 @@ class _TechnicalHomeViewState extends State<TechnicalHomeView> {
               icon: const Icon(Icons.assignment_outlined),
               activeIcon: const Icon(Icons.assignment_rounded),
               label: accountText(context, 'طلباتي', 'My requests'),
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.account_balance_wallet_outlined),
-              label: accountText(context, 'الأرباح', 'Earnings'),
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.person_outline_rounded),

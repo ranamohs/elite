@@ -73,7 +73,7 @@ class AssignedRequestCard extends StatelessWidget {
                   ),
                   child: Text(
                     request.statusLabel.isNotEmpty
-                        ? request.statusLabel
+                        ? request.statusValue
                         : request.statusValue,
                     style: TextStyle(
                       fontSize: 10.sp,
